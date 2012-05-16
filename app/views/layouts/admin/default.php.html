@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cms</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<?php $this->javascript('jquery'); ?>
+	<?php $this->javascript('js/Object.js'); ?>
+	<?php $this->javascript('bootstrap/js/bootstrap.js'); ?>
+	
+	<?php $this->stylesheet('bootstrap/css/bootstrap.css'); ?>
+	<style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+	<?php $this->stylesheet('bootstrap/css/bootstrap-responsive.css'); ?>
+</head>
+<body>
+	<?php $this->render("admin/shared/_top-nav"); ?>
+	
+	<?php $this->yield(); ?>
+	<?php $this->printSqlLog(); ?>
+</body>
+</html>

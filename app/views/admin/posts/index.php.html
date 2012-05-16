@@ -1,0 +1,41 @@
+<h1>Listing posts</h1>
+
+<table>
+	<tr>
+		<th>Id</th>
+		<th>Title</th>
+		<th>Content</th>
+		<th>Custom Data</th>
+		<th>Type</th>
+		<th>Slug</th>
+		<th>Layout</th>
+		<th>Status</th>
+		<th>Created At</th>
+		<th>Updated At</th>
+		<th></th>
+		<th></th>
+		<th></th>
+	</tr>
+	
+	<?php $this->posts->each(function($post) { ?>
+		<tr>
+			<td><?php echo $post->id; ?></td>
+			<td><?php echo $post->title; ?></td>
+			<td><?php echo $post->content; ?></td>
+			<td><?php echo $post->custom_data; ?></td>
+			<td><?php echo $post->type; ?></td>
+			<td><?php echo $post->slug; ?></td>
+			<td><?php echo $post->layout; ?></td>
+			<td><?php echo $post->status; ?></td>
+			<td><?php echo $post->created_at; ?></td>
+			<td><?php echo $post->updated_at; ?></td>
+			<td><?php $this->linkTo('Show', $this->admin_post_path($post->id)); ?></td>
+			<td><?php $this->linkTo('Edit', $this->edit_admin_post_path($post->id)); ?></td>
+			<td><?php $this->linkTo('Destroy', $this->admin_post_path($post->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete' )); ?></td>
+		</tr>
+	<?php }); ?>
+</table>
+			
+<br>
+			
+<?php $this->linkTo("New posts", $this->new_admin_post_path()); ?>
