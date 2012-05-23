@@ -1,10 +1,11 @@
 <?php
 use \Speedy\Loader;
 
-App::instance()->configure(function() {
+App::instance()->configure(function($conf) {
 
 	// Turn on short links
-	// $this->set('short_links', true);
+	$conf->set('short_links', true);
+	//$conf->set('sprockets'
 	date_default_timezone_set('America/Los_Angeles');
 	
 	Loader::instance()->registerNamespace("{$this->ns()}.lib", LIB_PATH);
@@ -21,6 +22,8 @@ App::instance()->configure(function() {
 		$conf->set_logging(true);
 		$conf->set_logger(\ActiveRecord\Logger\Runtime::instance());
 	});
+	
+	$conf->addRenderer('php', 'cms.lib.view.php');
 	
 });
 ?>

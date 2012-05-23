@@ -14,7 +14,14 @@ class Routes extends SpeedyDraw {
 		
 			$this->resources('posts');
 			$this->resources('pages');
-			$this->resources('configs');
+			
+			$this->resources('configs', null, function() {
+				
+				$this->collection('get', 'options');
+				
+			});
+			
+			$this->resources('categories');
 			
 		});
 		

@@ -7,7 +7,7 @@ use \Cms\Models\Config;
 class Configs extends Admin {
 
 	/**
-	 * GET /posts
+	 * GET /configs
 	 */
 	public function index() {
 		$this->configs	= Config::all();
@@ -21,7 +21,7 @@ class Configs extends Admin {
 	}
 
 	/**
-	 * GET /posts/1
+	 * GET /configs/1
 	 */
 	public function show() {
 		$this->config	= Config::find($this->params('id'));
@@ -35,7 +35,7 @@ class Configs extends Admin {
 	}
 
 	/**
-	 * GET /posts/new
+	 * GET /configs/new
 	 */
 	public function _new() {
 		$this->config	= new Config();
@@ -49,14 +49,14 @@ class Configs extends Admin {
 	}
 
 	/**
-	 * GET /posts/1/edit
+	 * GET /configs/1/edit
 	 */
 	public function edit() {
 		$this->config	= Config::find($this->params('id'));
 	}
 
 	/**
-	 * POST /posts
+	 * POST /configs
 	 */
 	public function create() {
 		$this->config	= new Config($this->params('config'));
@@ -81,7 +81,7 @@ class Configs extends Admin {
 	}
 
 	/**
-	 * PUT /posts/1
+	 * PUT /configs/1
 	 */
 	public function update() {
 		$this->config	= Config::find($this->params('id'));
@@ -106,7 +106,7 @@ class Configs extends Admin {
 	}
 
 	/** 
-	 * DELETE /posts/1
+	 * DELETE /configs/1
 	 */
 	public function destroy() {
 		$this->config = Config::find($this->params('id'));
@@ -115,6 +115,20 @@ class Configs extends Admin {
 		$this->respondTo(function($format) {
 			$format->html = function() { $this->redirectTo($this->admin_configs_url()); };
 		});
+	}
+	
+	/**
+	 * POST /configs/save
+	 */
+	public function save() {
+	
+	}
+	
+	/**
+	 * GET /configs/options/:view
+	 */
+	public function options() {
+		
 	}
 
 }

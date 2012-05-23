@@ -4,6 +4,7 @@ namespace Cms\Controllers\Admin;
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Post;
 use \Speedy\Utility\Inflector;
+use \Speedy\Loader;
 
 class Cms extends Admin {
 

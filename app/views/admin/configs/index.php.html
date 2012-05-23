@@ -1,27 +1,25 @@
-<h1>Listing configs</h1>
+<?php $this->render('top-nav'); ?>
 
-<table>
-	<tr>
-		<th>Id</th>
-		<th>Name</th>
-		<th>Value</th>
-		<th></th>
-		<th></th>
-		<th></th>
-	</tr>
+<section id="grid">
+	<div class="page-header">
+		<h1>Configurations</h1>
+	</div>
 	
-	<?php $this->configs->each(function($config) { ?>
+	<table class="table table-striped">
 		<tr>
-			<td><?php echo $config->id; ?></td>
-			<td><?php echo $config->name; ?></td>
-			<td><?php echo $config->value; ?></td>
-			<td><?php $this->linkTo('Show', $this->admin_config_path($config->id)); ?></td>
-			<td><?php $this->linkTo('Edit', $this->edit_admin_config_path($config->id)); ?></td>
-			<td><?php $this->linkTo('Destroy', $this->admin_config_path($config->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete' )); ?></td>
+			<th>Name</th>
+			<th>Value</th>
+			<th></th>
+			<th></th>
 		</tr>
-	<?php }); ?>
-</table>
-			
-<br>
-			
-<?php $this->linkTo("New configs", $this->new_admin_config_path()); ?>
+		
+		<?php $this->configs->each(function($config) { ?>
+			<tr>
+				<td><?php echo $config->name; ?></td>
+				<td><?php echo $config->value; ?></td>
+				<td><?php $this->linkTo('<i class="icon-edit icon-white"></i> Edit', $this->edit_admin_config_path($config->id), array('class' => 'btn btn-primary')); ?></td>
+				<td><?php $this->linkTo('<i class="icon-trash icon-white"></i> Destroy', $this->admin_config_path($config->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete', 'class' => 'btn btn-danger' )); ?></td>
+			</tr>
+		<?php }); ?>
+	</table>
+</section>
