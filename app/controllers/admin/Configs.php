@@ -128,7 +128,7 @@ class Configs extends Admin {
 	 * GET /configs/options/:view
 	 */
 	public function options() {
-		
+		debug($this->params('view'));
 	}
 
 }

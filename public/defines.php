@@ -7,12 +7,12 @@ defined('APP_PATH') or define('APP_PATH', ROOT . DS . 'app');	// Define path to 
 defined('CONFIG_PATH') or define('CONFIG_PATH', ROOT . DS . 'config');	// Define path to the config directory
 defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
 defined('TMP_PATH') or define('TMP_PATH', ROOT . DS . 'tmp');	// Define path to the tmp directory
+define('VENDOR_PATH', ROOT . DS . 'vendor');
 
-if (!getenv('SPEEDY_PATH')) trigger_error("Could not find library path for SpeedyPHP. Be sure to add environment variable SPEEDY_PATH with absolute path to the library.");
-defined('SPEEDY_PATH') or define('SPEEDY_PATH', getenv('SPEEDY_PATH'));
+defined('SPEEDY_PATH') or define('SPEEDY_PATH', (getenv('SPEEDY_PATH')) ? getenv('SPEEDY_PATH') : VENDOR_PATH . DS . 'SpeedyPHP');
 
 if (function_exists('ini_set') && 
-	ini_set('include_path', SPEEDY_PATH . DS . 'speedy' . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
+	ini_set('include_path', SPEEDY_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
 	define('CORE_PATH', null);
 } else {
 	define('CORE_PATH', ROOT . DS);

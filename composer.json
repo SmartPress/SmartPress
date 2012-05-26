@@ -1,0 +1,5 @@
+{
+	"require" : {
+		"SpeedyPHP/Framework" : "dev-master"
+	}
+}

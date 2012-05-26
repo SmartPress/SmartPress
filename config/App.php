@@ -1,6 +1,6 @@
 <?php
-require_once('Loader.php');
-require_once('Routes.php');
+require_once(SPEEDY_PATH . DS . 'Loader.php');
+require_once(SPEEDY_PATH . DS . 'Router.php');
 
 import('speedy.app');
 use \Speedy\Loader;
