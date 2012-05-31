@@ -17,11 +17,12 @@ class Routes extends SpeedyDraw {
 			
 			$this->resources('configs', null, function() {
 				
-				$this->match(array('options/:view' => "configs#options"));
+				$this->match(array('options/:view' => "options"));
 				
 			});
 			
 			$this->resources('categories');
+			$this->resources('modules');
 			
 		});
 		

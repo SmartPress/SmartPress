@@ -2,7 +2,7 @@
 
 <section id="grid">
 	<div class="page-header">
-		<h1>Configurations</h1>
+		<h1>Settings</h1>
 	</div>
 	
 	<table class="table table-striped">
