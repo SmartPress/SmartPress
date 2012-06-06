@@ -2,7 +2,9 @@
 namespace Cms\Models;
 
 
-class Post extends \ActiveRecord\Model {
+use \Speedy\Model\ActiveRecord\Base;
+
+class Post extends Base {
 }
 
 ?>

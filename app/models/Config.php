@@ -2,7 +2,9 @@
 namespace Cms\Models;
 
 
-class Config extends \ActiveRecord\Model {
+use \Speedy\Model\ActiveRecord\Base;
+
+class Config extends Base {
 }
 
 ?>

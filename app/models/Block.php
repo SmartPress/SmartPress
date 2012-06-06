@@ -2,7 +2,9 @@
 namespace Cms\Models;
 
 
-class Block extends \ActiveRecord\Model {
+use \Speedy\Model\ActiveRecord\Base;
+
+class Block extends Base {
 }
 
 ?>

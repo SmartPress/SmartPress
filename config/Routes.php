@@ -1,7 +1,7 @@
 <?php
 namespace Cms\Config;
 
-import('speedy.router.draw');
+
 use \Speedy\Router\Draw as SpeedyDraw;
 use \Cms\Lib\Router\Routes\Slug;
 
