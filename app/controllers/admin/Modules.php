@@ -4,9 +4,26 @@ namespace Cms\Controllers\Admin;
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Module;
 
+defined('MODULE_UPLOAD_DIR') or define('MODULE_UPLOAD_DIR', ROOT . DS . 'tmp' . DS . 'uploads');
+
 class Modules extends Admin {
 
-		/**
+	protected $_mixins = [
+		'\\Cms\\Lib\\Helpers\\FileUpload' => [
+			'fileModel'	=> '\\Cms\\Models\\Module',
+			'allowedTypes'	=> [ 'zip' ],
+			'unique'	=> false,
+			'forceWebroot'	=> false,
+			'uploadDir'	=> MODULE_UPLOAD_DIR,
+			'fileVar'	=> 'file'
+		]
+	];
+	
+	public $before_filter = [];
+	
+	
+	
+	/**
 	 * GET /posts
 	 */
 	public function index() {
@@ -60,6 +77,7 @@ class Modules extends Admin {
 	 */
 	public function create() {
 		$this->module	= new Module($this->params('module'));
+		
 		
 		$this->respondTo(function($format) {
 			if ($this->module->save()) {

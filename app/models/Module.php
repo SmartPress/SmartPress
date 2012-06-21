@@ -2,11 +2,11 @@
 namespace Cms\Models;
 
 
-define("MODULE_UPLOAD_DIR", ROOT . DS . 'tmp' . DS . 'uploads');
+defined('MODULE_UPLOAD_DIR') or define("MODULE_UPLOAD_DIR", ROOT . DS . 'tmp' . DS . 'uploads');
 
 class Module extends \Speedy\Model\ActiveRecord\Base {
 	
-	protected $_mixins = array(
+	/*protected $_mixins = array(
 		"\\Cms\\Lib\\Concerns\\Uploader" => array(
         	'uploadDir' => MODULE_UPLOAD_DIR,
           	'forceWebroot' => false, //if false, files will be upload to the exact path of uploadDir
@@ -17,7 +17,7 @@ class Module extends \Speedy\Model\ActiveRecord\Base {
           	'unique' => false, //filenames will overwrite existing files of the same name. (default true)
           	'fileNameFunction' => false //execute the Sha1 function on a filename before saving it (default false)
         )
-	);
+	);*/
 	
 }
 

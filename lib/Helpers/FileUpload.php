@@ -13,10 +13,11 @@
 namespace Cms\Lib\Helpers;
 
 
+use \Speedy\Object;
 use \Cms\Lib\Utility\Uploader;
 use \Cms\Lib\Config\FileUpload as Settings;
 
-class FileUpload extends Object{
+class FileUpload extends Object {
   	/**
      * options are the default options that will be used
      * 
@@ -106,6 +107,12 @@ class FileUpload extends Object{
      * @access public
      */
   	var $errors = array();
+  	
+  	/**
+  	 * Before filters
+  	 * @var string[] names of methods for before filters
+  	 */
+  	public $beforeFilters = array('detectUpload');
   
   	
   	
@@ -118,8 +125,8 @@ class FileUpload extends Object{
      * @param mixed $params Params for method.
      * @return mixed
      */
-    function __call($method, $params){
-  		if(key_exists($method, $this->options)) {
+    function __call($method, $params) {
+  		if (key_exists($method, $this->options)) {
     		array_unshift($params, $method);
 			return $this->dispatchMethod('attr', $params);
   		}
@@ -133,9 +140,9 @@ class FileUpload extends Object{
      * @param string value to set to name option, if null, return option's value
      * @return mixed option on key name, or void if setting
      */
-	function attr($name, $values = null){
-    	if(key_exists($name, $this->options)){
-      		if(func_num_args() > 1){
+	function attr($name, $values = null) {
+    	if (key_exists($name, $this->options)) {
+      		if (func_num_args() > 1) {
         		$this->options[$name] = $values;
       		} else {
         		return $this->options[$name];
@@ -152,12 +159,16 @@ class FileUpload extends Object{
      * @return void
      * @access public
      */
-  	function __construct(&$controller){
-    	$this->data = $controller->data();
-    	$this->params = $controller->params();
+  	function __construct(&$controller, $options = array()) {
+    	$this->setData($controller->data())
+    		->addData($controller->params());
     
     	$FileUploadSettings = new Settings;
-    	$this->options = array_merge($FileUploadSettings->defaults, $this->options);
+    	$this->options = array_merge($FileUploadSettings->defaults, $this->options, $options);
+    	$modelArr	= explode('\\', $this->options['fileModel']);
+    	
+    	$this->_addPropertiesToController($controller);
+    	debug(['data' => $this->data()]);
   	}
   
   	/**
@@ -167,7 +178,7 @@ class FileUpload extends Object{
      * @return void
      * @access public
      */
-  	function startup(&$controller){
+  	function detectUpload() {
     	//Backporting 4.0 to 3.6.3 //using setting attributes is now deprecated.
     	$this->fileModel= $this->fileModel();
     	$this->fileVar	= $this->fileVar();
@@ -181,10 +192,10 @@ class FileUpload extends Object{
     	$uploader_settings['uploadDir'] = $this->options['forceWebroot'] ? WWW_ROOT . $uploader_settings['uploadDir'] : $uploader_settings['uploadDir']; 
     	$this->Uploader = new Uploader($uploader_settings);
     
-    	$this->uploadDetected = ($this->_multiArrayKeyExists("tmp_name", $this->data) || $this->_multiArrayKeyExists("tmp_name",$this->params));
-    	$this->uploadedFiles = $this->_uploadedFilesArray();
-    
-    	if($this->uploadDetected){
+    	$this->uploadDetected	= ($this->_multiArrayKeyExists("tmp_name",$this->_data));
+    	$this->uploadedFiles	= $this->_uploadedFilesArray();
+    	
+    	if ($this->uploadDetected) {
       		$this->hasFile = true;
       		if ($this->options['automatic']) { $this->processAllFiles(); }
     	}
@@ -278,7 +289,7 @@ class FileUpload extends Object{
     	$this->Uploader->file = $this->currentFile;
     	if ($finalFile = $this->Uploader->processFile()) {
       		$this->finalFiles[] = $finalFile;
-      		$this->finalFile = $finalFile; //backported.  //finalFile is now depreciated
+      		$this->finalFile = $finalFile; 
       		$save_data[$this->options['fileModel']][$this->options['fields']['name']] = $this->finalFile;
       		$save_data[$this->options['fileModel']][$this->options['fields']['type']] = $this->currentFile['type'];
       		$save_data[$this->options['fileModel']][$this->options['fields']['size']] = $this->currentFile['size'];
@@ -288,20 +299,11 @@ class FileUpload extends Object{
     	  	if (!$model) {
         		$this->success = true;
       		} else {
-        		if ($this->options['massSave']) {
-          			if ($model->saveAll($save_data)) {
-            			$this->success = true;
-            			$this->uploadIds[] = $model->id;
-            			$this->uploadId = $model->id; //backported. //uploadId is now depreciated.
-          			}
-        		} else {
-          			if ($model->save($save_data)) {
-            			$this->success = true;
-            			$this->uploadIds[] = $model->id;
-            			$this->uploadId = $model->id; //backported. //uploadId is now depreciated.
-          			}
-        		}
-        		$model->create(); //get ready for the next one.
+       			$entry	= new $model($save_data);	
+          		if ($entry->save()) {
+            		$this->success = true;
+            		$this->uploadIds[] = $model->id;
+          		}
       		}
     	} else {
       		//add uploader errors to component errors list
@@ -338,7 +340,7 @@ class FileUpload extends Object{
      * @return void
      * @access public
      */
-  	function processAllFiles(){
+  	function processAllFiles() {
     	foreach ($this->uploadedFiles as $file) {
       		$this->_setCurrentFile($file);
       		$this->Uploader->file = $this->options['fileModel'] ? $file[$this->options['fileVar']] : $file;
@@ -376,13 +378,9 @@ class FileUpload extends Object{
 		}
     
 	    if($name){
-			if (PHP5) {
-		    	$model = ClassRegistry::init($name);
-		    } else {
-		        $model =& ClassRegistry::init($name);
-		    }
+			$model = $name;
 		
-		    if (empty($model) && $this->options['fileModel']) {
+		    if (!class_exists($model) && $this->options['fileModel']) {
 		        $this->_error('FileUpload::getModel() - Model is not set or could not be found');
 		        return null;
 		    }
@@ -398,9 +396,8 @@ class FileUpload extends Object{
      * @access protected
      */
   	function _error($text){
-    	$message = __($text,true);
-    	$this->errors[] = $message;
-    	trigger_error($message,E_USER_WARNING);
+    	$this->errors[] = $text;
+    	trigger_error($text, E_USER_WARNING);
   	}
   
   	/**
@@ -413,28 +410,31 @@ class FileUpload extends Object{
     	$retval = array();
     	if ($this->options['fileModel']) { 
     		//Model
-      		if (isset($this->data[$this->options['fileModel']][$this->options['fileVar']])) {
-        		$retval[][$this->options['fileVar']] = $this->data[$this->options['fileModel']][$this->options['fileVar']];
-      		} elseif (isset($this->data[$this->options['fileModel']][0][$this->options['fileVar']])) {
-        		$retval = $this->data[$this->options['fileModel']];
+      		if ($this->hasData("files.{$this->options['fileModel']}.name.{$this->options['fileVar']}")) {
+        		$retval[][$this->options['fileVar']] = [
+        			'name' => $this->data("files.{$this->options['fileModel']}.name.{$this->options['fileVar']}"),
+        			'type' => $this->data("files.{$this->options['fileModel']}.type.{$this->options['fileVar']}"),
+        			'tmp_name' => $this->data("files.{$this->options['fileModel']}.tmp_name.{$this->options['fileVar']}"),
+        			'error' => $this->data("files.{$this->options['fileModel']}.error.{$this->options['fileVar']}"),
+        			'size'	=> $this->data("files.{$this->options['fileModel']}.size.{$this->options['fileVar']}")
+        		];
+      		} elseif ($this->hasData("files.{$this->options['fileModel']}.0.name.{$this->options['fileVar']}")) {
+        		$retval = $this->data("files.{$this->options['fileModel']}");
       		} else {
         		$retval = false;
       		}
     	} else { 
     		// No model
-      		if (isset($this->params['form'][$this->options['fileVar']])) {
-        		$retval[][$this->options['fileVar']] = $this->params['form'][$this->options['fileVar']];
-      		} elseif (isset($this->data[$this->options['fileVar']][0])) { 
+      		if ($this->hasData("files.{$this->options['fileVar']}")) {
+        		$retval[][$this->options['fileVar']] = $this->data("files.{$this->options['fileVar']}");
+      		} elseif ($this->hasData("files.{$this->options['fileVar']}.0")) { 
       			//syntax for multiple files without a model is data[file][0]..data[file][1]..data[file][n]
-        		$retval = $this->data[$this->options['fileVar']];
-      		} elseif (isset($this->params['form'][$this->options['fileVar']][0])) {
-        		$this->_error("FileUpload: Multiple Files were detected without a model present, with the improper syntax. Use this naming scheme for your inputs: data[file][0]..data[file][1]..data[file][n]");
-        		$retval = false;
+        		$retval = $this->data("files.{$this->options['fileVar']}");
       		} else {
         		$retval = false;
       		}
     	}
-            
+        
     	// cleanup array. unset any file in the array that wasn't actually uploaded.
     	if ($retval) {
       		foreach ($retval as $key => $file) {
@@ -450,7 +450,7 @@ class FileUpload extends Object{
           			unset($retval[$key]);
         		}
       		}
-    	}
+    	} 
     
     	// spit out an error if a file was detected but nothing is being returned by this method.
     	if ($this->uploadDetected && $retval === false) {
@@ -470,7 +470,7 @@ class FileUpload extends Object{
      */
   	function _multiArrayKeyExists($needle, $haystack) {
     	if (is_array($haystack)) {
-      		foreach ($haystack as $key=>$value) {
+      		foreach ($haystack as $key => $value) {
         		if ($needle===$key && $value) {
           			return true;
         		}
@@ -485,6 +485,19 @@ class FileUpload extends Object{
     	
     	return false;
   	}
+	
+	/**
+	 * Adds properties to owning class
+	 * @param object $mixin
+	 * @return object $this
+	 */
+	private function _addPropertiesToController(object &$controller) {
+		if (is_array($controller->before_filter)) {
+			$controller->before_filter = array_merge($controller->before_filter, $this->beforeFilters);
+		}
+	
+		return $this;
+	}
 }
 
 ?>
