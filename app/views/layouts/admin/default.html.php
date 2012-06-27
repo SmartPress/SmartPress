@@ -5,7 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<?php $this->javascript('jquery'); ?>
 	<?php $this->javascript('/application.js?debug=1'); ?>
-	<?php $this->javascript('/js/Object.js'); ?>
 	<?php $this->javascript('/bootstrap/js/bootstrap.js'); ?>
 	
 	<?php $this->stylesheet('/bootstrap/css/bootstrap.css'); ?>

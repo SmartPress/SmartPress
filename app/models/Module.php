@@ -2,6 +2,9 @@
 namespace Cms\Models;
 
 
+use \Speedy\Cache;
+use \Cms\Lib\Module\Exception as MException;
+
 defined('MODULE_UPLOAD_DIR') or define("MODULE_UPLOAD_DIR", ROOT . DS . 'tmp' . DS . 'uploads');
 
 class Module extends \Speedy\Model\ActiveRecord\Base {
@@ -18,6 +21,48 @@ class Module extends \Speedy\Model\ActiveRecord\Base {
           	'fileNameFunction' => false //execute the Sha1 function on a filename before saving it (default false)
         )
 	);*/
+	
+	private $_config;
+	
+	static $after_destroy = [ 'clearCache' ];
+	
+	static $after_create = [ 'clearCache' ];
+	
+	
+	
+	public function clearCache() {
+		Cache::clear('modules');
+	}
+	
+	public static function findActives() {
+		return self::all(array('conditions' => 'status = 1'));
+	}
+	
+	public function config() {
+		if (!$this->_config) {
+			$filename	= $this->file_path . DS . 'etc' . DS . 'config.xml';
+			if (!file_exists($filename)) {
+				throw new MException('Could not load config file at ' . $filename);
+			}
+			
+			$this->setConfig(simplexml_load_file($filename));
+		}
+		
+		return $this->_config;
+	}
+	
+	public function get_file_path() {
+		if (!isset($this->file_path)) {
+			$this->assign_attribute('file_path', MODULES_PATH . DS . $this->code);
+		}
+		
+		return $this->read_attribute('file_path');
+	}
+	
+	private function setConfig($config) {
+		$this->_config = $config;
+		return $this;
+	}
 	
 }
 

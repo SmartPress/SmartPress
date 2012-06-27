@@ -1,3 +1,5 @@
+//= require_tree "public"
+
 (function($) {
 	
 	$(document).ready(function() {

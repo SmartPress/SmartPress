@@ -2,12 +2,15 @@
 namespace Cms\Lib\Utility;
 
 /**
-  * Uploader class handles a single file to be uploaded to the file system
-  * 
-  * @author: Nick Baker
-  * @version: since 6.0.0
-  * @link: http://www.webtechnick.com 
-  */
+ * Uploader class handles a single file to be uploaded to the file system
+ * 
+ * @author: Nick Baker
+ * @version: since 6.0.0
+ * @link: http://www.webtechnick.com 
+ */
+
+use \Cms\Lib\Exceptions\Uploader as UException;
+
 class Uploader {
   
 	/**
@@ -86,7 +89,7 @@ class Uploader {
 			} 
 			      
 			if (!$fileName) {
-				$this->_error('No filename resulting after parsing. Function: ' . $this->options['fileNameFunction']);
+				throw new UException('No filename resulting after parsing. Function: ' . $this->options['fileNameFunction']);
 			}
 		}
 		
@@ -156,7 +159,7 @@ class Uploader {
 	    	$this->finalFile	= $fileName;
 	    	return $this->finalFile;
 	    } else {
-	    	$this->_error('Unable to save temp file to file system.');
+	    	throw new UException('Unable to save temp file to file system.');
 	    	return false;
 	    }
 	}
@@ -216,7 +219,7 @@ class Uploader {
 			$file_ext = strtolower($this->_ext());
 			if ($file_ext == $ext) {
 				if (is_array($types) && !in_array($this->file['type'], $types)) {
-					$this->_error("{$this->file['type']} is not an allowed type.");
+					throw new UException("{$this->file['type']} is not an allowed type.");
 					return false;
 		        } else {
 					return true;
@@ -224,7 +227,7 @@ class Uploader {
 			}    
 	    }
 	
-	    $this->_error("extension is not allowed.");
+	    throw new UException("extension is not allowed.");
 	    return false;
 	  }
 	  
@@ -242,7 +245,7 @@ class Uploader {
 			if (isset($this->file['error']) && $this->file['error'] == UPLOAD_ERR_OK) {
 				return true;
 	      	} else {
-				$this->_error($this->uploadErrors[$this->file['error']]);
+				throw new UException($this->uploadErrors[$this->file['error']]);
 			}
 	    }        
 	    return false;
@@ -263,7 +266,7 @@ class Uploader {
 			} elseif ($this->options['maxFileSize'] && $this->file['size'] < $this->options['maxFileSize']) {
 	        	return true;
 	      	} else {
-	        	$this->_error("File exceeds {$this->options['maxFileSize']} byte limit.");
+	        	throw new UException("File exceeds {$this->options['maxFileSize']} byte limit.");
 	      	}
 	    }
 	    

@@ -16,6 +16,7 @@ namespace Cms\Lib\Helpers;
 use \Speedy\Object;
 use \Cms\Lib\Utility\Uploader;
 use \Cms\Lib\Config\FileUpload as Settings;
+use \Cms\Lib\Helpers\FileUpload\Exception as FUException;
 
 class FileUpload extends Object {
   	/**
@@ -148,7 +149,7 @@ class FileUpload extends Object {
         		return $this->options[$name];
       		}
     	} else {
-      		$this->_error("Unknown option: $name");
+      		throw new FUException("Unknown option: $name");
     	}
   	}
 
@@ -165,10 +166,8 @@ class FileUpload extends Object {
     
     	$FileUploadSettings = new Settings;
     	$this->options = array_merge($FileUploadSettings->defaults, $this->options, $options);
-    	$modelArr	= explode('\\', $this->options['fileModel']);
     	
     	$this->_addPropertiesToController($controller);
-    	debug(['data' => $this->data()]);
   	}
   
   	/**
@@ -239,7 +238,7 @@ class FileUpload extends Object {
     
     	$model =& $this->getModel();
     	if (!$model) {
-      		$this->_error('FileUpload::removeFileById -- no model detected.');
+      		throw new FUException('FileUpload::removeFileById -- no model detected.');
       		return false;
     	}
     
@@ -280,7 +279,7 @@ class FileUpload extends Object {
   	function processFile(){
     	//Backporting for manual use processFile(), show error when using.
     	if (count($this->uploadedFiles) && empty($this->currentFile)) {
-      		$this->_error('FileUpload: You\'re using a deprecated standard of uploading files manually.  Don\'t call processFile() directly. Instead, call processAllFiles().');
+      		throw new FUException('FileUpload: You\'re using a deprecated standard of uploading files manually.  Don\'t call processFile() directly. Instead, call processAllFiles().');
       		$this->setCurrentFile($this->uploadedFiles[0]);
     	}
     
@@ -310,7 +309,7 @@ class FileUpload extends Object {
       		foreach ($this->Uploader->errors as $error) {
         		$this->errors[] = $error;
       		}
-      		$this->_error('FileUpload::processFile() - Unable to save temp file to file system.');
+      		throw new FUException('FileUpload::processFile() - Unable to save temp file to file system.');
     	}
   	}
   
@@ -340,7 +339,7 @@ class FileUpload extends Object {
      * @return void
      * @access public
      */
-  	function processAllFiles() {
+  	function processAllFiles() { 
     	foreach ($this->uploadedFiles as $file) {
       		$this->_setCurrentFile($file);
       		$this->Uploader->file = $this->options['fileModel'] ? $file[$this->options['fileVar']] : $file;
@@ -355,11 +354,11 @@ class FileUpload extends Object {
      * @param associative array of file
      * @return void
      */
-  	function _setCurrentFile($file){
+  	function _setCurrentFile($file) { 
     	if ($this->options['fileModel']) {
       		$this->currentFile = $file[$this->options['fileVar']];
     	} else {
-      		$this->currentFile = $file['file'];
+      		$this->currentFile = $file;
     	}
   	}
   
@@ -381,7 +380,7 @@ class FileUpload extends Object {
 			$model = $name;
 		
 		    if (!class_exists($model) && $this->options['fileModel']) {
-		        $this->_error('FileUpload::getModel() - Model is not set or could not be found');
+		        throw new FUException('FileUpload::getModel() - Model is not set or could not be found');
 		        return null;
 		    }
 	    }
@@ -411,7 +410,7 @@ class FileUpload extends Object {
     	if ($this->options['fileModel']) { 
     		//Model
       		if ($this->hasData("files.{$this->options['fileModel']}.name.{$this->options['fileVar']}")) {
-        		$retval[][$this->options['fileVar']] = [
+        		$retval[] = [
         			'name' => $this->data("files.{$this->options['fileModel']}.name.{$this->options['fileVar']}"),
         			'type' => $this->data("files.{$this->options['fileModel']}.type.{$this->options['fileVar']}"),
         			'tmp_name' => $this->data("files.{$this->options['fileModel']}.tmp_name.{$this->options['fileVar']}"),
@@ -425,8 +424,8 @@ class FileUpload extends Object {
       		}
     	} else { 
     		// No model
-      		if ($this->hasData("files.{$this->options['fileVar']}")) {
-        		$retval[][$this->options['fileVar']] = $this->data("files.{$this->options['fileVar']}");
+      		if ($this->hasData("files.{$this->options['fileVar']}")) { 
+        		$retval[] = $this->data("files.{$this->options['fileVar']}");
       		} elseif ($this->hasData("files.{$this->options['fileVar']}.0")) { 
       			//syntax for multiple files without a model is data[file][0]..data[file][1]..data[file][n]
         		$retval = $this->data("files.{$this->options['fileVar']}");
@@ -434,13 +433,13 @@ class FileUpload extends Object {
         		$retval = false;
       		}
     	}
-        
+
     	// cleanup array. unset any file in the array that wasn't actually uploaded.
     	if ($retval) {
       		foreach ($retval as $key => $file) {
-        		if (is_array($file) && isset($file[$this->options['fileVar']])) {
+        		if (is_array($file) && !isset($file[$this->options['fileVar']])) {
           			if (!empty($file[$this->options['fileVar']]) && !isset($file[$this->options['fileVar']]['error'])) {
-            			$this->_error("FileUpload::_uploadedFilesArray() error.  Only a filename was detected, not the actual file.  Make sure you have enctype='multipart/form-data' in your form.  Please review documentation.");
+            			throw new FUException("FileUpload::_uploadedFilesArray() error.  Only a filename was detected, not the actual file.  Make sure you have enctype='multipart/form-data' in your form.  Please review documentation.");
           			}
           			
           			if (isset($file[$this->options['fileVar']]['error']) && $file[$this->options['fileVar']]['error'] == UPLOAD_ERR_NO_FILE) {
@@ -454,7 +453,7 @@ class FileUpload extends Object {
     
     	// spit out an error if a file was detected but nothing is being returned by this method.
     	if ($this->uploadDetected && $retval === false) {
-      		$this->_error("FileUpload: A file was detected, but was unable to be processed due to a misconfiguration of FileUpload. Current config -- fileModel:'{$this->options['fileModel']}' fileVar:'{$this->options['fileVar']}'");
+      		throw new FUException ("FileUpload: A file was detected, but was unable to be processed due to a misconfiguration of FileUpload. Current config -- fileModel:'{$this->options['fileModel']}' fileVar:'{$this->options['fileVar']}'");
     	}
     
     	return $retval;
@@ -484,6 +483,22 @@ class FileUpload extends Object {
     	}
     	
     	return false;
+  	}
+  	
+  	/**
+  	 * Was upload successful
+  	 * @return boolean
+  	 */
+  	public function success() {
+  		return $this->success;
+  	}
+  	
+  	/**
+  	 * Attr accessor for finalFiles
+  	 * @return array
+  	 */
+  	public function finalFiles() {
+  		return $this->finalFiles;
   	}
 	
 	/**

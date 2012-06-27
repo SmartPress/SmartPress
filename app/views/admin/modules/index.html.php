@@ -23,6 +23,7 @@
 				<td><?php echo $module->version; ?></td>
 				<td><?php echo $module->status; ?></td>
 				<td><?php $this->linkTo('<i class="icon-eye-open"></i> Show', $this->admin_module_path($module->id), array('class' => 'btn')); ?></td>
+				<td><?php $this->linkTo('<i class="icon-repeat icon-white"></i> Update', $this->admin_module_path($module->id), array('class' => 'btn btn-warning', 'method' => 'put')); ?></td>
 				<td><?php $this->linkTo('<i class="icon-trash icon-white"></i> Destroy', $this->admin_module_path($module->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete', 'class' => 'btn btn-danger' )); ?></td>
 			</tr>
 		<?php }); ?>

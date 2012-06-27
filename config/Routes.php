@@ -15,7 +15,7 @@ class Routes extends SpeedyDraw {
 			$this->resources('posts');
 			$this->resources('pages');
 			
-			$this->resources('configs', null, function() {
+			$this->resources('configs', array(), function() {
 				
 				$this->match(array('options/:view' => "options"));
 				

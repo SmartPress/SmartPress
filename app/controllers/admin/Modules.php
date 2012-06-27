@@ -3,6 +3,8 @@ namespace Cms\Controllers\Admin;
 
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Module;
+use \Cms\Lib\Module\Installer as ModInstaller;
+use \ZipArchive;
 
 defined('MODULE_UPLOAD_DIR') or define('MODULE_UPLOAD_DIR', ROOT . DS . 'tmp' . DS . 'uploads');
 
@@ -10,12 +12,13 @@ class Modules extends Admin {
 
 	protected $_mixins = [
 		'\\Cms\\Lib\\Helpers\\FileUpload' => [
-			'fileModel'	=> '\\Cms\\Models\\Module',
 			'allowedTypes'	=> [ 'zip' ],
 			'unique'	=> false,
 			'forceWebroot'	=> false,
 			'uploadDir'	=> MODULE_UPLOAD_DIR,
-			'fileVar'	=> 'file'
+			'fileVar'	=> 'module',
+			'fileModel' => null,
+			'alias'		=> 'FileUpload'
 		]
 	];
 	
@@ -76,13 +79,16 @@ class Modules extends Admin {
 	 * POST /posts
 	 */
 	public function create() {
-		$this->module	= new Module($this->params('module'));
+		//$this->module	= new Module($this->params('module'));
+		$uploadSuccess 	= $this->mixin('FileUpload')->success();
+		$processSuccess	= false;
+		$zips	= ($uploadSuccess) ? $this->mixin('FileUpload')->finalFiles() : null;
 		
-		
-		$this->respondTo(function($format) {
-			if ($this->module->save()) {
+		$this->respondTo(function($format) use ($zips) {
+			if ($zips && ModInstaller::instance()->processZip(TMP_PATH . DS . 'uploads' . DS . array_shift($zips))) {
+				$this->module = ModInstaller::instance()->record();
 				$format->html = function() {
-					$this->redirectTo($this->module, array("notice" => "Module was successfully created."));
+					$this->redirectTo($this->admin_modules_url(), array("notice" => "Module was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->module ));
@@ -105,9 +111,9 @@ class Modules extends Admin {
 		$this->module	= Module::find($this->params('id'));
 		
 		$this->respondTo(function($format) {
-			if ($this->module->update_attributes($this->params('module'))) {
+			if (ModInstaller::instance()->update($this->module->id)) {
 				$format->html = function() {
-					$this->redirectTo($this->module, array("notice" => "Module was successfully updated."));
+					$this->redirectTo($this->admin_module_path($this->module), array("notice" => "Module was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->module ));
@@ -131,10 +137,10 @@ class Modules extends Admin {
 		$this->module->destroy();
 		
 		$this->respondTo(function($format) {
-			$format->html = function() { $this->redirectTo($this->modules_url()); };
+			$format->html = function() { $this->redirectTo($this->admin_modules_url()); };
 		});
 	}
-
+	
 }
 
 ?>

@@ -1,4 +1,4 @@
-<?php $this->formFor(['admin', $this->module], ["class" => "", 'enctype' => 'multipart/form-data'], function($f) { ?>
+<?php $this->formTag("/admin/modules", ["class" => "", 'enctype' => 'multipart/form-data', "method" => "POST"], function() { ?>
 
 	<?php if ($this->module->errors && $this->module->errors->count()): ?>
 		<div id="error_explanation">
@@ -11,14 +11,16 @@
 		</ul>
 	<?php endif; ?>
 
-	<?php $f->hidden("id"); ?>
+	<?php if (!empty($this->module) && $this->module->id > 0): ?>
+		<?php $this->hiddenFieldTag("module.id"); ?>
+	<?php endif; ?>
 	<fieldset>
 		<div class="control-group">
-			<?php $f->label("file"); ?>
-			<?php $f->fileField("file"); ?>
+			<?php $this->labelTag("module"); ?>
+			<?php $this->fileFieldTag("module"); ?>
 		</div>
 		<div class="form-actions">
-			<?php $f->submit('Save', array( "class" => 'btn btn-primary' )); ?>
+			<?php $this->submit('Save', array( "class" => 'btn btn-primary' )); ?>
 		</div>
 	</fieldset>
 	

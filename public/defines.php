@@ -10,6 +10,8 @@ defined('TMP_PATH') or define('TMP_PATH', ROOT . DS . 'tmp');	// Define path to 
 define('VENDOR_PATH', ROOT . DS . 'vendor');
 //defined('SPEEDY_PATH') or define('SPEEDY_PATH', VENDOR_PATH . DS . 'SpeedyPHP' . );
 
+defined('MODULES_PATH') or define('MODULES_PATH', ROOT . DS . 'modules'); // Not part of Speedy
+
 if (function_exists('ini_set') && 
 	ini_set('include_path', SPEEDY_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
 	//define('CORE_PATH', null);
