@@ -51,6 +51,16 @@ class Module extends \Speedy\Model\ActiveRecord\Base {
 		return $this->_config;
 	}
 	
+	/**
+	 * Settings object
+	 * @return object of Cms\Lib\Settings\Base
+	 */
+	public function settings() {
+		$config	= $this->config();
+		$class	= $config->namespace . '\\Etc\\Settings';
+		return new $class($config);
+	}
+	
 	public function get_file_path() {
 		if (!isset($this->file_path)) {
 			$this->assign_attribute('file_path', MODULES_PATH . DS . $this->code);
@@ -62,6 +72,10 @@ class Module extends \Speedy\Model\ActiveRecord\Base {
 	private function setConfig($config) {
 		$this->_config = $config;
 		return $this;
+	}
+	
+	public static function settings($namespace) {
+		
 	}
 	
 }

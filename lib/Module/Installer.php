@@ -2,6 +2,7 @@
 namespace Cms\Lib\Module;
 
 
+use \Speedy\Cache;
 use \Speedy\Singleton;
 use \Speedy\Loader;
 use \Speedy\Utility\Inflector;
@@ -41,11 +42,14 @@ class Installer extends Singleton {
 	 */
 	private $_processed = false;
 	
-	const NO_CODE_MATCH = 'Module codes do not match!';
-	const NO_CONFIG_FILE = 'No configuration file found';
-	const ARCHIVE_FAILED = 'Failed to open module install file';
-	const UPDATED_SUCCESS = 'Module updated successfully';
-	const INSTALLED_SUCCESS = 'Module installed and updated successfully';
+	const NO_CODE_MATCH 	= 'Module codes do not match!';
+	const NO_CONFIG_FILE 	= 'No configuration file found';
+	const ARCHIVE_FAIL 		= 'Failed to open module install file';
+	const UPDATE_SUCCESS 	= 'Module updated successfully';
+	const UPDATE_FAIL 		= 'Module updated failed!';
+	const INSTALL_SUCCESS 	= 'Module installed and updated successfully';
+	const INSTALL_FAIL	 	= 'Module install failed!';
+	const UNKNOWN_ERROR 	= "Unknown error";
 	
 	
 	
@@ -105,41 +109,50 @@ class Installer extends Singleton {
 		else $zip	= $this->zipFile();
 		$arch	= new ZipArchive();
 	
-		if ($arch->open($zip)) {
-			if ($xmlString = $arch->getFromName('etc' . DS . 'config.xml')) {
-				$xmlObj	= simplexml_load_string($xmlString);
-	
-				if ($id && $module = Module::find_by_code((string) $xmlObj->code)) {
-					if ($id && $id != $module->id) {
-						$this->setProcessed(false, self::NO_CODE_MATCH);
-					}
-	
-					if (!$this->update($module->id, $arch)) {
-						$this->setProcessed(false);
-					} else {
-						// TODO: Add cache controls
-						// Cache::clear();
-						$this->setProcessed(self::UPDATED_SUCCESS);
-					}
-				} else {
-					if (!$this->_install($xmlObj, $arch)) {
-						$this->setProcessed(false);
-					} else {
-						// TODO: Add cache controls
-						// Cache::clear();
-						$this->setProcessed(true, self::INSTALLED_SUCCESS);
-					}
-				}
-			} else {
-				$this->setProcessed(false, self::NO_CONFIG_FILE);
-			}
-	
-			$arch->close();
-		} else {
-			$this->setProcessed(false, self::ARCHIVE_FAILED);
+		if (!$arch->open($zip)) {
+			return $this->setProcessed(false, self::ARCHIVE_FAIL);
 		}
 		
-		return $this->processed();
+		// Only work if arch has config manifest
+		$xmlString = null;
+		if ($xmlString = $arch->getFromName('etc' . DS . 'config.xml')) {
+			$arch->close();
+			return $this->setProcessed(false, self::NO_CONFIG_FILE);
+		}
+			
+		if (!$xmlString) {
+			$arch->close();
+			return $this->setProcessed(false, self::UNKNOWN_ERROR);
+		}
+			
+		$xmlObj	= simplexml_load_string($xmlString);
+		if ($id && $module = Module::find_by_code((string) $xmlObj->code)) {
+			if ($id && $id != $module->id) {
+				$arch->close();
+				return $this->setProcessed(false, self::NO_CODE_MATCH);
+			}
+				
+			if (!$this->update($module->id, $arch)) {
+				$arch->close();
+				return $this->setProcessed(false, self::UPDATE_FAIL);
+			} else {
+				Cache::clear("modules");
+				$arch->close();
+				return $this->setProcessed(true, self::UPDATE_SUCCESS);
+			}
+		} else {
+			if (!$this->_install($xmlObj, $arch)) {
+				$arch->close();
+				return $this->setProcessed(false, self::INSTALL_FAIL);
+			} else {
+				Cache::clear("modules");
+				$arch->close();
+				return $this->setProcessed(true, self::INSTALL_SUCCESS);
+			}
+		}
+		
+		$arch->close();
+		return $this->setProcessed(false, self::UNKNOWN_ERROR);
 	}
 	
 	/**
@@ -181,9 +194,8 @@ class Installer extends Singleton {
 			return false;
 		}*/
 	
-		if ($config = self::config($module)) {		
-			$class	= $config->namespace . '\\Etc\\Settings';
-			$settings	= new $class($config);
+		if ($config = $module->config()) {		
+			$settings	= $module->settings();
 				
 			if ($settings->update($module->version)) {
 				$module->version = $config->version;
@@ -233,7 +245,7 @@ class Installer extends Singleton {
 		}
 		
 		$this->_processed = $processed;
-		return $this->processed;
+		return $this->_processed;
 	}
 	
 	private function _install($config, $archive) {
