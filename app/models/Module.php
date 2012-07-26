@@ -74,7 +74,7 @@ class Module extends \Speedy\Model\ActiveRecord\Base {
 		return $this;
 	}
 	
-	public static function settings($namespace) {
+	public static function settingsFor($namespace) {
 		
 	}
 	
