@@ -129,7 +129,8 @@ class FileUpload extends Object {
     function __call($method, $params) {
   		if (key_exists($method, $this->options)) {
     		array_unshift($params, $method);
-			return $this->dispatchMethod('attr', $params);
+    		return call_user_func_array([ $this, 'attr' ], $params);
+			//return $this->dispatchMethod('attr', $params);
   		}
   	}
   
@@ -167,7 +168,7 @@ class FileUpload extends Object {
     	$FileUploadSettings = new Settings;
     	$this->options = array_merge($FileUploadSettings->defaults, $this->options, $options);
     	
-    	$this->_addPropertiesToController($controller);
+    	$this->_addPropertiesToController($controller)->detectUpload();
   	}
   
   	/**
@@ -199,6 +200,7 @@ class FileUpload extends Object {
       		if ($this->options['automatic']) { $this->processAllFiles(); }
     	}
     
+    	return $this;
   	}
   
   	/**

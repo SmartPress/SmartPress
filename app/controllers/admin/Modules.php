@@ -5,6 +5,7 @@ use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Module;
 use \Cms\Lib\Module\Installer as ModInstaller;
 use \ZipArchive;
+use \ArrayObject;
 
 defined('MODULE_UPLOAD_DIR') or define('MODULE_UPLOAD_DIR', ROOT . DS . 'tmp' . DS . 'uploads');
 
@@ -83,7 +84,7 @@ class Modules extends Admin {
 		$uploadSuccess 	= $this->mixin('FileUpload')->success();
 		$processSuccess	= false;
 		$zips	= ($uploadSuccess) ? $this->mixin('FileUpload')->finalFiles() : null;
-		
+
 		$this->respondTo(function($format) use ($zips) {
 			if ($zips && ModInstaller::instance()->processZip(TMP_PATH . DS . 'uploads' . DS . array_shift($zips))) {
 				$this->module = ModInstaller::instance()->record();
@@ -95,6 +96,7 @@ class Modules extends Admin {
 				};
 			} else {
 				$format->html = function() {
+					$this->module->errors = new ArrayObject([ModInstaller::instance()->error()]);
 					$this->render("new");
 				};
 				$format->json = function() {

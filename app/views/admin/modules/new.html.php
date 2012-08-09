@@ -2,4 +2,4 @@
 
 <?php $this->render('form'); ?>
 
-<?php $this->linkTo('Back', $this->admin_modules_url()); ?>
+<?php $this->linkTo('<i class="icon-chevron-left"></i> Back', $this->admin_modules_url(), [ 'class' => 'btn' ]); ?>

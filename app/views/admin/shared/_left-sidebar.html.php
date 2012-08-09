@@ -32,6 +32,12 @@
 			<ul id="settings-menu" class="collapse in nav nav-list">
 				<li><?php $this->linkTo('New', $this->new_admin_config_path()); ?></li>
 				<li><?php $this->linkTo('Settings', $this->admin_configs_url()); ?></li>
+				<?php if (!empty($this->menus['settings'])): ?>
+				<li class="divider"></li>
+					<?php foreach ($this->menus['settings'] as $item): ?>
+					<li><?php $this->linkTo($item['label'], $item['url']); ?></li>
+					<?php endforeach; ?>
+				<?php endif; ?>
 			</ul>
 		</li>
 		<li>
@@ -41,8 +47,13 @@
 			</div>
 			<ul id="modules-menu" class="collapse in nav nav-list">
 				<li><?php $this->linkTo('Upload', $this->new_admin_module_path()); ?></li>
-				<li class="divider"></li>
 				<li><?php $this->linkTo('Modules', $this->admin_modules_url()); ?></li>
+				<?php if (!empty($this->menus['modules'])): ?>
+				<li class="divider"></li>
+					<?php foreach ($this->menus['modules'] as $item): ?>
+					<li><?php $this->linkTo($item['label'], $item['url']); ?></li>
+					<?php endforeach; ?>
+				<?php endif; ?>
 			</ul>
 		</li>
 	</ul>

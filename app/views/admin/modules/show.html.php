@@ -19,5 +19,6 @@
 	<b>Status</b>
 	<?php echo $this->module->status; ?>
 </p>
-<?php echo $this->linkTo('Edit', $this->edit_module_path($this->module->id)); ?>
-<?php echo $this->linkTo('Back', $this->modules_url()); ?>
+
+<?php echo $this->linkTo('<i class="icon-chevron-left"></i> Back', $this->admin_modules_url(), [ 'class' => 'btn' ]); ?>
+<?php echo $this->linkTo('<i class="icon-pencil"></i> Upload', $this->edit_admin_module_path($this->module->id), [ 'class' => 'btn']); ?>

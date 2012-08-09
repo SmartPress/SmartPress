@@ -96,6 +96,15 @@ Class Site extends Singleton {
 		$self	= self::instance();
 		return $self->siteModules;
 	}
+	
+	/**
+	 * Getter for module cache
+	 * @param string $code
+	 * @return array
+	 */
+	public static function module($code) {
+		return (self::hasModule($code)) ? self::instance()->siteModules[$code] : null;
+	}
 }
 
 ?>

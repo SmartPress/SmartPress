@@ -12,7 +12,8 @@
 	<?php endif; ?>
 
 	<?php if (!empty($this->module) && $this->module->id > 0): ?>
-		<?php $this->hiddenFieldTag("module.id"); ?>
+		<?php $this->hiddenFieldTag("module.id", $this->module->id); ?>
+		<?php //$this->hiddenFieldTag("_modules", "PUT"); ?>
 	<?php endif; ?>
 	<fieldset>
 		<div class="control-group">

@@ -107,7 +107,7 @@ class Installer extends Singleton {
 	public function processZip($zip = null) {
 		if ($zip) $this->setZipFile($zip);
 		else $zip	= $this->zipFile();
-		$arch	= new ZipArchive();
+		$arch	= new ZipArchive(); 
 	
 		if (!$arch->open($zip)) {
 			return $this->setProcessed(false, self::ARCHIVE_FAIL);
@@ -115,7 +115,7 @@ class Installer extends Singleton {
 		
 		// Only work if arch has config manifest
 		$xmlString = null;
-		if ($xmlString = $arch->getFromName('etc' . DS . 'config.xml')) {
+		if (!($xmlString = $arch->getFromName('etc' . DS . 'config.xml'))) {
 			$arch->close();
 			return $this->setProcessed(false, self::NO_CONFIG_FILE);
 		}
@@ -123,31 +123,31 @@ class Installer extends Singleton {
 		if (!$xmlString) {
 			$arch->close();
 			return $this->setProcessed(false, self::UNKNOWN_ERROR);
-		}
+		} 
 			
 		$xmlObj	= simplexml_load_string($xmlString);
-		if ($id && $module = Module::find_by_code((string) $xmlObj->code)) {
-			if ($id && $id != $module->id) {
+		if (($module = Module::find_by_code((string) $xmlObj->code))) {
+			/*if ($id && $id != $module->id) {
 				$arch->close();
 				return $this->setProcessed(false, self::NO_CODE_MATCH);
-			}
+			}*/
 				
-			if (!$this->update($module->id, $arch)) {
-				$arch->close();
-				return $this->setProcessed(false, self::UPDATE_FAIL);
-			} else {
+			if ($this->update($module->id, $arch)) {
 				Cache::clear("modules");
 				$arch->close();
 				return $this->setProcessed(true, self::UPDATE_SUCCESS);
+			} else {
+				$arch->close();
+				return $this->setProcessed(false, self::UPDATE_FAIL);
 			}
 		} else {
-			if (!$this->_install($xmlObj, $arch)) {
-				$arch->close();
-				return $this->setProcessed(false, self::INSTALL_FAIL);
-			} else {
+			if ($this->_install($xmlObj, $arch)) {
 				Cache::clear("modules");
 				$arch->close();
 				return $this->setProcessed(true, self::INSTALL_SUCCESS);
+			} else {
+				$arch->close();
+				return $this->setProcessed(false, self::INSTALL_FAIL);
 			}
 		}
 		
