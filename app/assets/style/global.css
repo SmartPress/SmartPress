@@ -94,6 +94,10 @@
 
 .accordion-menu .btn-group .pull-right { float: right; }
 
+.nav-accordion {
+	width: 200px;
+}
+
 .nav-accordion > li .btn-group .btn {
 	-webkit-border-radius: 0;
        -moz-border-radius: 0;
@@ -135,7 +139,12 @@
   	border-bottom: 0;
 }
 
-.btn-group.accordion-heading .btn-head { width: 183px; text-align: left; }
+.btn-group.accordion-heading .btn-head { 
+	max-width: 200px; 
+	width: 79%;
+	text-align: left;
+	padding-right: 0; 
+}
 
 /* Fixed subnav on scroll, but only for 980px and up (sorry IE!) */
 @media (min-width: 980px) {

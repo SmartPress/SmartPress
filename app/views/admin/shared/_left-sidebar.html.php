@@ -32,6 +32,9 @@
 			<ul id="settings-menu" class="collapse in nav nav-list">
 				<li><?php $this->linkTo('New', $this->new_admin_config_path()); ?></li>
 				<li><?php $this->linkTo('Settings', $this->admin_configs_url()); ?></li>
+				<li class="divider"></li>
+				<li><?php $this->linkTo("Users", $this->admin_users_url()); ?></li>
+				<li><?php $this->linkTo("Groups", $this->admin_groups_url()); ?></li>
 				<?php if (!empty($this->menus['settings'])): ?>
 				<li class="divider"></li>
 					<?php foreach ($this->menus['settings'] as $item): ?>

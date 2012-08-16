@@ -23,7 +23,8 @@ class Routes extends SpeedyDraw {
 			
 			$this->resources('categories');
 			$this->resources('modules');
-			
+			$this->resources('groups');
+			$this->resources('users');
 		});
 		
 		$this->slug(array("/:slug" => "pages#show", "type" => "page"));

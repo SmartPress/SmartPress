@@ -1,6 +1,6 @@
 <?php
 
-use \ActiveRecord\Migration;
+use \Speedy\ActiveRecord\Migration;
 
 class Modules extends Migration {
 
