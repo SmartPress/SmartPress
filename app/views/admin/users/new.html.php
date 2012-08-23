@@ -1,5 +1,5 @@
-<h1>New user</h1>
+<div class="page-header">
+	<h1>New User</h1>
+</div>
 
 <?php $this->render('form'); ?>
-
-<?php $this->linkTo('Back', $this->users_url()); ?>

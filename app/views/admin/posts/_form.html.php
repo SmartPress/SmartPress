@@ -16,7 +16,7 @@
 	</div>
 	<div class="field">
 		<?php $f->label("content"); ?>
-		<?php $f->textField("content"); ?>
+		<?php $f->textArea("content"); ?>
 	</div>
 	<div class="field">
 		<?php $f->label("custom_data"); ?>

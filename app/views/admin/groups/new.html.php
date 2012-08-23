@@ -1,5 +1,5 @@
-<h1>New group</h1>
+<div class="page-header">
+	<h1>New Group</h1>
+</div>
 
 <?php $this->render('form'); ?>
-
-<?php $this->linkTo('Back', $this->groups_url()); ?>

@@ -23,5 +23,5 @@
 	<b>Updated At</b>
 	<?php echo $this->user->updated_at; ?>
 </p>
-<?php echo $this->linkTo('Edit', $this->edit_user_path($this->user->id)); ?>
-<?php echo $this->linkTo('Back', $this->users_url()); ?>
+<?php echo $this->linkTo('Edit', $this->edit_admin_user_path($this->user->id)); ?>
+<?php echo $this->linkTo('Back', $this->admin_users_url()); ?>

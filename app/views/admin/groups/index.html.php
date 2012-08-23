@@ -1,29 +1,27 @@
-<h1>Listing groups</h1>
+<?php $this->render('top-nav'); ?>
 
-<table>
-	<tr>
-		<th>Id</th>
-		<th>Name</th>
-		<th>Read Privileges</th>
-		<th>Write Privileges</th>
-		<th></th>
-		<th></th>
-		<th></th>
-	</tr>
+<section id="grid">
+	<div class="page-header">
+		<h1>Listing groups</h1>
+	</div>
 	
-	<?php $this->groups->each(function($group) { ?>
+	<table class="table table-striped">
 		<tr>
-			<td><?php echo $group->id; ?></td>
-			<td><?php echo $group->name; ?></td>
-			<td><?php echo $group->read_privileges; ?></td>
-			<td><?php echo $group->write_privileges; ?></td>
-			<td><?php $this->linkTo('Show', $this->group_path($group->id)); ?></td>
-			<td><?php $this->linkTo('Edit', $this->edit_group_path($group->id)); ?></td>
-			<td><?php $this->linkTo('Destroy', $this->group_path($group->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete' )); ?></td>
+			<th>Name</th>
+			<th>Read Privileges</th>
+			<th>Write Privileges</th>
+			<th></th>
+			<th></th>
 		</tr>
-	<?php }); ?>
-</table>
-			
-<br>
-			
-<?php $this->linkTo("New groups", $this->new_group_path()); ?>
+		
+		<?php $this->groups->each(function($group) { ?>
+			<tr>
+				<td><?php echo $group->name; ?></td>
+				<td><?php echo $group->read_privileges; ?></td>
+				<td><?php echo $group->write_privileges; ?></td>
+				<td><?php $this->linkTo('<i class="icon-edit icon-white"></i> Edit', $this->edit_admin_group_path($group->id), ['class' => 'btn btn-primary']); ?></td>
+				<td><?php $this->linkTo('<i class="icon-trash icon-white"></i> Destroy', $this->admin_group_path($group->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete', 'class' => 'btn btn-danger' )); ?></td>
+			</tr>
+		<?php }); ?>
+	</table>
+</section>

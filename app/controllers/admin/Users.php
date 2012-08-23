@@ -3,6 +3,7 @@ namespace Cms\Controllers\Admin;
 
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\User;
+use \Cms\Models\Group;
 
 class Users extends Admin {
 
@@ -39,6 +40,7 @@ class Users extends Admin {
 	 */
 	public function _new() {
 		$this->user	= new User();
+		$this->groups = Group::all();
 		
 		$this->respondTo(function($format) {
 			$format->html; // new.php.html
@@ -53,6 +55,7 @@ class Users extends Admin {
 	 */
 	public function edit() {
 		$this->user	= User::find($this->params('id'));
+		$this->groups = Group::all();
 	}
 
 	/**
@@ -64,13 +67,14 @@ class Users extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->user->save()) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_users_path($this->user), array("notice" => "User was successfully created."));
+					$this->redirectTo($this->admin_user_path($this->user), array("notice" => "User was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->user ));
 				};
 			} else {
 				$format->html = function() {
+					$this->groups = Group::all();
 					$this->render("new");
 				};
 				$format->json = function() {
@@ -89,13 +93,14 @@ class Users extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->user->update_attributes($this->params('user'))) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_users_path($this->user), array("notice" => "User was successfully updated."));
+					$this->redirectTo($this->admin_user_path($this->user), array("notice" => "User was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->user ));
 				};
 			} else {
 				$format->html = function() {
+					$this->groups = Group::all();
 					$this->render("new");
 				};
 				$format->json = function() {

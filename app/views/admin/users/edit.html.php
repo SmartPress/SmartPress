@@ -1,7 +1,5 @@
-<h1>Editing user</h1>
+<div class="page-header">
+	<h1>Editing User</h1>
+</div>
 
 <?php $this->render("form"); ?>
-
-<?php $this->linkTo('Show', $this->user_path($this->user->id)); ?> 
-|
-<?php $this->linkTo('Back', $this->users_url()); ?>
