@@ -2,7 +2,7 @@
 
 <section id="grid">
 	<div class="page-header">
-		<h1>Listing groups</h1>
+		<h1>Groups</h1>
 	</div>
 	
 	<table class="table table-striped">

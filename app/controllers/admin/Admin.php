@@ -43,6 +43,17 @@ class Admin extends Application {
 		$this->menus = $menus;
 		Cache::write("module_menus", $menus);
 	}
+	
+	protected function user() {
+		if (isset($this->user)) 
+			return $this->user;
+		
+		$userId	= $this->session()->read('User.id');
+		if (isset($userId))
+			$this->user = User::find($userId);
+		
+		return $this->user;
+	}
 }
 
 ?>

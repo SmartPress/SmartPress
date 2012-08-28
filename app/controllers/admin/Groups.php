@@ -64,7 +64,7 @@ class Groups extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->group->save()) {
 				$format->html = function() {
-					$this->redirectTo($this->group, array("notice" => "Group was successfully created."));
+					$this->redirectTo($this->admin_groups_url(), array("notice" => "Group was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->group ));
@@ -89,7 +89,7 @@ class Groups extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->group->update_attributes($this->params('group'))) {
 				$format->html = function() {
-					$this->redirectTo($this->group, array("notice" => "Group was successfully updated."));
+					$this->redirectTo($this->admin_groups_url(), array("notice" => "Group was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->group ));
@@ -113,7 +113,7 @@ class Groups extends Admin {
 		$this->group->destroy();
 		
 		$this->respondTo(function($format) {
-			$format->html = function() { $this->redirectTo($this->groups_url()); };
+			$format->html = function() { $this->redirectTo($this->admin_groups_url()); };
 		});
 	}
 
