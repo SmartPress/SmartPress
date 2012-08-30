@@ -29,6 +29,8 @@ class Routes extends SpeedyDraw {
 			$this->resources('sessions', ['only' => ['new', 'create', 'destroy']]);
 		});
 		
+		$this->resources('posts');
+		
 		$this->match(['/admin/signin' => "admin/sessions#_new"]);
 		$this->match(['/admin/signout' => "admin/sessions#destroy"]);
 		$this->slug(array("/:slug" => "pages#show", "type" => "page"));

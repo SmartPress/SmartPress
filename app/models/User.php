@@ -17,7 +17,7 @@ class User extends Base {
 	static $validates_uniqueness_of = ['username'];
 	
 	static $belongs_to = [
-		['group']
+		['group', 'namespace' => '\\Cms\\Models']
 	];
 	
 	

@@ -10,6 +10,10 @@ class Config extends Migration {
 			$this->text("value");
 		});
 	}
+	
+	public function up() {
+		$this->query('CREATE UNIQUE INDEX name_index ON configs (name)');
+	}
 
 }
 

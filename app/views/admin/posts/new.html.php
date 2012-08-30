@@ -1,5 +1,7 @@
-<h1>New post</h1>
-
-<?php $this->render('form'); ?>
-
-<?php $this->linkTo('Back', $this->admin_posts_url()); ?>
+<div class="row-fluid">
+	<div class="page-header">
+		<h1>New Post</h1>
+	</div>
+		
+	<?php $this->render('form'); ?>
+</div>

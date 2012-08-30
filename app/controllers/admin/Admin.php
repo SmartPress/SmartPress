@@ -2,14 +2,29 @@
 namespace Cms\Controllers\Admin;
 
 use \Cms\Controllers\Application;
+use \Cms\Models\User;
 use \Cms\Lib\Module\Site as SiteModules;
 use \Speedy\Cache;
+use \Speedy\Request;
+
+
+define('ReadPrivilege',	1);
+define('WritePrivilege',2);
+define('AdminPrivilege',16);
+define('SuperAdminPrivilege', 128);
+
 
 class Admin extends Application {
 
 	public $layout	= "admin/default";
 
-	protected $beforeFilter = ['adminMenus'];
+	protected $beforeFilter = ['adminMenus', '_checkPrivilege'];
+	
+	protected $minReadPrivilege	= AdminPrivilege;
+	
+	protected $minWritePrivilege= AdminPrivilege;
+	
+	protected $_mixins = ['\\Speedy\\Controller\\Helper\\Session' => [ 'alias' => 'Session']];
 	
 	
 	
@@ -49,11 +64,28 @@ class Admin extends Application {
 			return $this->user;
 		
 		$userId	= $this->session()->read('User.id');
-		if (isset($userId))
-			$this->user = User::find($userId);
+		if (isset($userId)) {
+			$this->user = User::find($userId, ['joins' => ['group']]);
+		} 
 		
 		return $this->user;
 	}
+	
+	protected function _checkPrivilege()
+	{
+		$method = $this->request()->method();
+		$minPrivilege = SuperAdminPrivilege;
+		if ($method == Request::GET) {
+			$minPrivilege = $this->minReadPrivilege;
+		} elseif ($method == Request::POST || $method == Request::PUT || $method == Request::DELETE) {
+			$minPrivilege = $this->minWritePrivilege;
+		}
+	
+		if (!($this->user()->group->privilege & $minPrivilege)) {
+			$this->redirectTo('/admin/signin', ['error' => 'You don\'t have permission to do this']);
+		}
+	}
+	
 }
 
 ?>

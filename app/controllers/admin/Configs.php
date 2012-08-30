@@ -3,8 +3,14 @@ namespace Cms\Controllers\Admin;
 
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Config;
+use \Speedy\View;
 
 class Configs extends Admin {
+	
+	protected $minReadPrivilege	= SuperAdminPrivilege;
+	
+	protected $minWritePrivilege= SuperAdminPrivilege;
+	
 
 	/**
 	 * GET /configs
@@ -18,7 +24,7 @@ class Configs extends Admin {
 				$this->render(array( 'json' => $this->configs ));
 			};
 		});
-	}
+	} 
 
 	/**
 	 * GET /configs/1
@@ -52,29 +58,61 @@ class Configs extends Admin {
 	 * GET /configs/1/edit
 	 */
 	public function edit() {
-		$this->config	= Config::find($this->params('id'));
+		$id = $this->params('id');
+		$viewAlias	= "admin/configs/section/$id";
+		$view		= View::instance()->findFile($viewAlias);
+	
+		if (!$view) {
+			$this->config	= Config::find($this->params('id'));
+		}
+		
+		$this->respondTo(function($format) use ($viewAlias) {
+			$format->html = function() use ($viewAlias) {
+				if ($viewAlias) $this->render($viewAlias);
+			};
+		});
 	}
 
 	/**
 	 * POST /configs
 	 */
 	public function create() {
-		$this->config	= new Config($this->params('config'));
+		$configs	= $this->params('config');
+		$success	= false;
+		$this->config	= new Config();
+		$errors = null;
 		
-		$this->respondTo(function($format) {
-			if ($this->config->save()) {
+		foreach ($configs as $config) {
+			$existingConfig	= Config::find_by_name($config['name']);
+			
+			if ($existingConfig) {
+				$success = $existingConfig->update_attributes($config);
+				if (!$success) $errors = $existingConfig->errors;
+			} else {
+				$newConfig = new Config($config);
+				$success = $newConfig->save();
+				if (!$success) $errors = $newConfig->errors;
+			}
+			
+			if (!$success) {
+				break;
+			}
+		}
+		
+		$this->respondTo(function($format) use($success, $errors) {
+			if ($success) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_configs_url(), array("notice" => "Config was successfully created."));
+					$this->redirectTo($this->admin_configs_url(), array("notice" => "Settings saved successfully."));
 				};
 				$format->json = function() {
-					$this->render(array( 'json' => $this->config ));
+					$this->render(array( 'json' => ['success' => true] ));
 				};
 			} else {
-				$format->html = function() {
+				$format->html = function() use ($errors) {
 					$this->render("new");
 				};
-				$format->json = function() {
-					$this->render(array( 'json' => $this->config->errors ));
+				$format->json = function() use ($errors) {
+					$this->render(array( 'json' => $errors ));
 				};
 			}
 		});

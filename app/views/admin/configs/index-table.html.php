@@ -1,7 +1,3 @@
-<?php /*$this->contentFor('left-sidebar', function() { ?> 
-	<?php $this->render('left-menu'); ?>
-	<?php $this->render("admin/shared/_left-sidebar"); ?>
-<?php });*/ ?>
 <?php $this->render('top-nav'); ?>
 
 <section id="grid">

@@ -1,11 +1,11 @@
 <?php
 namespace Cms\Controllers\Admin;
 
-use \Cms\Controllers\Admin\Admin;
+use \Cms\Controllers\Application;
 use \Cms\Models\User;
 use \Speedy\Session;
 
-class Sessions extends Admin {
+class Sessions extends Application {
 
 	const NoUserErrorMsg = 'Unable to find the username or email you provided';
 	const PasswordMismatchErrorMsg = 'Password doesn\'t match';

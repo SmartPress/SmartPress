@@ -6,6 +6,11 @@ use \Cms\Models\Group;
 
 class Groups extends Admin {
 
+	protected $minReadPrivilege	= SuperAdminPrivilege;
+	
+	protected $minWritePrivilege= SuperAdminPrivilege;
+	
+	
 		/**
 	 * GET /posts
 	 */

@@ -1,0 +1,15 @@
+.themes .dl-horizontal {
+	width: 228px;	
+}
+
+.themes .dl-horizontal dt {
+	width: 90px;
+}
+
+.themes .dl-horizontal dd {
+	margin-left: 100px;
+}
+
+.themes .actions {
+	text-align: center;
+}

@@ -4,7 +4,7 @@
 	<title>SmartPress</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<?php $this->javascript('jquery'); ?>
-	<?php $this->javascript('/application.js?debug=1'); ?>
+	<?php $this->javascript('/admin.js?debug=1'); ?>
 	<?php $this->javascript('/bootstrap/js/bootstrap.js'); ?>
 	
 	<?php $this->stylesheet('/bootstrap/css/bootstrap.css'); ?>
@@ -19,6 +19,7 @@
     </style>
 	<?php $this->stylesheet('/bootstrap/css/bootstrap-responsive.css'); ?>
 	<?php $this->stylesheet('/application.css?debug=1'); ?>
+	<?php $this->stylesheet('/admin.css?debug=1'); ?>
 </head>
 <body>
 	<?php $this->render("admin/shared/_top-nav"); ?>
@@ -26,8 +27,11 @@
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span3">
-				<?php $this->render("admin/shared/_left-sidebar"); ?>
-				<?php $this->yield("left-sidebar"); ?>
+				<?php if ($this->hasContentFor('left-sidebar')): ?>
+					<?php $this->yield("left-sidebar"); ?>
+				<?php else: ?>
+					<?php $this->render("admin/shared/_left-sidebar"); ?>
+				<?php endif; ?>
 			</div>
 			<div class="span9">
 				<?php $this->yield(); ?>

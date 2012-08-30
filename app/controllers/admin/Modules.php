@@ -10,6 +10,10 @@ use \ArrayObject;
 defined('MODULE_UPLOAD_DIR') or define('MODULE_UPLOAD_DIR', ROOT . DS . 'tmp' . DS . 'uploads');
 
 class Modules extends Admin {
+	
+	protected $minReadPrivilege	= SuperAdminPrivilege;
+	
+	protected $minWritePrivilege= SuperAdminPrivilege;
 
 	protected $_mixins = [
 		'\\Cms\\Lib\\Helpers\\FileUpload' => [

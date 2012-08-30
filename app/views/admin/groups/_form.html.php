@@ -18,15 +18,9 @@
 		</div>
 	</div>
 	<div class="control-group">
-		<?php $f->label("write_privileges", null, ['class' => 'control-label']); ?>
+		<?php $f->label("privilege", null, ['class' => 'control-label']); ?>
 		<div class="controls">
-			<?php $f->textField("write_privileges"); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<?php $f->label("read_privileges", null, ['class' => 'control-label']); ?>
-		<div class="controls">
-			<?php $f->textField("read_privileges"); ?>
+			<?php $f->textField("privilege"); ?>
 		</div>
 	</div>
 	<div class="form-actions">
