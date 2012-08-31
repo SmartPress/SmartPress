@@ -6,7 +6,7 @@
 		"database"	: "cms",
 		"pool"	: 5,
 		"username"	: "root",
-		"password"	: "root",
+		"password"	: "",
 		"host"	: "localhost"
 	},
 

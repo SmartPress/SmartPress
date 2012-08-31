@@ -13,7 +13,7 @@ define('VENDOR_PATH', ROOT . DS . 'vendor');
 defined('MODULES_PATH') or define('MODULES_PATH', ROOT . DS . 'modules'); // Not part of Speedy
 
 if (function_exists('ini_set') && 
-	ini_set('include_path', SPEEDY_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
+	ini_set('include_path', APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
 	//define('CORE_PATH', null);
 } else {
 	//define('CORE_PATH', ROOT . DS);

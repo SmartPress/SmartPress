@@ -22,7 +22,8 @@ class User extends Base {
 	
 	
 	public function set_password($password) {
-		$this->password = $password;
+		//output("PASSWORD: " . $password);
+		//$this->password = $password;
 		$this->assign_attribute('password', $this->crypto($password));
 	}
 	
@@ -31,7 +32,7 @@ class User extends Base {
 	}
 
 	public function passwordMatch($testPassword) {
-		return ($this->password == $this->crypto($testPassword)) ? true : false;
+		return ($this->password_hash == $this->crypto($testPassword)) ? true : false;
 	}
 }
 

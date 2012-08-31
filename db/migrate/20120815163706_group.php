@@ -7,9 +7,16 @@ class Group extends Migration {
 	public function change() {
 		$this->create_table("groups", function() {
 			$this->string("name");
-			$this->integer("read_privileges");
-			$this->integer("write_privileges");
+			$this->integer("privileges");
 		});
+	}
+	
+	public function up() {
+		$superAdmin = new \Cms\Models\Group(['name' => 'Super Admin', 'privileges' => 128]);
+		$superAdmin->save();
+		
+		$admin	= new \Cms\Models\Group(['name' => 'Admin', 'privileges' => 16]);
+		$admin->save();
 	}
 
 }
