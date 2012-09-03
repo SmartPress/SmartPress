@@ -9,7 +9,7 @@ class Configs extends Admin {
 	
 	protected $minReadPrivilege	= SuperAdminPrivilege;
 	
-	protected $minWritePrivilege= SuperAdminPrivilege;
+	protected $minWritePrivilege	= SuperAdminPrivilege;
 	
 
 	/**

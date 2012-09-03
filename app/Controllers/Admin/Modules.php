@@ -24,7 +24,8 @@ class Modules extends Admin {
 			'fileVar'	=> 'module',
 			'fileModel' => null,
 			'alias'		=> 'FileUpload'
-		]
+		],
+		'\\Speedy\\Controller\\Helper\\Session' => [ 'alias' => 'Session']
 	];
 	
 	public $before_filter = [];

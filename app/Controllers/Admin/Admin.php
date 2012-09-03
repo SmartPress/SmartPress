@@ -66,9 +66,10 @@ class Admin extends Application {
 		$userId	= $this->session()->read('User.id');
 		if (isset($userId)) {
 			$this->user = User::find($userId, ['joins' => ['group']]);
+			return $this->user;
 		} 
 		
-		return $this->user;
+		return null;
 	}
 	
 	protected function _checkPrivilege()
@@ -81,7 +82,7 @@ class Admin extends Application {
 			$minPrivilege = $this->minWritePrivilege;
 		}
 	
-		if (!($this->user()->group->privilege & $minPrivilege)) {
+		if (!$this->user() || !($this->user()->group->privilege & $minPrivilege)) {
 			$this->redirectTo('/admin/signin', ['error' => 'You don\'t have permission to do this']);
 		}
 	}
