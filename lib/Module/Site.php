@@ -17,7 +17,7 @@ Class Site extends Singleton {
 	 * Site modules in array
 	 * @var array
 	 */
-	public $siteModules;
+	public $modules;
 	
 	
 	
@@ -37,7 +37,7 @@ Class Site extends Singleton {
 		} 
 		
 		$self = self::instance();
-		$self->siteModules	= $siteModules;
+		$self->modules	= $siteModules;
 		//debug($siteModules);
 		$draw	= new Draw();
 		foreach ($siteModules as $module) {
@@ -71,7 +71,7 @@ Class Site extends Singleton {
 	
 	/*public function getModulesByFeature($name) {
 		$modules	= array();
-		foreach ($this->siteModules as $module) {
+		foreach ($this->modules as $module) {
 			if (!in_array((string) $name, $module['features']['feature'])) {
 				$modules[]	= $module;
 			}
@@ -86,7 +86,7 @@ Class Site extends Singleton {
 	 */
 	public static function hasModule($code) {
 		$self	= self::instance();
-		return (is_string($code)) ? isset($self->siteModules[$code]) : false;
+		return (is_string($code)) ? isset($self->modules[$code]) : false;
 	}
 	
 	/** 
@@ -94,7 +94,7 @@ Class Site extends Singleton {
 	 */
 	public static function all() {
 		$self	= self::instance();
-		return $self->siteModules;
+		return $self->modules();
 	}
 	
 	/**
@@ -103,7 +103,14 @@ Class Site extends Singleton {
 	 * @return array
 	 */
 	public static function module($code) {
-		return (self::hasModule($code)) ? self::instance()->siteModules[$code] : null;
+		return (self::hasModule($code)) ? self::instance()->modules[$code] : null;
+	}
+	
+	public function modules() {
+		if ($this->modules) return $this->modules;
+		self::load();
+		
+		return $this->modules;
 	}
 }
 

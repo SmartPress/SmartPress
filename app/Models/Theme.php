@@ -2,18 +2,22 @@
 namespace Cms\Models;
 
 
-use \Speedy\Singleton;
 use \Speedy\Cache;
+use \Speedy\Singleton;
+use \Speedy\Utility\File;
 use \Cms\Lib\Exceptions\Theme as ThemeException;
 
 
 define('THEME_DIR', ROOT . DS . 'themes');
+define('PUBLIC_RESOURCE_DIR', PUBLIC_DIR . DS . 'resources');
 
 class Theme extends Singleton {
 	
 	const CacheName = 'themes';
 	
 	const DIR = THEME_DIR;
+	
+	const ResourceDir = PUBLIC_RESOURCE_DIR;
 	
 	private $_error;
 	
@@ -33,15 +37,28 @@ class Theme extends Singleton {
 		}
 		
 		if (!$arch->locateName('theme.xml')) {
-			throw new ThemeException("Required manifest \"theme.xml\" not found in archive");
+			throw new ThemeException("Missing required manifest \"theme.xml\" in archive");
+		}
+		
+		if (!$arch->locateName('views') || !$arch->locateName('resources')) {
+			throw new ThemeException("Missing required views or resources directory");
 		}
 		
 		$info = pathinfo($zip);
 		$arch->extractTo(self::DIR . DS . $info['filename']);
 	}
 	
+	public static function delete($themeDir) {
+		return File::rm_rf($themeDir);
+	}
+	
 	public static function all() {
 		return self::instance()->findAll();
+	}
+	
+	public static function updateTheme($config) {
+		$resources = $config->value . DS . 'resources';
+		File::cp_r($resources, self::ResourceDir);
 	}
 	
 	public function findAll() {

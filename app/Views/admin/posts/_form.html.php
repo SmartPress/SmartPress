@@ -1,4 +1,4 @@
-<?php $this->formFor(['admin', $this->post], ['class' => ''], function($f) { ?>
+<?php $this->formFor(['admin', $this->post], ['class' => 'cms-form'], function($f) { ?>
 	<?php if ($this->post->errors && $this->post->errors->count()): ?>
 		<div id="error_explanation">
 			<?php element('h2', "{$this->pluralize($this->post, 'error')} prohibited this post from beign saved:"); ?>
@@ -30,17 +30,21 @@
 		</div>
 	</div>
 	<div class="span4">
-		<div class="actions pull-right">
-			<?php $f->submit('Save', ['class' => 'btn btn-primary']); ?>
-			<?php $this->linkTo('Cancel', $this->admin_posts_url(), ['class' => 'btn']); ?>
-		</div>
-		<div class="field">
-			<?php $f->label("status"); ?>
-			<?php $f->select("status", \Cms\Models\Post::statuses(), null, ['class' => 'input-medium']); ?>
-		</div>
-		<div class="field">
-			<?php $f->label("layout"); ?>
-			<?php $f->textField("layout"); ?>
+		<div class="well">
+			<div class="actions">
+				<div class="pull-right">
+					<?php $f->submit('Save', ['class' => 'btn btn-primary']); ?>
+					<?php $this->linkTo('Cancel', $this->admin_posts_url(), ['class' => 'btn']); ?>
+				</div>
+			</div>
+			<div class="field">
+				<?php $f->label("status"); ?>
+				<?php $f->select("status", \Cms\Models\Post::statuses(), null, ['class' => 'input-medium']); ?>
+			</div>
+			<div class="field">
+				<?php $f->label("layout"); ?>
+				<?php $f->textField("layout"); ?>
+			</div>
 		</div>
 	</div>
 <?php }); ?>

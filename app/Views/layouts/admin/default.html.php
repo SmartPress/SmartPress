@@ -21,7 +21,7 @@
 	<?php $this->stylesheet('/application.css?debug=1'); ?>
 	<?php $this->stylesheet('/admin.css?debug=1'); ?>
 </head>
-<body>
+<body class="<?php echo implode(' ', $this->param('controller')) . ' ' . $this->param('action'); ?>">
 	<?php $this->render("admin/shared/_top-nav"); ?>
 	
 	<div class="container-fluid">

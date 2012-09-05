@@ -1,5 +1,5 @@
 <?php $this->formTag($this->admin_configs_url(), ['method' => 'POST'], function() use ($theme) { ?>
-	<?php $this->hiddenFieldTag('config[0][name]', 'root/theme'); ?>
+	<?php $this->hiddenFieldTag('config[0][name]', 'theme'); ?>
 	<?php $this->hiddenFieldTag('config[0][value]', $theme['path']); ?>
 	
 	<div class="snapshot">
@@ -20,6 +20,10 @@
 	</div>
 	
 	<div class="actions">
-		<?php $this->submit('Choose', ['class' => 'btn btn-primary']); ?>
+		<?php if ($theme['path'] == \Cms\Models\ConfigManager::instance()->get('theme')): ?>
+			<span class="label label-success">In Use</span>
+		<?php else: ?>
+			<?php $this->submit('Choose', ['class' => 'btn btn-primary']); ?>
+		<?php endif; ?>
 	</div>
 <?php }); ?>

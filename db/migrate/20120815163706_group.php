@@ -12,7 +12,7 @@ class Group extends Migration {
 	}
 	
 	public function up() {
-		$superAdmin = new \Cms\Models\Group(['name' => 'Super Admin', 'privileges' => 128]);
+		$superAdmin = new \Cms\Models\Group(['name' => 'Super Admin', 'privileges' => 255]);
 		$superAdmin->save();
 		
 		$admin	= new \Cms\Models\Group(['name' => 'Admin', 'privileges' => 16]);

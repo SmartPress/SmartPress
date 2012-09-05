@@ -1,4 +1,4 @@
-<?php $this->formFor($this->post, array('action' => $this->action_path), function($f) { ?>
+<?php $this->formFor($this->post, array('action' => $this->action_path, 'class' => 'cms-form'), function($f) { ?>
 	<?php if ($this->post->errors && $this->post->errors->count()): ?>
 		<div id="error_explanation">
 			<?php element('h2', "{$this->pluralize($this->post, 'error')} prohibited this post from beign saved:"); ?>

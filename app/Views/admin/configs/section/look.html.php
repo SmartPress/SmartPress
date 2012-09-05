@@ -1,20 +1,20 @@
 <?php /*$this->contentFor('left-sidebar', function() { ?> 
 	<?php $this->render('left-menu'); ?>
 <?php });*/ ?>
-<div class="pull-right">
-	<p>Upload new theme</p>
-	<?php $this->formTag('/admin/themes', ['enctype' => 'multipart/form-data', 'method' => 'POST'], function() { ?>
-		<div class="field">
+<div class="pull-right well well-small">
+	<strong>Upload new theme</strong>
+	<?php $this->formTag('/admin/themes', ['enctype' => 'multipart/form-data', 'method' => 'POST', 'class' => 'form-inline'], function() { ?>
+		<!-- <div class="field"> -->
 			<?php $this->labelTag('theme'); ?>
 			<?php $this->fileFieldTag('theme'); ?>
-		</div>
-		<div class="actions">
+		<!-- </div>
+		<div class="actions"> -->
 			<?php $this->submit('Upload', array( "class" => 'btn btn-primary' )); ?>
-		</div>
+		<!-- </div> -->
 	<?php }); ?>	
 </div>
 
-<div class="page-header">
+<div class="page-header page-header-theme">
 	<h2>Theme</h2>
 </div>
 <ul class="unstyled themes">

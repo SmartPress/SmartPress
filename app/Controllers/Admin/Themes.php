@@ -13,6 +13,10 @@ defined('TEMPLATE_UPLOAD_DIR') or define('TEMPLATE_UPLOAD_DIR', ROOT . DS . 'tmp
 
 class Themes extends Admin {
 	
+	protected $minReadPrivilege	= SuperAdminPrivilege;
+	
+	protected $minWritePrivilege	= SuperAdminPrivilege;
+	
 	protected $_mixins = [
 		'\\Cms\\Lib\\Helpers\\FileUpload' => [
 			'allowedTypes'	=> [ 'zip' ],
@@ -65,7 +69,7 @@ class Themes extends Admin {
 		$this->themeDir	= Theme::DIR . DS . $themeName;
 		
 		$this->respondTo(function($format) {
-			if (is_dir($this->themeDir) && rmdir($this->themeDir)) {
+			if (is_dir($this->themeDir) && Theme::delete($this->themeDir)) {
 				$format->html = function() {
 					$this->redirectTo($this->edit_admin_config_path('look'), ['notice' => 'Deleted theme successfully']);
 				};

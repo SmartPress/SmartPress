@@ -27,7 +27,7 @@ class Routes extends SpeedyDraw {
 			$this->resources('users');
 			
 			$this->resources('sessions', ['only' => ['new', 'create', 'destroy']]);
-			//$this->resources('themes', ['only' => ['create', 'destroy']]);
+			$this->resources('themes', ['only' => ['create', 'destroy']]);
 		});
 		
 		$this->resources('posts');

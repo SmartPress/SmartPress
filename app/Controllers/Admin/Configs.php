@@ -3,6 +3,7 @@ namespace Cms\Controllers\Admin;
 
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Config;
+use \Cms\Models\Event\Manager as EventManager;
 use \Speedy\View;
 
 class Configs extends Admin {
@@ -66,10 +67,12 @@ class Configs extends Admin {
 			$this->config	= Config::find($this->params('id'));
 		}
 		
-		$this->respondTo(function($format) use ($viewAlias) {
-			$format->html = function() use ($viewAlias) {
-				if ($viewAlias) $this->render($viewAlias);
-			};
+		$this->respondTo(function($format) use ($viewAlias, $view) {
+			if ($view) {
+				$format->html = function() use ($viewAlias) {
+					$this->render($viewAlias);
+				};
+			}
 		});
 	}
 
@@ -77,26 +80,38 @@ class Configs extends Admin {
 	 * POST /configs
 	 */
 	public function create() {
-		$configs	= $this->params('config');
-		$success	= false;
-		$this->config	= new Config();
+		$configs= $this->params('config');
+		$success= false;
 		$errors = null;
 		
-		foreach ($configs as $config) {
-			$existingConfig	= Config::find_by_name($config['name']);
+		if (isset($configs[0]) && is_array($configs[0])) {
+			$this->config	= new Config();
 			
-			if ($existingConfig) {
-				$success = $existingConfig->update_attributes($config);
-				if (!$success) $errors = $existingConfig->errors;
-			} else {
-				$newConfig = new Config($config);
-				$success = $newConfig->save();
-				if (!$success) $errors = $newConfig->errors;
+			foreach ($configs as $config) {
+				$existingConfig	= Config::find_by_name($config['name']);
+				$finalConfig = null;
+					
+				if ($existingConfig) {
+					$success = $existingConfig->update_attributes($config);
+					if (!$success) $errors = $existingConfig->errors;
+					$finalConfig = $existingConfig;
+				} else {
+					$newConfig = new Config($config);
+					$success = $newConfig->save();
+					if (!$success) $errors = $newConfig->errors;
+					$finalConfig = $newConfig;
+				}
+					
+				if (!$success) {
+					break;
+				} else {
+					$name = str_replace('/', '_', $config['name']);
+					EventManager::dispatch('admin_configs_update_' . $name, $finalConfig);
+				}
 			}
-			
-			if (!$success) {
-				break;
-			}
+		} else {
+			$this->config	= new Config($configs);
+			$success = $this->config->save();
 		}
 		
 		$this->respondTo(function($format) use($success, $errors) {
@@ -126,6 +141,9 @@ class Configs extends Admin {
 		
 		$this->respondTo(function($format) {
 			if ($this->config->update_attributes($this->params('config'))) {
+				$name = str_replace('/', '_', $this->config->name);
+				EventManager::dispatch('admin_configs_update_' . $name);
+				
 				$format->html = function() {
 					$this->redirectTo($this->admin_configs_url(), array("notice" => "Config was successfully updated."));
 				};
