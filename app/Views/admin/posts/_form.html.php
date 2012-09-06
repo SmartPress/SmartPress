@@ -12,24 +12,30 @@
 	<?php $f->hidden("type"); ?>
 	
 	<div class="span7">
-		<div class="field">
-			<?php $f->label("title"); ?>
-			<?php $f->textField("title", ['class' => 'span12']); ?>
-		</div>
-		<div class="field">
-			<?php $f->label("content"); ?>
-			<?php $f->textArea("content", ['class' => 'span12', 'rows' => '14']); ?>
-		</div>
-		<div class="field">
-			<?php $f->label("custom_data"); ?>
-			<?php $f->textField("custom_data"); ?>
-		</div>
-		<div class="field">
-			<?php $f->label("slug"); ?>
-			<?php $f->textField("slug", ['class' => 'span12']); ?>
-		</div>
+		<fieldset>
+			<div class="field">
+				<?php $f->label("title"); ?>
+				<?php $f->textField("title", ['class' => 'span12', ['data-target' => 'post_slug', 'data-preview' => 'slug_preview', 'data-edit-btn' => 'slug_edit_btn']]); ?>
+			</div>
+			<div class="field">
+				<?php $f->label("slug"); ?>
+				<div class="input-append">
+					<span><?php $f->textField("slug"); ?></span>
+					<span class="span5 uneditable-input" id="slug_preview"></span>
+					<button class="btn" type="button" id="slug_edit_btn">Edit</button>
+				</div>
+			</div>
+		</fieldset>
+		
+		<fieldset>
+			<legend>Content</legend>
+			
+			<div class="field">
+				<?php $f->textArea("content", ['class' => 'span12', 'rows' => '14']); ?>
+			</div>
+		</fieldset>
 	</div>
-	<div class="span4">
+	<div class="span3 offset1">
 		<div class="well">
 			<div class="actions">
 				<div class="pull-right">
@@ -43,7 +49,14 @@
 			</div>
 			<div class="field">
 				<?php $f->label("layout"); ?>
-				<?php $f->textField("layout"); ?>
+				<?php $f->select("layout", \Cms\Models\Theme::availableLayouts(), null, ['class' => 'input-medium']); ?>
+			</div>
+		</div>
+		
+		<div class="well">
+			<div class="field">
+				<?php $f->label("custom_data"); ?>
+				<?php $f->textField("custom_data", ['class' => 'span12']); ?>
 			</div>
 		</div>
 	</div>

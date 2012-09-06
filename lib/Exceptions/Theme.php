@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Exceptions;
+namespace Cms\Lib\Exceptions;
 
 
 use \Exception;

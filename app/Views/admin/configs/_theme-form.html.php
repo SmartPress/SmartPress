@@ -20,10 +20,11 @@
 	</div>
 	
 	<div class="actions">
-		<?php if ($theme['path'] == \Cms\Models\ConfigManager::instance()->get('theme')): ?>
+		<?php if ($theme['path'] == \Cms\Models\ConfigManager::get('theme')): ?>
 			<span class="label label-success">In Use</span>
 		<?php else: ?>
 			<?php $this->submit('Choose', ['class' => 'btn btn-primary']); ?>
+			<?php $this->linkTo('<i class="icon-trash icon-white"></i> Remove', '/admin/themes/' . $theme['filename'], ['confirm' => 'Are you sure?', 'method' => 'delete', 'class' => 'btn btn-danger']); ?>
 		<?php endif; ?>
 	</div>
 <?php }); ?>

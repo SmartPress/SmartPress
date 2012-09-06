@@ -8,7 +8,9 @@
 			<ul id="posts-menu" class="collapse in nav nav-list">
 				<li><?php $this->linkTo('New', $this->new_admin_post_path()); ?></li>
 				<li><?php $this->linkTo('Posts', $this->admin_posts_url()); ?></li>
+				<li class="divider"></li>
 				<li><?php $this->linkTo('<i class="icon-tags"></i> Categories', $this->admin_categories_url()); ?></li>
+				<li><?php $this->linkTo('<i class="icon-th-list"></i> Custom Fields', $this->admin_post_custom_fields_url()); ?></li>
 			</ul>
 		</li>
 		<li>

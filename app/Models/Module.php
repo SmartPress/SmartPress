@@ -32,6 +32,7 @@ class Module extends \Speedy\Model\ActiveRecord\Base {
 	
 	public function clearCache() {
 		Cache::clear('modules');
+		Cache::clear('module_menus');
 	}
 	
 	public static function findActives() {

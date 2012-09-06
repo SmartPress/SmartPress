@@ -14,6 +14,7 @@ class Routes extends SpeedyDraw {
 		
 			$this->resources('posts');
 			$this->resources('pages');
+			$this->resources('post_custom_fields');
 			
 			$this->resources('configs', array(), function() {
 				

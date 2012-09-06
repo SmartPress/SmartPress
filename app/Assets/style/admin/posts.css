@@ -5,3 +5,10 @@ form.cms-form .actions {
 .page-header.page-header-theme {
 	margin-top: 50px;
 }
+
+.row-fluid input#post_slug {
+	width: 286px;
+}
+.row-fluid span#slug_preview {
+	width: 300px;
+}

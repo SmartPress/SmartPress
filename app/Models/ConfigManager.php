@@ -16,7 +16,11 @@ class ConfigManager extends Singleton {
 	
 	
 	
-	public function get($name = null) {
+	public static function get($name = null) {
+		return self::instance()->_get($name);
+	}
+	
+	public function _get($name = null) {
 		if (self::$_configs) {
 			if (!$name) return self::$_configs;
 			return $this->__dotAccess($name, self::$_configs);

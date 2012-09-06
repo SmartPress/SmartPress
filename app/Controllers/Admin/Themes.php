@@ -41,7 +41,7 @@ class Themes extends Admin {
 		$this->respondTo(function($format) use ($zips) {
 			try {
 				if (empty($zips)) throw new ThemeException('Unable to detect zip');
-				Theme::instance()->install(TEMPLATE_UPLOAD_DIR . array_shift($zips));
+				Theme::instance()->install(TEMPLATE_UPLOAD_DIR . DS . array_shift($zips));
 				Cache::clear(Theme::CacheName);
 				
 				$format->html = function() {
@@ -51,10 +51,10 @@ class Themes extends Admin {
 					$this->render(['success' => true]);
 				};
 			} catch (ThemeException $e) {
-				$format->html = function() {
+				$format->html = function() use ($e) {
 					$this->redirectTo($this->edit_admin_config_path('look'), ['error' => 'Failed uploading theme. ' . $e->getMessage()]);
 				};
-				$format->json = function() {
+				$format->json = function() use ($e) {
 					$this->render(['success' => false, 'error' => $e->getMessage]);
 				};
 			} 
@@ -70,6 +70,8 @@ class Themes extends Admin {
 		
 		$this->respondTo(function($format) {
 			if (is_dir($this->themeDir) && Theme::delete($this->themeDir)) {
+				Cache::clear(Theme::CacheName);
+				
 				$format->html = function() {
 					$this->redirectTo($this->edit_admin_config_path('look'), ['notice' => 'Deleted theme successfully']);
 				};
@@ -83,7 +85,7 @@ class Themes extends Admin {
 				};
 				$format->json = function() {
 					$this->render(['success' => false, 'error' => $message]);
-				}
+				};
 			}
 		}); 
 	}

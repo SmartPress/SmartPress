@@ -5,7 +5,9 @@ namespace Cms\Models;
 use \Speedy\Cache;
 use \Speedy\Singleton;
 use \Speedy\Utility\File;
+use \Cms\Models\ConfigManager;
 use \Cms\Lib\Exceptions\Theme as ThemeException;
+use \ZipArchive;
 
 
 define('THEME_DIR', ROOT . DS . 'themes');
@@ -40,9 +42,13 @@ class Theme extends Singleton {
 			throw new ThemeException("Missing required manifest \"theme.xml\" in archive");
 		}
 		
-		if (!$arch->locateName('views') || !$arch->locateName('resources')) {
-			throw new ThemeException("Missing required views or resources directory");
+		/*if ($arch->locateName('views') === false) {
+			throw new ThemeException("Missing required views directory");
 		}
+		
+		if ($arch->locateName('resources') === false) {
+			throw new ThemeException("Missing required resources directory");
+		}*/
 		
 		$info = pathinfo($zip);
 		$arch->extractTo(self::DIR . DS . $info['filename']);
@@ -59,6 +65,37 @@ class Theme extends Singleton {
 	public static function updateTheme($config) {
 		$resources = $config->value . DS . 'resources';
 		File::cp_r($resources, self::ResourceDir);
+	}
+	
+	public static function currentTheme() {
+		$themePath = ConfigManager::get('theme');
+		$info = pathinfo($themePath);
+		
+		return self::info($info['filename']);
+	}
+	
+	public static function info($name) {
+		$themePath	= self::DIR . DS . $name;
+		if (!is_dir($themePath)) {
+			throw new ThemeException("Attempting to get theme that doesn't exist.");
+		}
+		
+		$info = pathinfo($themePath);
+		$info['fullpath']= $themePath;
+		$info['layouts'] = [];
+		foreach(glob($themePath . DS . 'views' . DS . 'layouts' . DS . '*.html.*') as $layout) {
+			$layoutInfo = pathinfo($layout);
+			$aFilename	= explode('.', $layoutInfo['filename']);
+				
+			$info['layouts'][]	= array_shift($aFilename);
+		}
+		
+		return $info;
+	}
+	
+	public static function availableLayouts() {
+		$theme = self::currentTheme();
+		return $theme['layouts'];		
 	}
 	
 	public function findAll() {
@@ -83,12 +120,16 @@ class Theme extends Singleton {
 						|| !isset($xml->version)) {
 					continue;
 				}
+				
+				$path = dirname($manifest);
+				$info = pathinfo($path);
 				$details	= [
 					'name'	=> (string) $xml->name,
 					'author'=> (string) $xml->author,
 					'version'	=> (string) $xml->version,
 					'snapshot'	=> (string) $xml->snapshot,
-					'path'	=> dirname($manifest)
+					'path'		=> $path,
+					'filename'	=> $info['filename']
 				];
 				$themes[]	= $details;
 			}

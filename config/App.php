@@ -5,6 +5,7 @@ use \Speedy\Session;
 use \Cms\Models\Module;
 use \Cms\Models\Event\Manager as EventManager;
 use \Cms\Lib\Module\Site as SiteModules;
+use \Cms\Models\Theme;
 
 class App extends \Speedy\App {
 
@@ -14,6 +15,7 @@ class App extends \Speedy\App {
 	protected function initApp() {
 		Session::start();
 		EventManager::dispatch('bootstrap');
+		Theme::currentTheme();
 	}
 	
 	protected function initModules() {
