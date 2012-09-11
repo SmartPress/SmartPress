@@ -1,4 +1,4 @@
-<?php $this->formFor(['admin', $this->postcustomfield], null, function($f) { ?>
+<?php $this->formFor(['admin', $this->postcustomfield], ['class' => 'form-horizontal'], function($f) { ?>
 
 	<?php if ($this->postcustomfield->errors && $this->postcustomfield->errors->count()): ?>
 		<div id="error_explanation">
@@ -10,24 +10,21 @@
 			<?php }); ?>
 		</ul>
 	<?php endif; ?>
-	<div class="field">
-		<?php $f->label("field"); ?>
-		<?php $f->textField("field"); ?>
+	<div class="control-group">
+		<?php $f->label("field", null, ['class' => 'control-label']); ?>
+		<div class="controls">
+			<?php $f->textField("field"); ?>
+		</div>
 	</div>
-	<div class="field">
-		<?php $f->label("label"); ?>
-		<?php $f->textField("label"); ?>
+	<div class="control-group">
+		<?php $f->label("label", null, ['class' => 'control-label']); ?>
+		<div class="controls">
+			<?php $f->textField("label"); ?>
+		</div>
 	</div>
-	<div class="field">
-		<?php $f->label("created_at"); ?>
-		<?php $f->textField("created_at"); ?>
-	</div>
-	<div class="field">
-		<?php $f->label("updated_at"); ?>
-		<?php $f->textField("updated_at"); ?>
-	</div>
-	<div class="actions">
-		<?php $f->submit('Save'); ?>
+	<div class="form-actions actions">
+		<?php $f->submit('Save', ['class' => 'btn btn-primary']); ?>
+		<?php $this->linkTo('Back', $this->admin_post_custom_fields_url(), ['class' => 'btn']); ?>
 	</div>
 	
 <?php }); ?>

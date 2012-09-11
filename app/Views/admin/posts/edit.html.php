@@ -1,7 +1,7 @@
-<h1>Editing post</h1>
-
-<?php $this->render("form"); ?>
-
-<?php $this->linkTo('Show', $this->admin_post_path($this->post->id)); ?> 
-|
-<?php $this->linkTo('Back', $this->admin_posts_url()); ?>
+<div class="row-fluid">
+	<div class="page-header">
+		<h1>Editing Post</h1>
+	</div>
+		
+	<?php $this->render('form'); ?>
+</div>

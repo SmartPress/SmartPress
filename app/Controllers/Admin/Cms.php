@@ -3,6 +3,7 @@ namespace Cms\Controllers\Admin;
 
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Post;
+use \Cms\Models\PostCustomField;
 use \Speedy\Utility\Inflector;
 use \Speedy\Loader;
 
@@ -51,6 +52,8 @@ class Cms extends Admin {
 	 */
 	public function _new() {
 		$this->post	= new Post(array( 'type' => $this->type ));
+		$this->post_custom_fields = PostCustomField::all();
+		
 		$path	= "admin_" . Inflector::pluralize($this->type) . "_url";
 		$this->action_path	= $this->{$path}();
 		
@@ -67,6 +70,8 @@ class Cms extends Admin {
 	 */
 	public function edit() {
 		$this->post	= Post::find($this->params('id', array( 'type' => $this->type )));
+		$this->post_custom_fields = PostCustomField::all();
+		
 		$path	= "admin_{$this->type}_path";
 		$this->action_path	= $this->{$path}($this->post->id);
 	}
@@ -82,8 +87,9 @@ class Cms extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->post->save()) {
 				$format->html = function() {
-					$path	= "admin_{$this->type}_path";
-					$this->redirectTo($this->{$path}($this->post->id), array("notice" => ucfirst($this->type) . " was successfully created."));
+					$plural	= Inflector::pluralize($this->type);
+					$path	= "admin_{$plural}_url";
+					$this->redirectTo($this->{$path}(), array("notice" => ucfirst($this->type) . " was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->post ));
@@ -106,7 +112,7 @@ class Cms extends Admin {
 		$this->post	= Post::find($this->params('id'), array( 'conditions' => array( 'type' => $this->type )));
 		
 		$this->respondTo(function($format) {
-			$data			= $this->params('post');
+			$data			= $this->params('post'); output($data);
 			$data['type']	= $this->type;
 			if ($this->post->update_attributes($data)) {
 				$format->html = function() {

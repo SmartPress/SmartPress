@@ -40,3 +40,4 @@
 	<b>Updated At</b>
 	<?php echo $this->post->updated_at; ?>
 </p>
+<p><?php echo $this->post->html; ?></p>

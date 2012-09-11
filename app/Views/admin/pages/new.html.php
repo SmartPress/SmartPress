@@ -1,5 +1,7 @@
-<h1>New page</h1>
-
-<?php $this->render('form'); ?>
-
-<?php $this->linkTo('Back', $this->admin_pages_url()); ?>
+<div class="row-fluid">
+	<div class="page-header">
+		<h1>New Page</h1>
+	</div>
+		
+	<?php $this->render('form'); ?>
+</div>

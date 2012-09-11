@@ -21,7 +21,9 @@
 				<?php $f->label("slug"); ?>
 				<div class="input-append">
 					<span><?php $f->textField("slug"); ?></span>
-					<span class="span5 uneditable-input" id="slug_preview"></span>
+					<span class="span5 uneditable-input" id="slug_preview">
+						<?php echo (isset($this->post->slug) && strlen($this->post->slug) > 0) ? $this->post->slug : ''; ?>
+					</span>
 					<button class="btn" type="button" id="slug_edit_btn">Edit</button>
 				</div>
 			</div>
@@ -54,10 +56,12 @@
 		</div>
 		
 		<div class="well">
-			<div class="field">
-				<?php $f->label("custom_data"); ?>
-				<?php $f->textField("custom_data", ['class' => 'span12']); ?>
-			</div>
+			<?php foreach($this->post_custom_fields as $field): ?>
+				<div class="field">
+					<?php $f->label("custom_data.{$field->field}", $field->label); ?>
+					<?php $this->textFieldTag($f->formatName("custom_data.{$field->field}"), ['class' => 'span12', 'value' => isset($this->post->custom_data[$field->field]) ? $this->post->custom_data[$field->field] : null ]); ?>
+				</div>
+			<?php endforeach; ?>
 		</div>
 	</div>
 <?php }); ?>

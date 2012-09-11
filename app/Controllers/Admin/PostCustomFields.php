@@ -58,7 +58,7 @@ class PostCustomFields extends Admin {
 	 * POST /posts
 	 */
 	public function create() {
-		$this->postcustomfield	= new PostCustomField($this->params('postcustomfield'));
+		$this->postcustomfield	= new PostCustomField($this->params('post_custom_field'));
 		
 		$this->respondTo(function($format) {
 			if ($this->postcustomfield->save()) {
@@ -86,7 +86,7 @@ class PostCustomFields extends Admin {
 		$this->postcustomfield	= PostCustomField::find($this->params('id'));
 		
 		$this->respondTo(function($format) {
-			if ($this->postcustomfield->update_attributes($this->params('postcustomfield'))) {
+			if ($this->postcustomfield->update_attributes($this->params('post_custom_field'))) {
 				$format->html = function() {
 					$this->redirectTo($this->admin_post_custom_fields_url(), array("notice" => "PostCustomField was successfully updated."));
 				};
