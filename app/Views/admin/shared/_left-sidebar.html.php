@@ -39,6 +39,7 @@
 				<li><?php $this->linkTo("Groups", $this->admin_groups_url()); ?></li>
 				<li class="divider"></li>
 				<li><?php $this->linkTo('Theme', $this->edit_admin_config_path('look')); ?></li>
+				<li><?php $this->linkTo('Blog', $this->edit_admin_config_path('blog')); ?></li>
 				<?php if (!empty($this->menus['settings'])): ?>
 				<li class="divider"></li>
 					<?php foreach ($this->menus['settings'] as $item): ?>

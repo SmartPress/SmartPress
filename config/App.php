@@ -15,7 +15,9 @@ class App extends \Speedy\App {
 	protected function initApp() {
 		Session::start();
 		EventManager::dispatch('bootstrap');
-		Theme::currentTheme();
+		
+		$theme = Theme::currentTheme();
+		Loader::instance()->pushPathToNamespace("cms.views", $theme['fullpath'] . DS . 'views');
 	}
 	
 	protected function initModules() {

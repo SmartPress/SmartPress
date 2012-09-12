@@ -5,8 +5,8 @@ use \Speedy\Controller;
 
 class Application extends Controller {
 
-	public $layout	= "application";
-
+	public $layout	= "default"; 
+	
 }
 
 ?>

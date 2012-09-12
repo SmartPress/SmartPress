@@ -86,8 +86,9 @@ class Theme extends Singleton {
 		foreach(glob($themePath . DS . 'views' . DS . 'layouts' . DS . '*.html.*') as $layout) {
 			$layoutInfo = pathinfo($layout);
 			$aFilename	= explode('.', $layoutInfo['filename']);
+			$name	= array_shift($aFilename);
 				
-			$info['layouts'][]	= array_shift($aFilename);
+			$info['layouts'][$name]	= $name;
 		}
 		
 		return $info;

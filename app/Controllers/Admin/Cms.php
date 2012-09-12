@@ -38,6 +38,7 @@ class Cms extends Admin {
 				'type'	=> $this->type
 			)
 		));
+		$this->layout	= $this->post->layout;
 		
 		$this->respondTo(function(&$format) {
 			$format->html; // show.php.html

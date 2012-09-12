@@ -16,6 +16,11 @@ class ConfigManager extends Singleton {
 	
 	
 	
+	public function __construct() {
+		$this->__aaSetDelimeter('/');
+		return $this;
+	}
+	
 	public static function get($name = null) {
 		return self::instance()->_get($name);
 	}
