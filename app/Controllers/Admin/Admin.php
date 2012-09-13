@@ -18,7 +18,7 @@ class Admin extends Application {
 
 	public $layout	= "admin/default";
 
-	protected $beforeFilter = ['adminMenus', '_checkPrivilege'];
+	protected $beforeFilter = ['__setBackUrl', 'adminMenus', '_checkPrivilege'];
 	
 	protected $minReadPrivilege	= AdminPrivilege;
 	

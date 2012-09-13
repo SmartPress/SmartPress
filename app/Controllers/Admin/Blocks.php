@@ -4,6 +4,8 @@ namespace Cms\Controllers\Admin;
 
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Block;
+use \Speedy\Session;
+use \Speedy\View;
 
 class Blocks extends Admin {
 		/**
@@ -43,7 +45,13 @@ class Blocks extends Admin {
 		$this->respondTo(function($format) {
 			$format->html; // new.php.html
 			$format->json = function() {
-				$this->render(array( 'json' => $this->block ));
+				$this->render(array( 
+						'json' => [
+							'template' => View::instance()->setVars([])->setParams($this->params())->renderToString(
+								'admin/blocks/new', 
+								[]
+							)
+						] ));
 			};
 		});
 	}
@@ -89,7 +97,7 @@ class Blocks extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->block->update_attributes($this->params('block'))) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_block_path($this->block), array("notice" => "Block was successfully updated."));
+					$this->redirectTo(Session::instance()->read('back_url'), array("notice" => "Block was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->block ));

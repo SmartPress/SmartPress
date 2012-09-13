@@ -91,7 +91,17 @@ class Theme extends Singleton {
 			$info['layouts'][$name]	= $name;
 		}
 		
+		$xml = @simplexml_load_file($themePath . DS . 'theme.xml');
+		if (isset($xml->editable_blocks))
+			$info['editable_blocks']	= (array) $xml->editable_blocks;
+		
 		return $info;
+	}
+	
+	public static function availableBlocks() {
+		$theme = self::currentTheme();
+		return (isset($theme['editable_blocks']) && !empty($theme['editable_blocks']['block'])) ?  
+			$theme['editable_blocks']['block'] : [];
 	}
 	
 	public static function availableLayouts() {

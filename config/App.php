@@ -18,6 +18,7 @@ class App extends \Speedy\App {
 		
 		$theme = Theme::currentTheme();
 		Loader::instance()->pushPathToNamespace("cms.views", $theme['fullpath'] . DS . 'views');
+		Loader::instance()->registerNamespace("cms.blocks",  [APP_PATH . DS . 'Blocks', $theme['fullpath'] . DS . 'blocks']);
 	}
 	
 	protected function initModules() {
