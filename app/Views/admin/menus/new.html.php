@@ -2,4 +2,4 @@
 
 <?php $this->render('form'); ?>
 
-<?php $this->linkTo('Back', $this->menus_url()); ?>
+<?php $this->linkTo('Back', $this->admin_menus_url()); ?>

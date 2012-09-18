@@ -20,6 +20,12 @@ class Menu extends Base {
 				]);
 	}
 	
+	public static function allMenus() {
+		return self::all([
+					'conditions' => ['parent_id = 0']
+				]);
+	}
+	
 }
 
 ?>

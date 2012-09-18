@@ -15,28 +15,12 @@
 		<?php $f->textField("parent_id"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("lft"); ?>
-		<?php $f->textField("lft"); ?>
-	</div>
-	<div class="field">
-		<?php $f->label("rght"); ?>
-		<?php $f->textField("rght"); ?>
-	</div>
-	<div class="field">
 		<?php $f->label("title"); ?>
 		<?php $f->textField("title"); ?>
 	</div>
 	<div class="field">
 		<?php $f->label("url"); ?>
 		<?php $f->textField("url"); ?>
-	</div>
-	<div class="field">
-		<?php $f->label("created_at"); ?>
-		<?php $f->textField("created_at"); ?>
-	</div>
-	<div class="field">
-		<?php $f->label("updated_at"); ?>
-		<?php $f->textField("updated_at"); ?>
 	</div>
 	<div class="actions">
 		<?php $f->submit('Save'); ?>
