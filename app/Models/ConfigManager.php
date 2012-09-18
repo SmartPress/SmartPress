@@ -8,7 +8,7 @@ use \Speedy\Singleton;
 
 class ConfigManager extends Singleton {
 	
-	use \Speedy\Utility\ArrayAccess;
+	use \Speedy\Traits\ArrayAccess;
 	
 	const CacheName = "configs";
 	

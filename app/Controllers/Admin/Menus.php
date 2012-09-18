@@ -39,6 +39,7 @@ class Menus extends Admin {
 	 */
 	public function _new() {
 		$this->menu	= new Menu();
+		$this->allMenus	= Menu::tree();
 		
 		$this->respondTo(function($format) {
 			$format->html; // new.php.html
@@ -64,7 +65,7 @@ class Menus extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->menu->save()) {
 				$format->html = function() {
-					$this->redirectTo($this->menu, array("notice" => "Menu was successfully created."));
+					$this->redirectTo($this->admin_menus_url(), array("notice" => "Menu was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->menu ));

@@ -12,7 +12,7 @@
 	<?php endif; ?>
 	<div class="field">
 		<?php $f->label("parent_id"); ?>
-		<?php $f->textField("parent_id"); ?>
+		<?php $f->collectionSelect("parent_id", $this->allMenus, 'id', 'title'); ?>
 	</div>
 	<div class="field">
 		<?php $f->label("title"); ?>
