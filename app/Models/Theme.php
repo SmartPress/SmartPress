@@ -104,6 +104,17 @@ class Theme extends Singleton {
 			$theme['editable_blocks']['block'] : [];
 	}
 	
+	public static function blockOptions() {
+		$blocks	= self::availableBlocks();
+		$ret	= [];
+		
+		foreach ($blocks as $block) {
+			$ret[$block] = $block;
+		}
+		
+		return $ret;
+	}
+	
 	public static function availableLayouts() {
 		$theme = self::currentTheme();
 		return $theme['layouts'];		

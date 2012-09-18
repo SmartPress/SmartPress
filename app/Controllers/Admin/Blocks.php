@@ -4,6 +4,8 @@ namespace Cms\Controllers\Admin;
 
 use \Cms\Controllers\Admin\Admin;
 use \Cms\Models\Block;
+use \Cms\Models\Block\Manager;
+use \Speedy\Loader;
 use \Speedy\Session;
 use \Speedy\View;
 
@@ -48,10 +50,36 @@ class Blocks extends Admin {
 				$this->render(array( 
 						'json' => [
 							'template' => View::instance()->setVars([])->setParams($this->params())->renderToString(
-								'admin/blocks/new', 
+								'admin/blocks/_form', 
 								[]
 							)
 						] ));
+			};
+		});
+	}
+	
+	public function new_with_ns() {
+		$block	= $this->params('block');
+		$scopes	= $this->params('scope');
+		
+		$class	= Loader::instance()->toClass($block);
+		$this->vars	= [
+			'info'	=> $class::info(),
+			'scopes'=> Manager::scopes($scopes['controller'], $scopes['action'])
+		];
+		
+		$this->respondTo(function($format) {
+			$format->html; // new.php.html
+			$format->json = function() {
+				$this->render(array(
+						'json' => [
+						'template' => View::instance()->setVars($this->vars)
+							->setParams($this->params())
+							->renderToString(
+								'admin/blocks/_class_form',
+								[]
+							)
+					] ));
 			};
 		});
 	}
@@ -72,7 +100,7 @@ class Blocks extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->block->save()) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_block_path($this->block), array("notice" => "Block was successfully created."));
+					$this->redirectTo(Session::instance()->read('back_url'), array("notice" => "Block was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->block ));

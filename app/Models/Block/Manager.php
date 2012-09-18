@@ -4,7 +4,10 @@ namespace Cms\Models\Block;
 
 use \Cms\Models\Block;
 use \Speedy\Cache;
+use \Speedy\Loader;
 use \Speedy\Singleton;
+use \Speedy\Request;
+use \Speedy\Utility\Inflector;
 
 class Manager extends Singleton {
 	
@@ -25,6 +28,53 @@ class Manager extends Singleton {
 	
 	public static function &all() {
 		return self::instance()->_all();
+	}
+	
+	public static function availableBlocks() {
+		$namespaces	= Loader::instance()->namespaces();
+		
+		$blocks	= ['' => 'Select One'];
+		foreach ($namespaces as $ns => $nsDirs) {
+			if (!is_array($nsDirs)) $nsDirs	= [$nsDirs];
+			foreach ($nsDirs as $dir) {
+				$blockPath	= $dir . DS . 'Blocks';
+				
+				foreach (rglob($blockPath . DS . '*.php') as $blockDir) {
+					$relPath	= str_replace($blockPath, '', $blockDir);
+					$relPath	= str_replace('.php', '', $relPath);
+					$aRelPath	= explode(DS, $relPath);
+					
+					array_walk($aRelPath, function(&$item, $key) {
+						$item	= Inflector::underscore($item);
+					});
+					
+					$blockNs	= $ns . '.blocks' . implode('.', $aRelPath);
+					$class	= Loader::instance()->toClass($blockNs);
+					if (!class_exists($class)) {
+						continue;
+					}
+					
+					$info	= $class::info();
+					$blocks[$blockNs] = $info['title'];
+				}
+			}
+		}
+		
+		return $blocks;
+	}
+	
+	public static function scopes($controller = null, $action = null) {
+		$params	= Request::instance()->params();
+		if (!$controller)
+			$controller	= implode('/', $params['controller']);
+		if (!$action)
+			$action	= $params['action'];
+		
+		return [
+			'global'	=> 'Global',
+			$controller	=> 'Controller',
+			"$controller/$action"	=> 'Action Only'
+		];
 	}
 	
 	public function _currentFor($controller, $action) {

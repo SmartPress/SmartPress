@@ -26,10 +26,15 @@ class Routes extends SpeedyDraw {
 			$this->resources('modules');
 			$this->resources('groups');
 			$this->resources('users');
-			$this->resources('blocks');
+			$this->resources('blocks', [], function() {
+				$this->collection(function() {
+					$this->get('new_with_ns');
+				});
+			});
 			
 			$this->resources('sessions', ['only' => ['new', 'create', 'destroy']]);
 			$this->resources('themes', ['only' => ['create', 'destroy']]);
+			$this->resources('menus');
 		});
 		
 		$this->resources('posts');

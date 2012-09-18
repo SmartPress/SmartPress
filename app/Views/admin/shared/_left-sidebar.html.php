@@ -40,6 +40,7 @@
 				<li class="divider"></li>
 				<li><?php $this->linkTo('Theme', $this->edit_admin_config_path('look')); ?></li>
 				<li><?php $this->linkTo('Blog', $this->edit_admin_config_path('blog')); ?></li>
+				<li><?php $this->linkTo('Menus', $this->admin_menus_url()); ?>
 				<?php if (!empty($this->menus['settings'])): ?>
 				<li class="divider"></li>
 					<?php foreach ($this->menus['settings'] as $item): ?>

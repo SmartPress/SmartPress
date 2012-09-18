@@ -1,7 +1,10 @@
 <?php
 namespace Cms\Controllers\Admin;
 
+
 use \Cms\Controllers\Admin\Admin;
+use \Cms\Models\Block;
+use \Cms\Models\Block\Manager as BlockManager;
 use \Cms\Models\Post;
 use \Cms\Models\PostCustomField;
 use \Speedy\Utility\Inflector;
@@ -72,6 +75,7 @@ class Cms extends Admin {
 	public function edit() {
 		$this->post	= Post::find($this->params('id', array( 'type' => $this->type )));
 		$this->post_custom_fields = PostCustomField::all();
+		$this->blocks	= BlockManager::availableBlocks();
 		
 		$path	= "admin_{$this->type}_path";
 		$this->action_path	= $this->{$path}($this->post->id);

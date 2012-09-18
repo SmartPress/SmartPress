@@ -4,11 +4,7 @@
 		$blocks		= \Cms\Models\Theme::availableBlocks();
 		$i = 0;
 		
-		$scopes	= [
-			'global'	=> 'Global',
-			$controller	=> 'Controller',
-			"$controller/$action"	=> 'Action Only'
-		];
+		$scopes	= \Cms\Models\Block\Manager::scopes($controller, $action);
 	?>
 	<?php foreach ($elements as $element): ?>
 		<?php 
@@ -34,7 +30,10 @@
 			<div class="thumbnail">
 				<div class="caption">
 					<h4><?php echo isset($info['title']) ? $info['title'] : ''; ?></h4>
-					<p><strong>Scope:</strong> <?php echo $scope; ?></p>
+					<p>
+						<strong>Scope:</strong> <?php echo $scope; ?><br>
+						<strong>Block:</strong> <?php echo $element['block']; ?>
+					</p>
 					
 					<button 
 						type="button" 
@@ -51,13 +50,18 @@
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 							<h3><?php echo isset($info['title']) ? $info['title'] : ''; ?></h3>
 						</div>
-						<?php $this->formTag($this->admin_block_path($element['id']), ['method' => 'POST'], function() use ($controller, $action, $info, $scopes, $element, $params) { ?>
+						<?php $this->formTag($this->admin_block_path($element['id']), ['method' => 'POST'], function() use ($info, $scopes, $element, $params) { ?>
 							<?php $this->hiddenFieldTag('_method', 'PUT'); ?>
 							<?php $this->hiddenFieldTag('block[id]', $element['id']); ?>
 							<div class="modal-body">
 								<div class="field">
 									<?php $this->labelTag("block[path]", "Scope"); ?>
 									<?php $this->selectTag("block[path]", $this->optionsForSelect($scopes, $element['path'])); ?>
+								</div>
+								
+								<div class="field">
+									<?php $this->labelTag('block[block]', 'Block'); ?>
+									<?php $this->selectTag('block[block]', $this->optionsForSelect(\Cms\Models\Theme::blockOptions(), $element['block'])); ?>
 								</div>
 							
 								<?php foreach ($info['params'] as $method => $name): ?>
