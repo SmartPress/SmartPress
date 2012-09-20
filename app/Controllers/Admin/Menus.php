@@ -10,7 +10,7 @@ class Menus extends Admin {
 	 * GET /posts
 	 */
 	public function index() {
-		$this->menus	= Menu::all();
+		$this->menus	= Menu::allMenus();
 		
 		$this->respondTo(function($format) {
 			$format->html; // Render per usual
@@ -39,7 +39,9 @@ class Menus extends Admin {
 	 */
 	public function _new() {
 		$this->menu	= new Menu();
-		$this->allMenus	= Menu::tree();
+		$menus	= (array)Menu::tree();
+		array_unshift($menus, new Menu(['title' => 'Select One']));
+		$this->allMenus	= $menus; 
 		
 		$this->respondTo(function($format) {
 			$format->html; // new.php.html
@@ -90,7 +92,7 @@ class Menus extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->menu->update_attributes($this->params('menu'))) {
 				$format->html = function() {
-					$this->redirectTo($this->menu, array("notice" => "Menu was successfully updated."));
+					$this->redirectTo($this->admin_menus_url(), array("notice" => "Menu was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->menu ));
@@ -114,7 +116,9 @@ class Menus extends Admin {
 		$this->menu->destroy();
 		
 		$this->respondTo(function($format) {
-			$format->html = function() { $this->redirectTo($this->menus_url()); };
+			$format->html = function() { 
+				$this->redirectTo($this->admin_menus_url()); 
+			};
 		});
 	}
 }

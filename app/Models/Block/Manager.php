@@ -11,7 +11,7 @@ use \Speedy\Utility\Inflector;
 
 class Manager extends Singleton {
 	
-	use \Speedy\Utility\ArrayAccess;
+	use \Speedy\Traits\ArrayAccess;
 	
 	private $_blocks;
 	

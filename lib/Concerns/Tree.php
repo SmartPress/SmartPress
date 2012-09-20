@@ -2,6 +2,9 @@
 namespace Cms\Lib\Concerns;
 
 
+use \Speedy\ActiveRecord\Relationships\BelongsTo;
+use \Speedy\ActiveRecord\Relationships\HasMany;
+
 trait Tree {
 	
 	public static $__treeSeparator = '-';
@@ -10,32 +13,109 @@ trait Tree {
 	
 	
 	
-	public function __construct(array $attributes=array(), $guard_attributes=true, $instantiating_via_find=false, $new_record=true) {
-		parent::__construct($attributes, $gaurd_attributes, $instantiating_via_find, $new_record);
+	public function _construct() {
+	
+		static::table()->callback->register('before_create', 'setTreeLocation');
+		static::table()->callback->register('after_destroy', 'reindexTreeAfterDelete');
+		if (!isset(static::$belongs_to)) {
+			static::table()->add_relationship(new BelongsTo([
+					'parent', 
+					'class_name' => get_class($this)
+					]));
+		}
 		
-		debug('tmp');
+		if (!isset(static::$has_many)) {
+			static::table()->add_relationship(new HasMany([
+					'children', 
+					'foreign_key' => 'parent_id', 
+					'class_name' => get_class($this), 
+					'order' => 'title ASC'
+					]));
+		}
+	}
+	
+	public function setTreeParent() {
+		$maxValue	= static::maximum(static::$__treeRght);
+		
+		$upper;
+		if (!empty($maxValue)) {
+			$upper	= static::where([static::$__treeRght => $maxValue])->first();
+		}
+		
+		if (empty($upper)) $rght	= 0;
+		else $rght = $upper;
+		
+		$this->{static::$__treeLft} = $rght + 1;
+		$this->{static::$__treeRght}= $this->{static::$__treeLft} + 1;
+		
+		return true;
+	}
+	
+	public function setTreeChild() {
+		$parent	= static::find($this->parent_id);
+		if (empty($parent)) return false;
+		
+		$this->{static::$__treeLft}	= $parent->{static::$__treeRght};
+		$this->{static::$__treeRght}= $parent->{static::$__treeRght} + 1;
+		
+		static::update_all(static::$__treeRght . ' = ' . static::$__treeRght . ' + 2', [static::$__treeRght . ' >= ?', $this->{static::$__treeLft}]);
+		static::update_all(static::$__treeLft . ' = ' . static::$__treeLft . ' + 2', [static::$__treeLft . ' > ?', $this->{static::$__treeLft}]);
+		
+		return true;
+	}
+	
+	public function setTreeLocation() {
+		$current	= ($this->id) ? self::find($this->id) : null;
+		// Return true if the parent id hasn't changed
+		if (!empty($current) && $current->parent_id == $this->parent_id) return true;
+		
+		if (empty($this->parent_id) || $this->parent_id < 1) {
+			return $this->setTreeParent();
+		} else {
+			return $this->setTreeChild();
+		}
+	}
+	
+	public function reindexTreeAfterDelete() {
+		$children	= static::allChildrenOf($this); 
+
+		if (count($children) > 0) {
+			$childrenIds= [];
+			foreach ($children as $child) {
+				$childrenIds[]	= $child->id;
+			} 
+
+			$options	= ['conditions' => ['id IN (?)', $childrenIds]];
+			static::delete_all($options);
+		}
+		
+		$shift	= 1 + ($this->{static::$__treeRght} - $this->{static::$__treeLft});
+		static::update_all(static::$__treeRght . ' = ' . static::$__treeRght . " - '$shift'", [static::$__treeRght . ' >= ?', $this->{static::$__treeLft}]);
+		static::update_all(static::$__treeLft . ' = ' . static::$__treeLft . " - '$shift'", [static::$__treeLft . ' > ?', $this->{static::$__treeLft}]);
+		return true;
 	}
 	
 	public static function tree($separator = '-', $options = [], $lft = null, $rght = null) {
-		if ($lft) self::$__treeLft	= $lft;
-		if ($rght)self::$__treeRght = $rght;
+		if ($lft) static::$__treeLft	= $lft;
+		if ($rght)static::$__treeRght = $rght;
 		
-		self::$__treeSeparator	= $separator;
-		$options['order'] = self::$__treeLft . ' ASC';
-		$items	= self::all($options);
+		static::$__treeSeparator	= $separator;
+		$options['order'] = static::$__treeLft . ' ASC';
+		$items	= static::all($options);
 		
 		$level = 0;
 		$lastItem = null;
 		foreach ($items as &$item) {
-			if (isset($lastItem) && isset($lastItem->{self::$__treeLft}) && isset($lastItem->{self::$__treeRght})) {
-				if ($item->{self::$__treeLft} == ($lastItem->{self::$__treeRght} + 1) && 
-					($lastItem->{self::$__treeRght} - $lastItem->{self::$__treeLft}) > 1) {
+			if (isset($lastItem) && isset($lastItem->{static::$__treeLft}) && isset($lastItem->{static::$__treeRght})) {
+				if ($item->{static::$__treeLft} == ($lastItem->{static::$__treeLft} + 1) && 
+					($lastItem->{static::$__treeRght} - $lastItem->{static::$__treeLft}) > 1) {
 					$level++;
-				} elseif (($item->{self::$__treeLft} - $lastItem->{self::$__treeRght}) > 1) {
+				} elseif (($item->{static::$__treeLft} - $lastItem->{static::$__treeRght}) > 1) {
 					$level--;
 				}
 			}
-			$item->title= self::separatorLevel($level) . $item->title;
+			output($level);
+			$item->title= static::separatorLevel($level) . $item->title;
 			 
 			$lastItem	= $item;
 		}
@@ -43,18 +123,32 @@ trait Tree {
 		return $items;
 	}
 	
+	public static function allChildrenById($id) {
+		$parent	= static::find($id);
+		return static::allChildrenOf($parent);
+	}
+	
+	public static function allChildrenOf($parent) {
+		return static::all([
+					'conditions' => [
+						static::$__treeLft . ' BETWEEN ? AND ?',
+						$parent->{static::$__treeLft},
+						$parent->{static::$__treeRght}
+					]
+				]);
+		
+	}
+	
 	public static function separatorLevel($level) {
 		if (empty($level)) return '';
 		
 		$ret	= '';
 		for ($i = 1; $i <= $level; $i++) {
-			$ret	.= $this->__treeSeparator; 
+			$ret	.= self::$__treeSeparator; 
 		}
 		
-		return $ret;
+		return $ret . ' ';
 	}
-	
-	
 	
 }
 ?>
