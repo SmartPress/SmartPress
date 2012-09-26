@@ -2,6 +2,8 @@
 namespace Cms\Models\Block;
 
 
+use Speedy\ActiveRecord\is_hash;
+
 use \Cms\Models\Block;
 use \Speedy\Cache;
 use \Speedy\Loader;
@@ -79,7 +81,14 @@ class Manager extends Singleton {
 	
 	public function _currentFor($controller, $action) {
 		$blocks	=& $this->_all();
-		return $this->__dotAccess(['global', $controller, "$controller/$action"], $blocks);
+		
+		$global	= $this->__dotAccess('global', $blocks);
+		if (is_hash($global))
+			$global	= [$global];
+		$filtered = $this->__dotAccess([$controller, "$controller/$action"], $blocks);
+		$filtered = array_merge($filtered, $global);
+
+		return $filtered;
 	}
 	
 	public function &_all() {

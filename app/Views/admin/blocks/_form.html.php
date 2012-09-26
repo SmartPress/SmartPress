@@ -1,4 +1,8 @@
-<?php $this->formFor(['admin', $this->block], null, function($f) { ?>
+<?php 
+$class	= \Speedy\Loader::instance()->toClass($this->block['element']);
+$info	= (class_exists($class)) ? $class::info() : null;
+?>
+<?php $this->formFor(['admin', $this->block], ['class' => 'form-horizontal', 'id' => 'block_form'], function($f) use ($info) { ?>
 
 	<?php if ($this->block->errors && $this->block->errors->count()): ?>
 		<div id="error_explanation">
@@ -10,28 +14,38 @@
 			<?php }); ?>
 		</ul>
 	<?php endif; ?>
-	<div class="field">
-		<?php $f->label("path"); ?>
-		<?php $f->textField("path"); ?>
+	<div class="control-group">
+		<?php $f->label("path", null, ['class' => 'control-label']); ?>
+		<div class="controls">
+			<?php $f->textField("path"); ?>
+		</div>
 	</div>
-	<div class="field">
-		<?php $f->label("block"); ?>
-		<?php $f->textField("block"); ?>
+	<div class="control-group">
+		<?php $f->label("block", null, ['class' => 'control-label']); ?>
+		<div class="controls">
+			<?php $f->select("block", \Cms\Models\Theme::blockOptions()); ?>
+		</div>
 	</div>
-	<div class="field">
-		<?php $f->label("element"); ?>
-		<?php $f->textField("element"); ?>
+	<div class="control-group">
+		<?php $f->label("element", null, ['class' => 'control-label']); ?>
+		<div class="controls">
+			<?php $f->select("element", \Cms\Models\Block\Manager::availableBlocks()); ?>
+		</div>
 	</div>
-	<div class="field">
-		<?php $f->label("params"); ?>
-		<?php $f->textField("params"); ?>
+	<div id="block_params_container">
+		<?php if (!empty($info)): ?>
+			<?php $this->render('dynamic_fields_horz', ['info' => $info, 'params' => $this->block['params']]); ?>
+		<?php endif; ?>
 	</div>
-	<div class="field">
-		<?php $f->label("priority"); ?>
-		<?php $f->textField("priority"); ?>
+	<div class="control-group">
+		<?php $f->label("priority", null, ['class' => 'control-label']); ?>
+		<div class="controls">
+			<?php $f->textField("priority"); ?>
+		</div>
 	</div>
-	<div class="actions">
-		<?php $f->submit('Save'); ?>
+	<div class="form-actions">
+		<?php $this->linkTo('Cancel', $this->admin_blocks_url(), ['class' => 'btn']); ?>
+		<?php $f->submit('Save', ['class' => 'btn btn-primary']); ?>
 	</div>
 	
 <?php }); ?>

@@ -83,6 +83,37 @@ class Blocks extends Admin {
 			};
 		});
 	}
+	
+	public function fields() {
+		$block	= $this->params('block');
+		$class	= Loader::instance()->toClass($block);
+		
+		$this->respondTo(function($format) use ($class) {
+			if (!class_exists($class)) {
+				$format->json	= function() {
+					$this->render([
+						'json'	=> [
+							'error'		=> 'Class not found!',
+							'success'	=> false
+						]
+					]);
+				};
+			} else {
+				$this->vars	= ['info' => $class::info()];
+				$format->json	= function() {
+					$this->render([
+						'json'	=> [
+						'template' 	=> View::instance()
+							->setVars($this->vars)
+							->setParams($this->params())
+							->renderToString('admin/blocks/_dynamic_fields_horz', [])
+						],
+						'success' 	=> true
+					]);
+				};
+			}
+		});
+	}
 
 	/**
 	 * GET /posts/1/edit
@@ -100,7 +131,11 @@ class Blocks extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->block->save()) {
 				$format->html = function() {
-					$this->redirectTo(Session::instance()->read('back_url'), array("notice" => "Block was successfully created."));
+					$redirect = $this->params('redirect');
+					
+					$this->redirectTo(
+							(empty($redirect)) ? $this->admin_blocks_url() : $redirect, 
+							array("notice" => "Block was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->block ));
@@ -125,7 +160,11 @@ class Blocks extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->block->update_attributes($this->params('block'))) {
 				$format->html = function() {
-					$this->redirectTo(Session::instance()->read('back_url'), array("notice" => "Block was successfully updated."));
+					$redirect = $this->params('redirect');
+					
+					$this->redirectTo(
+							(empty($redirect)) ? $this->admin_blocks_url() : $redirect, 
+							array("notice" => "Block was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->block ));

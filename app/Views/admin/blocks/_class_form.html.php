@@ -1,4 +1,6 @@
 <?php $this->formTag($this->admin_blocks_url(), ['method' => 'POST'], function() use ($scopes, $info) { ?>
+	<?php $this->hiddenFieldTag('block[element]', ''); ?>
+
 	<div class="field">
 		<?php $this->labelTag("block[path]", "Scope"); ?>
 		<?php $this->selectTag("block[path]", $this->optionsForSelect($scopes)); ?>
@@ -9,10 +11,10 @@
 		<?php $this->selectTag('block[block]', $this->optionsForSelect(\Cms\Models\Theme::blockOptions())); ?>
 	</div>
 							
-	<?php foreach ($info['params'] as $method => $name): ?>
-		<div class="field">
-			<?php $this->labelTag("block[params][$name]", ucfirst($name)); ?>
-			<?php $this->{$method}("block[params][$name]", ['value' => isset($params[$name]) ? $params[$name] : '']); ?>
-		</div>
-	<?php endforeach; ?>
+	<?php $this->render('dynamic_fields', ['info' => $info, 'params' => $params]); ?>
+	
+	<div class="field">
+		<?php $this->labelTag('block[priority]', 'Block'); ?>
+		<?php $this->textFieldTag('block[priority]'); ?>
+	</div>
 <?php }); ?>

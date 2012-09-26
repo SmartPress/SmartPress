@@ -1,7 +1,5 @@
-<h1>Editing block</h1>
+<div class="page-header">
+	<h1>Editing Block</h1>
+</div>
 
 <?php $this->render("form"); ?>
-
-<?php $this->linkTo('Show', $this->admin_block_path($this->block->id)); ?> 
-|
-<?php $this->linkTo('Back', $this->admin_blocks_url()); ?>

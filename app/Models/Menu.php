@@ -2,6 +2,7 @@
 namespace Cms\Models;
 
 
+use Speedy\Cache;
 use Speedy\Model\ActiveRecord\Base;
 use Speedy\Set;
 
@@ -12,6 +13,10 @@ class Menu extends Base {
 	public $children;
 	
 	
+	
+	public function set_title($title) {
+		return $this->assign_attribute('title', htmlentities($title));
+	}
 	
 	public function items() {
 		$items = $all	= self::childrenFor($this->lft, $this->rght);
@@ -74,6 +79,22 @@ class Menu extends Base {
 		}
 		
 		return $menu;
+	}
+	
+	public static function treeForOptions() {
+		$menus	= (array)self::tree();
+		array_unshift($menus, new Menu(['title' => 'Select One']));
+		return $menus;
+	}
+	
+	public static function itemsForId($id) {
+		$items	= Cache::read("menu_$id");
+		if (empty($items)) {
+			$items	= self::allChildrenById($id);
+			Cache::write("menu_$id", (array)$items);
+		}
+		
+		return $items;
 	}
 	
 }

@@ -1,9 +1,0 @@
-ul.sortable li.draging {
-	position: absolute;
-	background: lightblue;
-}
-
-ul.sortable li {
-	height: 25px;
-	display: block;
-}

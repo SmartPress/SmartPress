@@ -13,6 +13,10 @@ class Application extends Controller {
 	
 	
 	protected function __setBackUrl() {
+		$ext = $this->params('ext');
+		if (!isset($ext) || $ext != 'html')
+			return; 
+		
 		$session = Session::instance();
 		$previous_url	= $session->read('_back_url');
 		if ($previous_url)

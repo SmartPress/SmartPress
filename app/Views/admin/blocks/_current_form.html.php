@@ -64,12 +64,12 @@
 									<?php $this->selectTag('block[block]', $this->optionsForSelect(\Cms\Models\Theme::blockOptions(), $element['block'])); ?>
 								</div>
 							
-								<?php foreach ($info['params'] as $method => $name): ?>
-									<div class="field">
-										<?php $this->labelTag("block[params][$name]", ucfirst($name)); ?>
-										<?php $this->{$method}("block[params][$name]", ['value' => isset($params[$name]) ? $params[$name] : '']); ?>
-									</div>
-								<?php endforeach; ?>
+								<?php $this->render('admin/blocks/_dynamic_fields', ['info' => $info, 'params' => $params]); ?>
+								
+								<div class="field">
+									<?php $this->labelTag('block[priority]', 'Block'); ?>
+									<?php $this->textFieldTag('block[priority]', $element['priority']); ?>
+								</div>
 							</div>
 							
 							<div class="modal-footer">

@@ -5,9 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<?php $this->javascript('jquery'); ?>
 	<?php $this->javascript('/application.js?debug=1'); ?>
-	<?php $this->javascript('/bootstrap/js/bootstrap.js'); ?>
+	<?php $this->javascript('/vendor/bootstrap/js/bootstrap.js'); ?>
 	
-	<?php $this->stylesheet('/bootstrap/css/bootstrap.css'); ?>
+	<?php $this->stylesheet('/vendor/bootstrap/css/bootstrap.css'); ?>
 	<style type="text/css">
       body {
         padding-top: 60px;
@@ -17,7 +17,7 @@
         padding: 9px 0;
       }
     </style>
-	<?php $this->stylesheet('/bootstrap/css/bootstrap-responsive.css'); ?>
+	<?php $this->stylesheet('/vendor/bootstrap/css/bootstrap-responsive.css'); ?>
 	<?php $this->stylesheet('/application.css?debug=1'); ?>
 </head>
 <body>

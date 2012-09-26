@@ -37,6 +37,7 @@
 				<li class="divider"></li>
 				<li><?php $this->linkTo("Users", $this->admin_users_url()); ?></li>
 				<li><?php $this->linkTo("Groups", $this->admin_groups_url()); ?></li>
+				<li><?php $this->linkTo("Blocks", $this->admin_blocks_url()); ?></li>
 				<li class="divider"></li>
 				<li><?php $this->linkTo('Theme', $this->edit_admin_config_path('look')); ?></li>
 				<li><?php $this->linkTo('Blog', $this->edit_admin_config_path('blog')); ?></li>

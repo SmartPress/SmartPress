@@ -2,10 +2,15 @@
 namespace Cms\Lib\Concerns;
 
 
-use \Speedy\ActiveRecord\Relationships\BelongsTo;
-use \Speedy\ActiveRecord\Relationships\HasMany;
+use Cms\Lib\Concerns\Exceptions\TreeException;
+use Speedy\ActiveRecord\Relationships\BelongsTo;
+use Speedy\ActiveRecord\Relationships\HasMany;
+
 
 trait Tree {
+	
+	private static $MoveDirectionUp	= 1;
+	private static $MoveDirectionDown	= 2;
 	
 	public static $__treeSeparator = '-';
 	public static $__treeLft	= 'lft';
@@ -95,6 +100,96 @@ trait Tree {
 		return true;
 	}
 	
+	public static function move($id, $offset = 1) {
+		if (!is_int($offset)) $offset = intval($offset);
+		if ($offset == 0) throw new TreeException('Offset is zero');
+		
+		$dir	= ($offset > 0) ? self::$MoveDirectionDown : self::$MoveDirectionUp; 
+		$symbol	= ($dir === self::$MoveDirectionUp) ? '+' : '-';
+		$node		= self::find($id);
+		$children	= self::allChildrenOf($node);
+		$siblings	= self::find_all_by_parent_id($node->parent_id, ['order' => 'lft ASC']);
+		
+		if ($siblings->count() <= 1) 
+			throw new TreeException('No siblings found for ' . $node->parent_id);
+		
+		$nodeIndex	= null;
+		foreach ($siblings as $index => $sibling) {
+			if ($sibling->id == $node->id) {
+				$nodeIndex	= $index;
+				break;
+			}	
+		}
+		
+		$toIndex	= $nodeIndex + $offset;
+		if ($toIndex < 0) 
+			throw new TreeException('Index of node moving to not found, tried ' . $toIndex);
+		
+		$nodeSpan	= $node->{static::$__treeRght} - $node->{static::$__treeLft};
+		$moveNode	= $siblings[$toIndex];
+		$moveSpan	= $nodeSpan + 1; output("Move Span $moveSpan");
+		
+		$oldLft	= $node->{static::$__treeLft};
+		$oldRght= $node->{static::$__treeRght};
+		
+		$newLft	= $moveNode->{static::$__treeLft};
+		$newRght= $newLft + $nodeSpan;
+		
+		
+		if ($dir === self::$MoveDirectionDown) {
+			$conditions = [
+				static::$__treeLft . ' > ? AND ' . static::$__treeRght . ' <= ?',
+				$node->{static::$__treeRght},
+				$moveNode->{static::$__treeRght}
+			];
+		} elseif ($dir === self::$MoveDirectionUp) {
+			$conditions = [
+				static::$__treeLft . ' >= ? AND ' . static::$__treeRght . ' < ?',
+				$moveNode->{static::$__treeLft},
+				$node->{static::$__treeLft}
+			];
+		}
+		output($conditions);
+		// Move affected siblings
+		static::update_all(
+				static::$__treeLft . ' = ' . static::$__treeLft . " $symbol $moveSpan, " .
+				static::$__treeRght . ' = ' . static::$__treeRght . " $symbol $moveSpan",
+				$conditions);
+		output("Last Query " . static::connection()->last_query);
+		output($conditions);
+				
+		
+		// Figure out the span for the move
+		if ($dir === self::$MoveDirectionUp)
+			$moveSpan	= $node->{static::$__treeLft} - $moveNode->{static::$__treeLft};
+		elseif ($dir === self::$MoveDirectionDown)
+			$moveSpan	= $moveNode->{static::$__treeLft} - $node->{static::$__treeLft};
+		
+		// Move the node
+		$node->{static::$__treeLft}	= $newLft;
+		$node->{static::$__treeRght}= $newRght;
+		if(!$node->save()) 
+			throw new TreeException('Unable to save the moving node');
+		
+		$symbol	= ($dir === self::$MoveDirectionUp) ? '-' : '+';
+		// Move any children
+		$childrenIds	= [];
+		if (count($children) < 1) return true;
+		foreach ($children as $child) {
+			$childrenIds[]	= $child->id;
+		}
+		
+		static::update_all(
+				static::$__treeLft . ' = ' . static::$__treeLft . " $symbol $moveSpan, " .
+				static::$__treeRght . ' = ' . static::$__treeRght . " $symbol $moveSpan",
+				[
+					'id IN (?)',
+					$childrenIds
+				]);
+		
+		return true;
+	}
+	
 	public static function tree($separator = '-', $options = [], $lft = null, $rght = null) {
 		if ($lft) static::$__treeLft	= $lft;
 		if ($rght)static::$__treeRght = $rght;
@@ -131,7 +226,7 @@ trait Tree {
 	public static function allChildrenOf($parent) {
 		return static::all([
 					'conditions' => [
-						static::$__treeLft . ' BETWEEN ? AND ?',
+						static::$__treeLft . ' > ? AND ' . static::$__treeRght . ' < ?',
 						$parent->{static::$__treeLft},
 						$parent->{static::$__treeRght}
 					]
@@ -148,7 +243,6 @@ trait Tree {
 		}
 		
 		return $ret . ' ';
-	}
-	
+	}	
 }
 ?>

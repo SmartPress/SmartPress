@@ -11,19 +11,19 @@
 		</ul>
 	<?php endif; ?>
 	<div class="field">
-		<?php $f->label("parent_id"); ?>
-		<?php $f->collectionSelect("parent_id", $this->allMenus, 'id', 'title'); ?>
+		<?php $f->label("parent_id", 'Item In'); ?>
+		<?php $f->collectionSelect("parent_id", $this->allMenus, 'id', 'title', null, ['class' => 'input-medium']); ?>
 	</div>
 	<div class="field">
 		<?php $f->label("title"); ?>
-		<?php $f->textField("title"); ?>
+		<?php $f->textField("title", ['class' => 'input-medium']); ?>
 	</div>
 	<div class="field">
 		<?php $f->label("url"); ?>
-		<?php $f->textField("url"); ?>
+		<?php $f->textField("url", ['class' => 'input-medium']); ?>
 	</div>
 	<div class="actions">
-		<?php $f->submit('Save'); ?>
+		<?php $f->submit('Add', ['class' => 'btn btn-primary pull-right']); ?>
 	</div>
 	
 <?php }); ?>

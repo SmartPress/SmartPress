@@ -33,13 +33,12 @@ class Block extends Base {
 		EventManager::dispatch("pre_load_block_{$name}_{$controller}", $blocks);
 		EventManager::dispatch("pre_load_block_{$name}_{$controller}_{$action}", $blocks);
 		
-		output($this->view()->params);
 		foreach ($blocks as $block) {
 			if ($block['block'] != $name) continue;
 			
-			//$params	= json_decode($block['params'], true);
-			$params = (!$params || $params === null) ? array() : $block['params'];
-			if (isset($options[$block['element']])) $params = array_merge($params, $options[$block['element']]);
+			$params = $block['params'];
+			if (isset($options[$block['element']])) 
+				$params = array_merge($params, $options[$block['element']]);
 			
 			if (isset($params['exclusions'])) {
 				if (is_array($params['exclusions']) && in_array($this->view()->here(), $params['exclusions'])) {
