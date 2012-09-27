@@ -3,8 +3,8 @@ namespace Cms\Lib\Concerns;
 
 
 use Cms\Lib\Concerns\Exceptions\TreeException;
-use Speedy\ActiveRecord\Relationships\BelongsTo;
-use Speedy\ActiveRecord\Relationships\HasMany;
+use ActiveRecord\Relationships\BelongsTo;
+use ActiveRecord\Relationships\HasMany;
 
 
 trait Tree {

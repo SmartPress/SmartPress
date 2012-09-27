@@ -2,8 +2,9 @@
 namespace Cms\Models;
 
 
-use \Speedy\Cache;
-use \Speedy\Model\ActiveRecord\Base;
+use Speedy\Cache;
+use Speedy\Set;
+use Speedy\Model\ActiveRecord\Base;
 
 class PostCustomField extends Base {
 	
@@ -23,8 +24,10 @@ class PostCustomField extends Base {
 		$fields = Cache::read(self::CacheName);
 		if (empty($fields)) {
 			$fields = parent::all();
-			Cache::write(self::CacheName, $fields);
-		} 	
+			Cache::write(self::CacheName, (array) $fields);
+		} else {
+			$fields = new Set($fields);
+		}
 		
 		return $fields;
 	}

@@ -2,12 +2,13 @@
 namespace Cms\Controllers\Admin;
 
 
-use \Cms\Controllers\Admin\Admin;
-use \Cms\Models\Block;
-use \Cms\Models\Block\Manager;
-use \Speedy\Loader;
-use \Speedy\Session;
-use \Speedy\View;
+use Cms\Controllers\Admin\Admin;
+use Cms\Models\Block;
+use Cms\Models\Block\Manager;
+use Speedy\Loader;
+use Speedy\Session;
+use Speedy\View;
+use Speedy\Logger;
 
 class Blocks extends Admin {
 		/**

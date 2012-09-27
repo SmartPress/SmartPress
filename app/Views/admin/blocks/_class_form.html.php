@@ -14,7 +14,7 @@
 	<?php $this->render('dynamic_fields', ['info' => $info, 'params' => $params]); ?>
 	
 	<div class="field">
-		<?php $this->labelTag('block[priority]', 'Block'); ?>
+		<?php $this->labelTag('block[priority]', 'Priority'); ?>
 		<?php $this->textFieldTag('block[priority]'); ?>
 	</div>
 <?php }); ?>

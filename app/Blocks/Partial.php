@@ -8,7 +8,7 @@ use \Speedy\View;
 class Partial extends Base {
 	
 	public function render() {
-		$view	= View::instance();output("DATA "); output($this->data());
+		$view	= View::instance();
 		$file	= $view->findFile($this->partial); 
 		if ($file === false) return '';
 		

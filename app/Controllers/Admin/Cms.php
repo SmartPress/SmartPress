@@ -2,13 +2,14 @@
 namespace Cms\Controllers\Admin;
 
 
-use \Cms\Controllers\Admin\Admin;
-use \Cms\Models\Block;
-use \Cms\Models\Block\Manager as BlockManager;
-use \Cms\Models\Post;
-use \Cms\Models\PostCustomField;
-use \Speedy\Utility\Inflector;
-use \Speedy\Loader;
+use Cms\Controllers\Admin\Admin;
+use Cms\Models\Block;
+use Cms\Models\Block\Manager as BlockManager;
+use Cms\Models\Post;
+use Cms\Models\PostCustomField;
+use Speedy\Utility\Inflector;
+use Speedy\Loader;
+use Speedy\Logger;
 
 class Cms extends Admin {
 
@@ -117,7 +118,7 @@ class Cms extends Admin {
 		$this->post	= Post::find($this->params('id'), array( 'conditions' => array( 'type' => $this->type )));
 		
 		$this->respondTo(function($format) {
-			$data			= $this->params('post'); output($data);
+			$data			= $this->params('post');
 			$data['type']	= $this->type;
 			if ($this->post->update_attributes($data)) {
 				$format->html = function() {

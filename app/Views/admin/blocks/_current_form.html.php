@@ -67,7 +67,7 @@
 								<?php $this->render('admin/blocks/_dynamic_fields', ['info' => $info, 'params' => $params]); ?>
 								
 								<div class="field">
-									<?php $this->labelTag('block[priority]', 'Block'); ?>
+									<?php $this->labelTag('block[priority]', 'Priority'); ?>
 									<?php $this->textFieldTag('block[priority]', $element['priority']); ?>
 								</div>
 							</div>
