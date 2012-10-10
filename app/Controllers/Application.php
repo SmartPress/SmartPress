@@ -17,11 +17,11 @@ class Application extends Controller {
 		if (!isset($ext) || $ext != 'html')
 			return; 
 		
-		$session = Session::instance();
-		$previous_url	= $session->read('_back_url');
+		//$session = Session::instance();
+		$previous_url	= Session::read('_back_url');
 		if ($previous_url)
-			$session->setData('back_url', $previous_url);
-		$session->write('_back_url', $this->_request()->uri());
+			Session::write('back_url', $previous_url);
+		Session::write('_back_url', $this->_request()->uri());
 	}
 	
 }

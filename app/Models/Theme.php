@@ -2,12 +2,12 @@
 namespace Cms\Models;
 
 
-use \Speedy\Cache;
-use \Speedy\Singleton;
-use \Speedy\Utility\File;
-use \Cms\Models\ConfigManager;
-use \Cms\Lib\Exceptions\Theme as ThemeException;
-use \ZipArchive;
+use Speedy\Cache;
+use Speedy\Singleton;
+use Speedy\Utility\File;
+use Cms\Models\Config\Manager as ConfigManager;
+use Cms\Lib\Exceptions\Theme as ThemeException;
+use ZipArchive;
 
 
 define('THEME_DIR', ROOT . DS . 'themes');

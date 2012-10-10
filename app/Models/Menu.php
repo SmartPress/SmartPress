@@ -3,10 +3,9 @@ namespace Cms\Models;
 
 
 use Speedy\Cache;
-use Speedy\Model\ActiveRecord\Base;
 use Speedy\Set;
 
-class Menu extends Base {
+class Menu extends \Speedy\Model\ActiveRecord {
 	
 	use \Cms\Lib\Concerns\Tree;
 	

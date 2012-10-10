@@ -23,6 +23,11 @@
 				<li><?php $this->linkTo('Pages', $this->admin_pages_url()); ?></li>
 			</ul>
 		</li>
+		<li>
+			<div class="btn-group accordion-heading">
+				<?php $this->linkTo('<i class="icon-pencil"></i> Comments', $this->admin_comments_url(), ['class' => 'btn btn-head', 'style' => 'width: 183px']); ?>
+			</div>		
+		</li>
 	</ul>
 	
 	<ul class="nav nav-accordion">

@@ -1,8 +1,9 @@
 <?php
 namespace Cms\Controllers;
 
-use \Cms\Controllers\Cms;
-use \Cms\Models\Post;
+
+use Cms\Controllers\Cms;
+use Cms\Models\Post;
 
 class Posts extends Cms {
 
@@ -10,6 +11,19 @@ class Posts extends Cms {
 	
 
 
+	/**
+	 * GET /posts
+	 */
+	public function index() {
+		$this->posts	= Post::all(array('conditions' => array( 'type' => $this->type )));
+	
+		$this->respondTo(function(&$format) {
+			$format->html; // Render per usual
+			$format->json	= function() {
+				$this->render(array( 'json' => $this->posts ));
+			};
+		});
+	}
 }
 
 ?>

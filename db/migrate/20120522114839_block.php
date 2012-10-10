@@ -1,6 +1,6 @@
 <?php
 
-use \Speedy\ActiveRecord\Migration;
+use \ActiveRecord\Migration;
 
 class Block extends Migration {
 

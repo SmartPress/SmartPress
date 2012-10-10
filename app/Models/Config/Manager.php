@@ -1,12 +1,12 @@
 <?php
-namespace Cms\Models;
+namespace Cms\Models\Config;
 
 
-use \Cms\Models\Config;
-use \Speedy\Cache;
-use \Speedy\Singleton;
+use Cms\Models\Config;
+use Speedy\Cache;
+use Speedy\Singleton;
 
-class ConfigManager extends Singleton {
+class Manager extends Singleton {
 	
 	use \Speedy\Traits\ArrayAccess;
 	

@@ -96,7 +96,7 @@ class Manager extends Singleton {
 	
 		$blocks	= Cache::read(Block::CacheName);
 		if (empty($blocks)) {
-			$blocks	= Block::all(['select' => 'id, path, block, element, params', 'order' => 'priority DESC']);
+			$blocks	= Block::all(['select' => 'id, path, block, element, params, priority', 'order' => 'priority DESC']);
 				
 			$refined = [];
 			foreach ($blocks as $block) {
@@ -107,6 +107,7 @@ class Manager extends Singleton {
 						'element'	=> $block->element,
 						'params'	=> $block->params,
 						'path'		=> $block->path,
+						'priority'	=> $block->priority,
 						'id'	=> $block->id
 					]
 				];

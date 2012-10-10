@@ -22,7 +22,7 @@ class Block extends Base {
 	}
 	
 	public function block($name, $options = []) {
-		$controller	= implode('/', $this->view()->param('controller'));
+		$controller	= implode('/', $this->view()->param('controller')); 
 		$action		= $this->view()->param('action');
 		$blocks	= BlockManager::currentFor($controller, $action);
 
@@ -40,10 +40,10 @@ class Block extends Base {
 			if (isset($options[$block['element']])) 
 				$params = array_merge($params, $options[$block['element']]);
 			
-			if (isset($params['exclusions'])) {
-				if (is_array($params['exclusions']) && in_array($this->view()->here(), $params['exclusions'])) {
+			if (isset($params['except'])) {
+				if (is_array($params['except']) && in_array($this->view()->here(), $params['except'])) {
 					continue;
-				} elseif (is_string($params['exclusions']) && $params['exclusions'] == $this->view()->here()) {
+				} elseif (is_string($params['except']) && $params['except'] == $this->view()->here()) {
 					continue;
 				}
 			}

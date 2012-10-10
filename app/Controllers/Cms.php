@@ -1,8 +1,11 @@
 <?php
 namespace Cms\Controllers;
 
-use \Cms\Controllers\Application;
-use \Cms\Models\Post;
+
+use Cms\Controllers\Application;
+use Cms\Models\Post;
+use Cms\Models\Theme;
+use Cms\Models\Comment;
 
 class Cms extends Application {
 
@@ -15,6 +18,10 @@ class Cms extends Application {
 	 */
 	public function show() {
 		$this->post	= Post::find($this->params('id'), array( 'conditions' => array( 'type' => $this->type )));
+		if (!empty($this->post->layout) && in_array($this->post->layout, Theme::availableLayouts())) {
+			$this->layout	= $this->post->layout;
+		}
+		$this->comment = new Comment();
 		
 		$this->respondTo(function(&$format) {
 			$format->html; // show.php.html

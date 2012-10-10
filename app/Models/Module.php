@@ -7,7 +7,7 @@ use \Cms\Lib\Module\Exception as MException;
 
 defined('MODULE_UPLOAD_DIR') or define("MODULE_UPLOAD_DIR", ROOT . DS . 'tmp' . DS . 'uploads');
 
-class Module extends \Speedy\Model\ActiveRecord\Base {
+class Module extends \Speedy\Model\ActiveRecord {
 	
 	/*protected $_mixins = array(
 		"\\Cms\\Lib\\Concerns\\Uploader" => array(

@@ -1,9 +1,9 @@
 <?php
 namespace Cms\Models;
 
-use \Speedy\Model\ActiveRecord\Base;
 
-class Group extends Base {
+
+class Group extends \Speedy\Model\ActiveRecord {
 }
 
 ?>

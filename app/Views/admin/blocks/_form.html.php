@@ -3,7 +3,7 @@ $class	= \Speedy\Loader::instance()->toClass($this->block['element']);
 $info	= (class_exists($class)) ? $class::info() : null;
 ?>
 <?php $this->formFor(['admin', $this->block], ['class' => 'form-horizontal', 'id' => 'block_form'], function($f) use ($info) { ?>
-
+	<?php $params = $this->block['params']; ?>
 	<?php if ($this->block->errors && $this->block->errors->count()): ?>
 		<div id="error_explanation">
 			<?php element('h2', "{$this->pluralize($this->block, 'error')} prohibited this block from beign saved:"); ?>
@@ -34,8 +34,22 @@ $info	= (class_exists($class)) ? $class::info() : null;
 	</div>
 	<div id="block_params_container">
 		<?php if (!empty($info)): ?>
-			<?php $this->render('dynamic_fields_horz', ['info' => $info, 'params' => $this->block['params']]); ?>
+			<?php $this->render('dynamic_fields_horz', ['info' => $info, 'params' => $params]); ?>
 		<?php endif; ?>
+	</div>
+	<div class="control-group">
+		<?php $this->labelTag('block[params][except]', 'Excluding', ['class' => 'control-label']); ?>
+		<div class="controls">
+			<?php $this->textFieldTag('block[params][except]', ['value' => (isset($params['except']) ? implode(',', $params['except']) : '')]); ?>
+			<span class="help-inline">Leave blank if you don't want exclusions.</span>
+		</div>
+	</div>
+	<div class="control-group">
+		<?php $this->labelTag('block[params][only]', 'Only On', ['class' => 'control-label']); ?>
+		<div class="controls">
+			<?php $this->textFieldTag('block[params][only]', ['value' => (isset($params['only'])) ? implode(',', $params['only']) : '']); ?>
+			<span class="help-inline">Leave blank if you don't want to limit.</span>
+		</div>
 	</div>
 	<div class="control-group">
 		<?php $f->label("priority", null, ['class' => 'control-label']); ?>

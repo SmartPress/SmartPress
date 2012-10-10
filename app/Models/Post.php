@@ -2,16 +2,22 @@
 namespace Cms\Models;
 
 
-use \Speedy\Model\ActiveRecord\Base;
 
 import("cms.lib.markdown");
 
-class Post extends Base {
+class Post extends \Speedy\Model\ActiveRecord {
 	
+	const PageType	= 'page';
+	
+	const PostType	= 'post';
 	
 	private static $_statuses = ['Select One', 'Draft', 'Publish'];
 	
 	private $_custom_data;
+	
+	static $has_many = [
+		['comments', 'order' => 'created_at ASC']
+	];
 	
 	
 	
@@ -42,6 +48,14 @@ class Post extends Base {
 	
 	public function get_html() {
 		return \Markdown($this->content);
+	}
+	
+	public function get_summary() {
+		return strip_tags($this->html);
+	}
+	
+	public static function allPages() {
+		return self::where(['type' => self::PageType]);
 	}
 	
 }

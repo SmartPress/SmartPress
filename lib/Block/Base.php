@@ -15,7 +15,7 @@ abstract class Base extends Object {
 	
 	abstract public function render();
 	
-	abstract public static function info();
+	//abstract public static function info();
 	
 }
 

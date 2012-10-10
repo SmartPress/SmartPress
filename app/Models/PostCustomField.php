@@ -4,9 +4,8 @@ namespace Cms\Models;
 
 use Speedy\Cache;
 use Speedy\Set;
-use Speedy\Model\ActiveRecord\Base;
 
-class PostCustomField extends Base {
+class PostCustomField extends \Speedy\Model\ActiveRecord {
 	
 	const CacheName = "post_custom_fields";
 	

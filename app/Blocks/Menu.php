@@ -11,6 +11,10 @@ class Menu extends Partial {
 	use \Speedy\View\Helpers\Html;
 	
 	
+	/*public function addData($data) {
+		parent::addData($data);
+	}*/
+	
 	public function setUp() {
 		$this->setData('items', MenuModel::itemsForId($this->menu));
 	}

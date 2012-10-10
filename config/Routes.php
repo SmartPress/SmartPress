@@ -2,8 +2,9 @@
 namespace Cms\Config;
 
 
-use \Speedy\Router\Draw as SpeedyDraw;
-use \Cms\Lib\Router\Routes\Slug;
+use Speedy\Router\Draw as SpeedyDraw;
+use Cms\Lib\Router\Routes\Slug;
+use Cms\Models\Config\Manager as ConfigManager;
 
 class Routes extends SpeedyDraw {
 
@@ -40,13 +41,25 @@ class Routes extends SpeedyDraw {
 					$this->post('move');
 				});
 			});
+			
+			$this->resources('comments');
 		});
 		
-		$this->resources('posts');
-		$this->resources('pages');
+		$this->resources('posts', ['only' => ['show', 'index']], function() {
+			$this->resources('comments', ['only' => ['create', 'index']]);
+		});
+		$this->resources('pages', ['only' => 'show']);
 		
 		$this->match(['/admin/signin' => "admin/sessions#_new"]);
 		$this->match(['/admin/signout' => "admin/sessions#destroy"]);
+		
+		$homeType = ConfigManager::get('home/type');
+		if ($homeType == 2) {
+			$this->rootTo('pages#show', ['id' => ConfigManager::get('home/single_id')]);
+		} elseif ($homeType == 1) {
+			$this->rootTo('posts#index');
+		}
+		
 		$this->slug(array("/:slug" => "pages#show", "type" => "page"));
 		
 		// Match example:

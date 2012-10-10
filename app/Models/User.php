@@ -1,9 +1,9 @@
 <?php
 namespace Cms\Models;
 
-use \Speedy\Model\ActiveRecord\Base;
 
-class User extends Base {
+
+class User extends \Speedy\Model\ActiveRecord {
 	
 	//public $password;
 	

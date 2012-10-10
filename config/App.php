@@ -13,7 +13,7 @@ class App extends \Speedy\App {
 
 
 	protected function initApp() {
-		Session::start();
+		Session::instance();
 		EventManager::dispatch('bootstrap');
 		
 		$theme = Theme::currentTheme();

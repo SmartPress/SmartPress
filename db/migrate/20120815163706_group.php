@@ -1,6 +1,6 @@
 <?php
 
-use \Speedy\ActiveRecord\Migration;
+use \ActiveRecord\Migration;
 
 class Group extends Migration {
 

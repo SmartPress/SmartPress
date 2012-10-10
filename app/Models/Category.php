@@ -2,9 +2,8 @@
 namespace Cms\Models;
 
 
-use \Speedy\Model\ActiveRecord\Base;
 
-class Category extends Base {
+class Category extends \Speedy\Model\ActiveRecord {
 }
 
 ?>

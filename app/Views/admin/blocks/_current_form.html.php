@@ -67,8 +67,19 @@
 								<?php $this->render('admin/blocks/_dynamic_fields', ['info' => $info, 'params' => $params]); ?>
 								
 								<div class="field">
+									<?php $this->labelTag('block[params][except]', 'Excluding'); ?>
+									<?php $this->textFieldTag('block[params][except]', ['value' => (isset($params['except']) ? implode(',', $params['except']) : '')]); ?>
+									<span class="help-inline">Leave blank if you don't want exclusions.</span>
+								</div>
+								
+								<div class="field">
+									<?php $this->labelTag('block[params][only]', 'Only On'); ?>
+									<?php $this->textFieldTag('block[params][only]', ['value' => (isset($params['only']) ? implode(',', $params['only']) : '')]); ?>
+									<span class="help-inline">Leave blank if you don't want to limit.</span>
+								</div>
+								<div class="field">
 									<?php $this->labelTag('block[priority]', 'Priority'); ?>
-									<?php $this->textFieldTag('block[priority]', $element['priority']); ?>
+									<?php $this->textFieldTag('block[priority]', ['value' => $element['priority']]); ?>
 								</div>
 							</div>
 							

@@ -3,10 +3,9 @@ namespace Cms\Models;
 
 
 use \Speedy\Cache;
-use \Speedy\Model\ActiveRecord\Base;
-use \Cms\Models\ConfigManager;
+use \Cms\Models\Config\Manager as ConfigManager;
 
-class Config extends Base {
+class Config extends \Speedy\Model\ActiveRecord {
 	
 	static $after_save = ['flushCache'];
 	

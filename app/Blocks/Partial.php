@@ -12,12 +12,7 @@ class Partial extends Base {
 		$file	= $view->findFile($this->partial); 
 		if ($file === false) return '';
 		
-		ob_start();
-		$view->render($this->partial, [], $this->data());
-		$content	= ob_get_contents();
-		ob_end_clean();
-		
-		return $content;
+		return $view->render($this->partial, [], $this->data());
 	}
 	
 	public static function info() {

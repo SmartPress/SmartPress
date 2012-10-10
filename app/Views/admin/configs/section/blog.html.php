@@ -10,8 +10,9 @@
 		<div class="page-header">
 			<h2>Blog Settings</h2>
 		</div>
-		<?php $this->formTag($this->admin_configs_url(), ['method' => 'POST', 'class' => 'form-horizontal'], function() use ($theme) { 
-			$title = \Cms\Models\ConfigManager::get('title/default');
+		<?php $this->formTag($this->admin_configs_url(), ['method' => 'POST', 'class' => 'form-horizontal'], function()  { 
+			$title	= \Cms\Models\Config\Manager::get('title/default');
+			$home	= \Cms\Models\Config\Manager::get('home');
 			?>
 			
 			<div class="control-group">
@@ -20,6 +21,30 @@
 				
 				<div class="controls">
 					<?php $this->textFieldTag('config[0][value]', ['value' => ($title) ? $title : '' ]); ?>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<?php $this->hiddenFieldTag('config[1][name]', 'home/type'); ?>
+				<?php $this->labelTag('config[1][value]', 'Home Page Type', ['class' => 'control-label']); ?>
+				
+				<div class="controls">
+					<?php $this->selectTag('config[1][value]', $this->optionsForSelect([
+							'0' => 'Select One', 
+							'1'	=> 'Blog Roll',
+							'2'	=> 'Single Page'
+					], (isset($home['type'])) ? $home['type'] : null)); ?>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<?php $this->hiddenFieldTag('config[2][name]', 'home/single_id'); ?>
+				<?php $this->labelTag('config[2][value]', 'Single Page', ['class' => 'control-label']); ?>
+				
+				<div class="controls">
+					<?php $this->selectTag('config[2][value]', $this->optionsForSelect(
+							$this->optionsFromCollectionForSelect(\Cms\Models\Post::allPages(), 'id', 'title'), 
+							(isset($home['single_id'])) ? $home['single_id'] : null)); ?>
 				</div>
 			</div>
 			

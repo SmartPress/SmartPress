@@ -24,7 +24,7 @@
 	<?php $this->stylesheet('/admin.css?debug=1'); ?>
 </head>
 <body class="<?php echo implode(' ', $this->param('controller')) . ' ' . $this->param('action'); ?>">
-	<?php $this->render("admin/shared/_top-nav"); ?>
+	<?php $this->render("admin/shared/top-nav"); ?>
 	
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -32,7 +32,7 @@
 				<?php if ($this->hasContentFor('left-sidebar')): ?>
 					<?php $this->yield("left-sidebar"); ?>
 				<?php else: ?>
-					<?php $this->render("admin/shared/_left-sidebar"); ?>
+					<?php $this->render("admin/shared/left-sidebar"); ?>
 				<?php endif; ?>
 			</div>
 			<div class="span9">
