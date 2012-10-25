@@ -64,7 +64,7 @@
 									<?php $this->selectTag('block[block]', $this->optionsForSelect(\Cms\Models\Theme::blockOptions(), $element['block'])); ?>
 								</div>
 							
-								<?php $this->render('admin/blocks/_dynamic_fields', ['info' => $info, 'params' => $params]); ?>
+								<?php $this->render('admin/blocks/dynamic_fields', ['info' => $info, 'params' => $params]); ?>
 								
 								<div class="field">
 									<?php $this->labelTag('block[params][except]', 'Excluding'); ?>

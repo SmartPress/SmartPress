@@ -9,7 +9,7 @@
 	<div class="page-header">
 		<h2>Blocks <button class="btn btn-small btn-primary" data-toggle="modal" data-target="#new_block"><i class="icon-plus icon-white"></i></button></h2>
 	</div>
-	<?php $this->render('admin/blocks/_current_form', ['controller' => 'posts', 'action' => 'show']); ?>
+	<?php $this->render('admin/blocks/current_form', ['controller' => 'posts', 'action' => 'show']); ?>
 </div>
 <div id="new_block" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-header">

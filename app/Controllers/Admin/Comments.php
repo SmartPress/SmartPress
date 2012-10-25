@@ -115,6 +115,52 @@ class Comments extends Admin {
 			$format->html = function() { $this->redirectTo($this->admin_comments_url()); };
 		});
 	}
+	
+	public function approve() {
+		$this->comment = Comment::find($this->params('id'));
+		$this->comment->status = Comment::ApprovedStatus;
+		
+		$this->respondTo(function($format) {
+			if ($this->comment->save()) {
+				$format->html = function() {
+					$this->redirectTo($this->admin_comment_path($this->comment), array("notice" => "Comment was successfully approved."));
+				};
+				$format->json = function() {
+					$this->render([ 'json' => ['success' => true] ]);
+				};
+			} else {
+				$format->html = function() {
+					$this->render("edit");
+				};
+				$format->json = function() {
+					$this->render(array( 'json' => [ 'success' => false, 'errors' => $this->comment->errors ]));
+				};
+			}
+		});
+	}
+	
+	public function disapprove() {
+		$this->comment = Comment::find($this->params('id'));
+		$this->comment->status = Comment::DisapprovedStatus;
+	
+		$this->respondTo(function($format) {
+			if ($this->comment->save()) {
+				$format->html = function() {
+					$this->redirectTo($this->admin_comment_path($this->comment), array("notice" => "Comment was successfully disapproved."));
+				};
+				$format->json = function() {
+					$this->render([ 'json' => ['success' => true] ]);
+				};
+			} else {
+				$format->html = function() {
+					$this->render("edit");
+				};
+				$format->json = function() {
+					$this->render(array( 'json' => [ 'success' => false, 'errors' => $this->comment->errors ]));
+				};
+			}
+		});
+	}
 }
 
 ?>

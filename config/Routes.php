@@ -42,7 +42,12 @@ class Routes extends SpeedyDraw {
 				});
 			});
 			
-			$this->resources('comments');
+			$this->resources('comments', [], function() {
+				$this->member(function() {
+					$this->post('approve');
+					$this->post('disapprove');
+				});
+			});
 		});
 		
 		$this->resources('posts', ['only' => ['show', 'index']], function() {

@@ -2,6 +2,6 @@
 
 <?php $this->render("form"); ?>
 
-<?php $this->linkTo('Show', $this->comment_path($this->comment->id)); ?> 
+<?php $this->linkTo('Show', $this->admin_comment_path($this->comment->id)); ?> 
 |
-<?php $this->linkTo('Back', $this->comments_url()); ?>
+<?php $this->linkTo('Back', $this->admin_comments_url()); ?>

@@ -16,7 +16,7 @@ class Post extends \Speedy\Model\ActiveRecord {
 	private $_custom_data;
 	
 	static $has_many = [
-		['comments', 'order' => 'created_at ASC']
+		['comments', 'order' => 'created_at ASC', 'conditions' => ['status = ?', Comment::ApprovedStatus]]
 	];
 	
 	
