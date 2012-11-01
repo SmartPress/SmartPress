@@ -44,8 +44,8 @@ class Routes extends SpeedyDraw {
 			
 			$this->resources('comments', [], function() {
 				$this->member(function() {
-					$this->post('approve');
-					$this->post('disapprove');
+					$this->get('approve');
+					$this->get('disapprove');
 				});
 			});
 		});
@@ -55,8 +55,8 @@ class Routes extends SpeedyDraw {
 		});
 		$this->resources('pages', ['only' => 'show']);
 		
-		$this->match(['/admin/signin' => "admin/sessions#_new"]);
-		$this->match(['/admin/signout' => "admin/sessions#destroy"]);
+		$this->match(['admin/signin' => "admin/sessions#_new"]);
+		$this->match(['admin/signout' => "admin/sessions#destroy"]);
 		
 		$homeType = ConfigManager::get('home/type');
 		if ($homeType == 2) {

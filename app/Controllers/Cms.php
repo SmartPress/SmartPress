@@ -18,7 +18,7 @@ class Cms extends Application {
 	 */
 	public function show() {
 		$this->post	= Post::find('first', array( 
-				'conditions' => ['id = ? AND type = ?', $this->params('id'), $this->type]
+				'conditions' => ['(id = ? OR slug = ?) AND type = ?', $this->params('id'), $this->params('id'), $this->type]
 				));
 		if (!empty($this->post->layout) && in_array($this->post->layout, Theme::availableLayouts())) {
 			$this->layout	= $this->post->layout;

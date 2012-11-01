@@ -123,7 +123,7 @@ class Comments extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->comment->save()) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_comment_path($this->comment), array("notice" => "Comment was successfully approved."));
+					$this->redirectTo($this->admin_comments_url(), array("notice" => "Comment was successfully approved."));
 				};
 				$format->json = function() {
 					$this->render([ 'json' => ['success' => true] ]);
@@ -146,7 +146,7 @@ class Comments extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->comment->save()) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_comment_path($this->comment), array("notice" => "Comment was successfully disapproved."));
+					$this->redirectTo($this->admin_comments_url(), array("notice" => "Comment was successfully disapproved."));
 				};
 				$format->json = function() {
 					$this->render([ 'json' => ['success' => true] ]);
