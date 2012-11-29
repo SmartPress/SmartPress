@@ -74,7 +74,7 @@ class Cms extends Admin {
 	 * GET /posts/1/edit
 	 */
 	public function edit() {
-		$this->post	= Post::find($this->params('id', array( 'type' => $this->type )));
+		$this->post	= Post::find($this->params('id'), array( 'type' => $this->type ));
 		$this->post_custom_fields = PostCustomField::all();
 		$this->blocks	= BlockManager::availableBlocks();
 		
