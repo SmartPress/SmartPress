@@ -5,12 +5,15 @@ namespace Cms\Lib\Module;
 use \Speedy\Cache;
 use \Speedy\Singleton;
 use \Speedy\Loader;
+use \Speedy\Logger;
 use \Speedy\Utility\Inflector;
 use \Cms\Lib\Module\Exception as MException;
 use \Cms\Models\Module;
 use \ZipArchive;
 
-class Installer extends Singleton {
+class Installer extends Object {
+	
+	use \Speedy\Traits\Singleton;
 
 	/**
 	 * String of zipFile
@@ -187,6 +190,12 @@ class Installer extends Singleton {
 		return simplexml_load_file($filename);
 	}
 	
+	/**
+	 * Runs update scripts for existing module
+	 * 
+	 * @param integer $id
+	 * @param resource optional $archive
+	 */
 	public function update($id, $archive = null) {
 		$module	= Module::find($id);
 	
@@ -248,6 +257,12 @@ class Installer extends Singleton {
 		return $this->_processed;
 	}
 	
+	/**
+	 * Installs a new module
+	 * 
+	 * @param resource $config xml
+	 * @param resource $archive
+	 */
 	private function _install($config, $archive) {
 		if (!isset($config->name) || !isset($config->version) || !isset($config->code)) {
 			$this->_error	= 'Manifest file missing required fields';
@@ -275,6 +290,8 @@ class Installer extends Singleton {
 			$this->_error	= 'Error occured while trying to update <br />' . $settings->lastError();
 			return false;
 		}
+		
+		$this->runMigrations($folder);
 	
 		$module = new Module($data);
 		if ($module->save()) {
@@ -286,23 +303,29 @@ class Installer extends Singleton {
 		return false;
 	}
 	
+	/**
+	 * Utility method  that unzips module into proper location
+	 * 
+	 * @param resource $archive
+	 * @param string $dest_path
+	 */
 	private function _unzipModule($archive, $dest_path = null) {
 		if (!$archive) return false;
 	
-		if (!$xmlString = $archive->getFromName('etc' . DS . 'config.xml')) {
+		if (!$xmlString = $archive->getFromName('Etc' . DS . 'config.xml')) {
 			$this->_error	= 'Unable to create xml object of manifest file';
 			return false;
 		}
 	
 		$xmlObj	= simplexml_load_string($xmlString);
-		$folder	= (!$dest_path) ? $xmlObj->code : $dest_path;
+		//$folder	= (!$dest_path) ? $xmlObj->code : $dest_path;
 		$dest_path	= (!$dest_path) ? MODULES_PATH . DS . $xmlObj->code . DS : $dest_path . DS;
 	
 		if (!$this->_extractFolder($archive, 'etc', $dest_path)) {
 			return false;
 		}
 	
-		if (($index	= $archive->locateName(Inflector::underscore("{$xmlObj->namespace}_app_model.php"))) !== FALSE) {
+		/*if (($index	= $archive->locateName(Inflector::underscore("{$xmlObj->namespace}_app_model.php"))) !== FALSE) {
 			if (!$archive->extractTo($dest_path, $archive->getNameIndex($index))) {
 				$this->_error	= 'Unable to extract module model';
 				return false;
@@ -314,7 +337,7 @@ class Installer extends Singleton {
 				$this->_error	= 'Unable to extract module controller';
 				return false;
 			}
-		}
+		}*/
 	
 		foreach ($xmlObj->features->feature as $feature) {
 			switch($feature) {
@@ -344,9 +367,16 @@ class Installer extends Singleton {
 			}
 		}
 	
-		return $folder;
+		return $dest_path;
 	}
 	
+	/**
+	 * Helper to extract a folder from archive
+	 * 
+	 * @param resource $zip
+	 * @param string $folder
+	 * @param string $dest_path
+	 */
 	private function _extractFolder($zip, $folder, $dest_path) {
 		for ($i = 0; $i < $zip->numFiles; $i++) {
 			$filename	= $zip->getNameIndex($i);
@@ -371,5 +401,42 @@ class Installer extends Singleton {
 	
 		return true;
 	}
+	
+	/**
+	 * Runs module database migrations
+	 * 
+	 * @param string $base
+	 */
+	private function runMigrations($base) {
+		$migrationPath	= $base . DS . "Etc" . DS . "migrate";
+		if (!is_dir($migrationPath)) {
+			return true;
+		}
+		
+		foreach (glob($migrationPath . DS . "*.php") as $migration) {
+			require_once $migration;
+				
+			$info	= pathinfo($migration);
+			$file	= $info['filename'];
+			$fileArr= explode('_', $file);
+			$version= array_shift($fileArr);
+			$class	= Inflector::camelize(implode('_', $fileArr));
+				
+				
+			$obj	= new $class(\ActiveRecord\Connection::instance());
+			Logger::info("===================================================");
+			Logger::info("Starting Migration for $class");
+			Logger::info("===================================================");
+				
+			$obj->runUp();
+			$log	= $obj->log();
+			foreach ($log as $l) {
+				Logger::info($l);
+			}
+		}
+		
+		return true;
+	}
+	
 }
 ?>

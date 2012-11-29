@@ -39,10 +39,11 @@ Class Site extends Singleton {
 		$self = self::instance();
 		$self->modules	= $siteModules;
 		//debug($siteModules);
-		$draw	= new Draw();
+		//$draw	= new Draw();
 		foreach ($siteModules as $module) {
 			Loader::instance()->registerNamespace(Inflector::underscore($module['namespace']), $module['file_path']);
 			
+			/*
 			if (!count($module['routes'])) {
 				continue;
 			}
@@ -63,7 +64,7 @@ Class Site extends Singleton {
 						} 
 					});
 				}
-			}
+			}*/
 		}
 		
 		return $self;
@@ -95,6 +96,17 @@ Class Site extends Singleton {
 	public static function all() {
 		$self	= self::instance();
 		return $self->modules();
+	}
+	
+	public static function allPaths() {
+		$self	= self::instance();
+		$paths	= [];
+		
+		foreach ($this->modules as $code => $info) {
+			$paths[]	= $info['file_path'];
+		}
+		
+		return $paths;
 	}
 	
 	/**

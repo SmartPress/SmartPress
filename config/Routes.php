@@ -4,6 +4,7 @@ namespace Cms\Config;
 
 use Speedy\Router\Draw as SpeedyDraw;
 use Cms\Lib\Router\Routes\Slug;
+use Cms\Lib\Module\Site as SiteModules;
 use Cms\Models\Config\Manager as ConfigManager;
 
 class Routes extends SpeedyDraw {
@@ -63,6 +64,15 @@ class Routes extends SpeedyDraw {
 			$this->rootTo('pages#show', ['id' => ConfigManager::get('home/single_id')]);
 		} elseif ($homeType == 1) {
 			$this->rootTo('posts#index');
+		}
+		
+		foreach (SiteModuels::allPaths() as $path) {
+			$routes = $path . DS . 'Etc' . DS . 'Routes.php';
+			if (!file_exists($routes)) {
+				continue;
+			}
+			
+			include_once $routes;
 		}
 		
 		$this->slug(array("/:slug" => "pages#show", "type" => "page"));
