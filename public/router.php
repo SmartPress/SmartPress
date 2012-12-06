@@ -5,8 +5,8 @@ function output($str = "") {
 	if (is_array($str)) $str = print_r($str, true);
 	fwrite(STDOUT, $str . "\n");
 }
-
-if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $_SERVER['REQUEST_URI'])) {
+//output(print_r($_SERVER, true));
+if (file_exists(__DIR__ . DIRECTORY_SEPARATOR . $_SERVER['SCRIPT_NAME'])) {
 	return false;
 } else {
 	if (!isset($_GET['url']) && isset($_SERVER['PATH_INFO'])) {

@@ -22,6 +22,21 @@
 	<?php $this->stylesheet('/vendor/jquery-ui/css/jquery-ui-1.8.23.custom.css'); ?>
 	<?php $this->stylesheet('/application.css?debug=1'); ?>
 	<?php $this->stylesheet('/admin.css?debug=1'); ?>
+	
+	<script type="text/javascript">
+		var CKEDITOR_BASEPATH = '/js/ckeditor/';
+	</script> 
+	
+	<?php $this->javascript('/js/ckeditor/ckeditor.js'); ?>
+	<?php $this->javascript('/js/ckeditor/adapters/jquery.js'); ?>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("tr.highlight").vectorEffect();
+
+			$(".ckeditor").ckeditor();
+		});
+	</script>
 </head>
 <body class="<?php echo implode(' ', $this->param('controller')) . ' ' . $this->param('action'); ?>">
 	<?php $this->render("admin/shared/top-nav"); ?>

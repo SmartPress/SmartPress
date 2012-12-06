@@ -29,7 +29,7 @@ class Admin extends Application {
 	
 	
 	protected function adminMenus() {
-		$this->menus = Cache::read("module_menus");
+		//$this->menus = Cache::read("module_menus");
 		if (!empty($this->menus)) {
 			return;
 		} 
@@ -56,7 +56,7 @@ class Admin extends Application {
 		}
 		
 		$this->menus = $menus;
-		Cache::write("module_menus", $menus);
+		//Cache::write("module_menus", $menus);
 	}
 	
 	protected function user() {

@@ -10,6 +10,7 @@ use \Speedy\Utility\Inflector;
 use \Speedy\Utility\Set;
 use \Speedy\Loader;
 use \Speedy\Router\Draw;
+use \App;
 
 Class Site extends Singleton {
 	
@@ -21,28 +22,54 @@ Class Site extends Singleton {
 	
 	
 	
-	public static function load()	{	
+	/**
+	 * Load all modules for the current site
+	 * @return array
+	 */
+	public function loadModules() {
 		$siteModules	= Cache::read("modules");
 		if (empty($siteModules)) {
 			$unfiltered	= Module::findActives();
 			$siteModules	= array();
-			
+				
 			foreach ($unfiltered as $module) {
 				$config	= $module->config();
-			
-				$siteModules[(string) $config->code]	= array_merge(Set::toArray($config), array('file_path' => $module->file_path));
+					
+				$siteModules[(string) $config->code]	= array_merge(Set::toArray($config), array('file_path' => $module->filePath()));
 			}
-			
+				
 			Cache::write('modules', $siteModules);
-		} 
+		}
 		
+		return $siteModules;
+	}
+	
+	/**
+	 * Getter for modules
+	 * @return array $this->modules
+	 */
+	public function modules() {
+		if (!$this->modules) {
+			$this->modules = $this->loadModules();
+		}
+		
+		return $this->modules;
+	}
+	
+	/**
+	 * Load all modules
+	 * @return object instance of Cms\Lib\Module\Site
+	 */
+	public static function load()	{	
 		$self = self::instance();
-		$self->modules	= $siteModules;
-		//debug($siteModules);
-		//$draw	= new Draw();
-		foreach ($siteModules as $module) {
-			Loader::instance()->registerNamespace(Inflector::underscore($module['namespace']), $module['file_path']);
-			
+		
+		foreach ($self->modules() as $module) {
+			Loader::instance()->registerNamespace(
+					Inflector::underscore($module['namespace']), 
+					$module['file_path']);
+			Loader::instance()->pushPathToNamespace(
+					App::instance()->ns() . '.views', 
+					$module['file_path'] . DS . 'Views');
 			/*
 			if (!count($module['routes'])) {
 				continue;
@@ -102,7 +129,7 @@ Class Site extends Singleton {
 		$self	= self::instance();
 		$paths	= [];
 		
-		foreach ($this->modules as $code => $info) {
+		foreach ($self->modules as $code => $info) {
 			$paths[]	= $info['file_path'];
 		}
 		
@@ -118,12 +145,12 @@ Class Site extends Singleton {
 		return (self::hasModule($code)) ? self::instance()->modules[$code] : null;
 	}
 	
-	public function modules() {
+	/*public function modules() {
 		if ($this->modules) return $this->modules;
 		self::load();
 		
 		return $this->modules;
-	}
+	}*/
 }
 
 ?>

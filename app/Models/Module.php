@@ -24,6 +24,8 @@ class Module extends \Speedy\Model\ActiveRecord {
 	
 	private $_config;
 	
+	private $_filePath;
+	
 	static $after_destroy = [ 'clearCache' ];
 	
 	static $after_create = [ 'clearCache' ];
@@ -41,7 +43,7 @@ class Module extends \Speedy\Model\ActiveRecord {
 	
 	public function config() {
 		if (!$this->_config) {
-			$filename	= $this->file_path . DS . 'etc' . DS . 'config.xml';
+			$filename	= $this->filePath() . DS . 'etc' . DS . 'config.xml';
 			if (!file_exists($filename)) {
 				throw new MException('Could not load config file at ' . $filename);
 			}
@@ -62,12 +64,12 @@ class Module extends \Speedy\Model\ActiveRecord {
 		return new $class($config);
 	}
 	
-	public function get_file_path() {
-		if (!isset($this->file_path)) {
-			$this->assign_attribute('file_path', MODULES_PATH . DS . $this->code);
+	public function filePath() {
+		if (!isset($this->_filePath)) {
+			$this->_filePath = MODULES_PATH . DS . $this->code;
 		}
 		
-		return $this->read_attribute('file_path');
+		return $this->_filePath;
 	}
 	
 	private function setConfig($config) {

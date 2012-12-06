@@ -101,6 +101,7 @@ class Modules extends Admin {
 				};
 			} else {
 				$format->html = function() {
+					$this->module = new \Speedy\Object();
 					$this->module->errors = new ArrayObject([ModInstaller::instance()->error()]);
 					$this->render("new");
 				};
@@ -115,19 +116,25 @@ class Modules extends Admin {
 	 * PUT /posts/1
 	 */
 	public function update() {
-		$this->module	= Module::find($this->params('id'));
-		
-		$this->respondTo(function($format) {
-			if (ModInstaller::instance()->update($this->module->id)) {
+		//$this->module	= Module::find($this->params('id'));
+		$uploadSuccess 	= $this->mixin('FileUpload')->success();
+		$processSuccess	= false;
+		$zips	= ($uploadSuccess) ? $this->mixin('FileUpload')->finalFiles() : null;
+
+		$this->respondTo(function($format) use ($zips) {
+			if ($zips && ModInstaller::instance()->processZip(TMP_PATH . DS . 'uploads' . DS . array_shift($zips))) {
+				$this->module = ModInstaller::instance()->record();
 				$format->html = function() {
-					$this->redirectTo($this->admin_module_path($this->module), array("notice" => "Module was successfully updated."));
+					$this->redirectTo($this->admin_modules_url(), array("notice" => "Module was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->module ));
 				};
 			} else {
 				$format->html = function() {
-					$this->render("new");
+					$this->module = Module::find($this->params('id'));
+					$this->module->errors = new ArrayObject([ModInstaller::instance()->error()]);
+					$this->render('edit');
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->module->errors ));

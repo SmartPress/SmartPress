@@ -33,7 +33,7 @@
 			<legend>Content</legend>
 			
 			<div class="field">
-				<?php $f->textArea("content", ['class' => 'span12', 'rows' => '14']); ?>
+				<?php $f->textArea("content", ['class' => 'span12 ckeditor', 'rows' => '14']); ?>
 			</div>
 		</fieldset>
 	</div>

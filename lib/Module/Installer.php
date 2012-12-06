@@ -11,7 +11,7 @@ use \Cms\Lib\Module\Exception as MException;
 use \Cms\Models\Module;
 use \ZipArchive;
 
-class Installer extends Object {
+class Installer extends \Speedy\Object {
 	
 	use \Speedy\Traits\Singleton;
 
@@ -118,7 +118,7 @@ class Installer extends Object {
 		
 		// Only work if arch has config manifest
 		$xmlString = null;
-		if (!($xmlString = $arch->getFromName('etc' . DS . 'config.xml'))) {
+		if (!($xmlString = $arch->getFromName('Etc' . DS . 'config.xml'))) {
 			$arch->close();
 			return $this->setProcessed(false, self::NO_CONFIG_FILE);
 		}
@@ -136,18 +136,16 @@ class Installer extends Object {
 			}*/
 				
 			if ($this->update($module->id, $arch)) {
-				Cache::clear("modules");
 				$arch->close();
-				return $this->setProcessed(true, self::UPDATE_SUCCESS);
+				return $this->clearCaches()->setProcessed(true, self::UPDATE_SUCCESS);
 			} else {
 				$arch->close();
 				return $this->setProcessed(false, self::UPDATE_FAIL);
 			}
 		} else {
 			if ($this->_install($xmlObj, $arch)) {
-				Cache::clear("modules");
 				$arch->close();
-				return $this->setProcessed(true, self::INSTALL_SUCCESS);
+				return $this->clearCaches()->setProcessed(true, self::INSTALL_SUCCESS);
 			} else {
 				$arch->close();
 				return $this->setProcessed(false, self::INSTALL_FAIL);
@@ -156,6 +154,16 @@ class Installer extends Object {
 		
 		$arch->close();
 		return $this->setProcessed(false, self::UNKNOWN_ERROR);
+	}
+	
+	/**
+	 * Clears related caches
+	 * @return obj $this
+	 */
+	private function clearCaches() {
+		Cache::clear("modules");
+		Cache::clear("module_menus");
+		return $this;
 	}
 	
 	/**
@@ -182,7 +190,7 @@ class Installer extends Object {
 	 * @return object \SimpleXMLElement
 	 */
 	static function config($module) {
-		$filename	= MODULES_PATH . DS . $module->code . DS . 'etc' . DS . 'config.xml';
+		$filename	= MODULES_PATH . DS . $module->code . DS . 'Etc' . DS . 'config.xml';
 		if (!file_exists($filename)) {
 			throw new MException('Could not load config file at ' . $filename);
 		}
@@ -199,9 +207,9 @@ class Installer extends Object {
 	public function update($id, $archive = null) {
 		$module	= Module::find($id);
 	
-		/*if ($archive && !$this->_unzipModule($archive, MODULES_PATH . $module['Module']['file_path'])) {
+		if ($archive && !$this->_unzipModule($archive, MODULES_PATH . DS . $module->code)) {
 			return false;
-		}*/
+		}
 	
 		if ($config = $module->config()) {		
 			$settings	= $module->settings();
@@ -321,7 +329,7 @@ class Installer extends Object {
 		//$folder	= (!$dest_path) ? $xmlObj->code : $dest_path;
 		$dest_path	= (!$dest_path) ? MODULES_PATH . DS . $xmlObj->code . DS : $dest_path . DS;
 	
-		if (!$this->_extractFolder($archive, 'etc', $dest_path)) {
+		if (!$this->_extractFolder($archive, 'Etc', $dest_path)) {
 			return false;
 		}
 	
@@ -342,25 +350,25 @@ class Installer extends Object {
 		foreach ($xmlObj->features->feature as $feature) {
 			switch($feature) {
 				case 'controllers':
-					if (!$this->_extractFolder($archive, 'controllers', $dest_path)) {
+					if (!$this->_extractFolder($archive, 'Controllers', $dest_path)) {
 						return false;
 					}
 					break;
 						
 				case 'blocks':
-					if (!$this->_extractFolder($archive, 'block', $dest_path)) {
+					if (!$this->_extractFolder($archive, 'Blocks', $dest_path)) {
 						return false;
 					}
 					break;
 						
 				case 'models':
-					if (!$this->_extractFolder($archive, 'models', $dest_path)) {
+					if (!$this->_extractFolder($archive, 'Models', $dest_path)) {
 						return false;
 					}
 					break;
 						
 				case 'views':
-					if (!$this->_extractFolder($archive, 'views', $dest_path)) {
+					if (!$this->_extractFolder($archive, 'Views', $dest_path)) {
 						return false;
 					}
 					break;
@@ -422,13 +430,13 @@ class Installer extends Object {
 			$version= array_shift($fileArr);
 			$class	= Inflector::camelize(implode('_', $fileArr));
 				
-				
+			Logger::info(get_class(\ActiveRecord\Connection::instance()));
 			$obj	= new $class(\ActiveRecord\Connection::instance());
 			Logger::info("===================================================");
 			Logger::info("Starting Migration for $class");
 			Logger::info("===================================================");
 				
-			$obj->runUp();
+			$obj->runUp(false);
 			$log	= $obj->log();
 			foreach ($log as $l) {
 				Logger::info($l);

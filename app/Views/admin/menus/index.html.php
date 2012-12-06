@@ -11,7 +11,7 @@
 				<?php
 					$i = 0;
 					 
-					$this->menus->each(function($menu) {
+					$this->menus->each(function($menu) use (&$i) {
 					$i++; 
 						?>
 					<li><?php $this->linkTo($menu->title, "#menu-$i", ['data' => ['toggle' => 'tab']]); ?></li>
@@ -22,7 +22,7 @@
 				<?php 
 					$i = 0;
 					
-					$this->menus->each(function($menu) { 
+					$this->menus->each(function($menu) use (&$i) { 
 					$i++;
 						?>
 					<div class="tab-pane<? if ($i == 1) echo ' active'; ?>" id="<?php echo "menu-$i"?>">

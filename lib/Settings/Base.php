@@ -4,7 +4,7 @@ namespace Cms\Lib\Settings;
 
 use \Speedy\Object;
 
-Class Base extends Object {
+class Base extends Object {
 	//public $uses	= array();
 	//public $Acl	= null;
 	
@@ -69,7 +69,7 @@ Class Base extends Object {
 		return true;
 	}
 	
-	public function update($version = null) {
+	public function update($version) {
 		return true;
 	}
 	

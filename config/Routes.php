@@ -66,7 +66,7 @@ class Routes extends SpeedyDraw {
 			$this->rootTo('posts#index');
 		}
 		
-		foreach (SiteModuels::allPaths() as $path) {
+		foreach (SiteModules::allPaths() as $path) {
 			$routes = $path . DS . 'Etc' . DS . 'Routes.php';
 			if (!file_exists($routes)) {
 				continue;

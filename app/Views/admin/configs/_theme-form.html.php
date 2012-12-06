@@ -20,7 +20,7 @@
 	</div>
 	
 	<div class="actions">
-		<?php if ($theme['path'] == \Cms\Models\ConfigManager::get('theme')): ?>
+		<?php if ($theme['path'] == \Cms\Models\Config\Manager::get('theme')): ?>
 			<span class="label label-success">In Use</span>
 		<?php else: ?>
 			<?php $this->submit('Choose', ['class' => 'btn btn-primary']); ?>

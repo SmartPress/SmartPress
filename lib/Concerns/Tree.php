@@ -195,6 +195,14 @@ trait Tree {
 		if ($rght)static::$__treeRght = $rght;
 		
 		static::$__treeSeparator	= $separator;
+		
+		if (isset($options['title'])) {
+			$title = $options['title'];
+			unset($options['title']);
+		} else {
+			$title = 'title';
+		}
+		
 		$options['order'] = static::$__treeLft . ' ASC';
 		$items	= static::all($options);
 		
@@ -210,7 +218,7 @@ trait Tree {
 				}
 			}
 			output($level);
-			$item->title= static::separatorLevel($level) . $item->title;
+			$item->{$title}= static::separatorLevel($level) . $item->{$title};
 			 
 			$lastItem	= $item;
 		}
