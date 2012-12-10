@@ -1,9 +1,9 @@
 # Software Instance #
 #####################
-tmp
-modules
-themes/*
-public/resources/*
+./tmp
+./modules
+./themes/*
+./public/resources/*
 
 # Other #
 #########
