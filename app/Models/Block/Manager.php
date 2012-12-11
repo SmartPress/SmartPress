@@ -79,8 +79,18 @@ class Manager extends Singleton {
 		];
 	}
 	
+	/**
+	 * Gets the all blocks for the current action
+	 * 
+	 * @param string $controller
+	 * @param string $action
+	 */
 	public function _currentFor($controller, $action) {
 		$blocks	=& $this->_all();
+		// If no blocks are set then return none
+		if (count($blocks) < 1 || empty($blocks)) {
+			return [];
+		}
 		
 		$global	= $this->__dotAccess('global', $blocks);
 		if (is_hash($global))

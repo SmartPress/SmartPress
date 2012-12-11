@@ -7,7 +7,7 @@ class Group extends Migration {
 	public function change() {
 		$this->create_table("groups", function() {
 			$this->string("name");
-			$this->integer("privileges");
+			$this->integer("privilege");
 		});
 	}
 	
