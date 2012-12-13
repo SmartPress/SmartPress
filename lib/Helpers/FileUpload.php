@@ -238,14 +238,14 @@ class FileUpload extends Object {
       		return false;
     	}
     
-    	$model =& $this->getModel();
+    	$model = $this->getModel();
     	if (!$model) {
       		throw new FUException('FileUpload::removeFileById -- no model detected.');
       		return false;
     	}
     
-    	$upload = $model->findById($id);
-    	$name = $upload[$this->options['fileModel']][$this->options['fields']['name']];
+    	$upload = $model::find($id);
+    	$name = $upload->{$this->options['fields']['name']};
     	return $this->removeFile($name);
   	}
   
@@ -291,10 +291,10 @@ class FileUpload extends Object {
     	if ($finalFile = $this->Uploader->processFile()) {
       		$this->finalFiles[] = $finalFile;
       		$this->finalFile = $finalFile; 
-      		$save_data[$this->options['fileModel']][$this->options['fields']['name']] = $this->finalFile;
-      		$save_data[$this->options['fileModel']][$this->options['fields']['type']] = $this->currentFile['type'];
-      		$save_data[$this->options['fileModel']][$this->options['fields']['size']] = $this->currentFile['size'];
-      		$model =& $this->getModel();
+      		$save_data[$this->options['fields']['name']] = $this->finalFile;
+      		$save_data[$this->options['fields']['type']] = $this->currentFile['type'];
+      		$save_data[$this->options['fields']['size']] = $this->currentFile['size'];
+      		$model = $this->getModel();
       		      
 	      	//Save it
     	  	if (!$model) {
@@ -303,7 +303,7 @@ class FileUpload extends Object {
        			$entry	= new $model($save_data);	
           		if ($entry->save()) {
             		$this->success = true;
-            		$this->uploadIds[] = $model->id;
+            		$this->uploadIds[] = $entry->id;
           		}
       		}
     	} else {
@@ -344,7 +344,8 @@ class FileUpload extends Object {
   	function processAllFiles() { 
     	foreach ($this->uploadedFiles as $file) {
       		$this->_setCurrentFile($file);
-      		$this->Uploader->file = $this->options['fileModel'] ? $file[$this->options['fileVar']] : $file;
+      		//$this->Uploader->file = $this->options['fileModel'] ? $file[$this->options['fileVar']] : $file;
+      		$this->Uploader->file	= $file;
       		$this->processFile();
     	}
   	}
@@ -357,11 +358,12 @@ class FileUpload extends Object {
      * @return void
      */
   	function _setCurrentFile($file) { 
-    	if ($this->options['fileModel']) {
+    	/*if ($this->options['fileModel']) {
       		$this->currentFile = $file[$this->options['fileVar']];
     	} else {
       		$this->currentFile = $file;
-    	}
+    	}*/
+  		$this->currentFile = $file;
   	}
   
   	/**
@@ -372,7 +374,7 @@ class FileUpload extends Object {
      * @return object A reference to a model object
      * @access public
      */
-	function &getModel($name = null) {
+	function getModel($name = null) {
 		$model = null;
 		if (!$name) {
 			$name = $this->options['fileModel'];
@@ -419,16 +421,16 @@ class FileUpload extends Object {
         			'error' => $this->data("files.{$this->options['fileModel']}.error.{$this->options['fileVar']}"),
         			'size'	=> $this->data("files.{$this->options['fileModel']}.size.{$this->options['fileVar']}")
         		];
-      		} elseif ($this->hasData("files.{$this->options['fileModel']}.0.name.{$this->options['fileVar']}")) {
-        		$retval = $this->data("files.{$this->options['fileModel']}");
+      		} elseif ($this->hasData("files.{$this->options['fileVar']}")) {
+        		$retval[] = $this->data("files.{$this->options['fileVar']}");
       		} else {
         		$retval = false;
       		}
     	} else { 
     		// No model
-      		if ($this->hasData("files.{$this->options['fileVar']}")) { 
+      		if ($this->hasData("files.{$this->options['fileVar']}.0")) { 
         		$retval[] = $this->data("files.{$this->options['fileVar']}");
-      		} elseif ($this->hasData("files.{$this->options['fileVar']}.0")) { 
+      		} elseif ($this->hasData("files.{$this->options['fileVar']}")) { 
       			//syntax for multiple files without a model is data[file][0]..data[file][1]..data[file][n]
         		$retval = $this->data("files.{$this->options['fileVar']}");
       		} else {

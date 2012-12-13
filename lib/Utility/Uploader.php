@@ -81,12 +81,19 @@ class Uploader {
 	function __handleFileNameCallback($fileName) {  
 		if ($this->options['fileNameFunction']) {
 			$callback	= $this->options['fileNameFunction'];
+			$aFileName	= explode('.', $fileName);
+			$ext	= array_pop($aFileName);
+			$fileName	= implode('.', $aFileName);
 			
-			if (is_array($callback) && is_callable($callback))  {
+			if ($callback instanceof \Closure) {
+				$fileName 	= $callback($fileName);
+			} elseif (is_callable($callback))  {
 				$fileName	= call_user_func($callback, $fileName);
 			} elseif (function_exists($this->options['fileNameFunction'])) {
 				$fileName 	= call_user_func($this->options['fileNameFunction'], $fileName);
 			} 
+			
+			$fileName	= $fileName . '.' . $ext;
 			      
 			if (!$fileName) {
 				throw new UException('No filename resulting after parsing. Function: ' . $this->options['fileNameFunction']);
@@ -206,6 +213,8 @@ class Uploader {
 	 */
 	function checkType($file = null) {
 		$this->setFile($file);
+		$file_ext = strtolower($this->_ext());
+		
 	    foreach ($this->options['allowedTypes'] as $ext => $types) {      
 			if (!is_string($ext)) {
 				$ext = $types;
@@ -216,7 +225,6 @@ class Uploader {
 			}
 	      
 			$ext = strtolower('.' . str_replace('.','', $ext));
-			$file_ext = strtolower($this->_ext());
 			if ($file_ext == $ext) {
 				if (is_array($types) && !in_array($this->file['type'], $types)) {
 					throw new UException("{$this->file['type']} is not an allowed type.");
@@ -227,8 +235,7 @@ class Uploader {
 			}    
 	    }
 	
-	    throw new UException("extension is not allowed.");
-	    return false;
+	    throw new UException("Extension is not allowed ({$file_ext}).");
 	  }
 	  
 	  /**

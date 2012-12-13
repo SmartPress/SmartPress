@@ -13,3 +13,9 @@
 .themes .actions {
 	text-align: center;
 }
+
+/*table#images-selection { border: 1px solid black; padding: 3px; }*/
+table#images-selection tr td { padding: 10px 0; }
+table#images-selection tr th { font-weight: bold; }
+table#images-selection tr.image-thumb td { vertical-align: top; }
+table#images-selection tr.insert_image_dialog td { padding: 0; }

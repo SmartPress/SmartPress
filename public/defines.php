@@ -8,6 +8,7 @@ defined('CONFIG_PATH') or define('CONFIG_PATH', ROOT . DS . 'config');	// Define
 defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
 defined('TMP_PATH') or define('TMP_PATH', ROOT . DS . 'tmp');	// Define path to the tmp directory
 defined('VENDOR_PATH') or define('VENDOR_PATH', ROOT . DS . 'vendor');
+defined('PUBLIC_UPLOADS_DIR') or define('PUBLIC_UPLOADS_DIR', PUBLIC_DIR . DS . 'uploads');
 //defined('SPEEDY_PATH') or define('SPEEDY_PATH', VENDOR_PATH . DS . 'SpeedyPHP' . );
 
 defined('MODULES_PATH') or define('MODULES_PATH', ROOT . DS . 'modules'); // Not part of Speedy

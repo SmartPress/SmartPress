@@ -49,6 +49,8 @@ class Routes extends SpeedyDraw {
 					$this->get('disapprove');
 				});
 			});
+			
+			$this->resources('uploads', ['only' => ['create','index','destroy']]);
 		});
 		
 		$this->resources('posts', ['only' => ['show', 'index']], function() {

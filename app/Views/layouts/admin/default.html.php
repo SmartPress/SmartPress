@@ -34,7 +34,9 @@
 		$(document).ready(function() {
 			$("tr.highlight").vectorEffect();
 
-			$(".ckeditor").ckeditor();
+			$(".ckeditor").ckeditor(function() {}, {
+					filebrowserUploadUrl	: "/admin/uploads.jsonp"
+				});
 		});
 	</script>
 </head>
