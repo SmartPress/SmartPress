@@ -13,10 +13,10 @@
 namespace Cms\Lib\Helpers;
 
 
-use \Speedy\Object;
-use \Cms\Lib\Utility\Uploader;
-use \Cms\Lib\Config\FileUpload as Settings;
-use \Cms\Lib\Helpers\FileUpload\Exception as FUException;
+use Speedy\Object;
+use Cms\Lib\Utility\Uploader;
+use Cms\Lib\Config\FileUpload as Settings;
+use Cms\Lib\Helpers\FileUpload\Exception as FUException;
 
 class FileUpload extends Object {
   	/**
@@ -115,6 +115,17 @@ class FileUpload extends Object {
   	 */
   	public $beforeFilters = array('detectUpload');
   
+  	public static $UploadErrors = [
+  		'Ok',
+  		'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
+  		'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
+  		'The uploaded file was only partially uploaded.',
+  		'No file was uploaded.',
+  		'Missing a temporary folder.',
+  		'Failed to write file to disk.',
+  		'A PHP extension stopped the file upload.'
+  	];
+  	
   	
   	
   	
@@ -126,7 +137,7 @@ class FileUpload extends Object {
      * @param mixed $params Params for method.
      * @return mixed
      */
-    function __call($method, $params) {
+    public function __call($method, $params) {
   		if (key_exists($method, $this->options)) {
     		array_unshift($params, $method);
     		return call_user_func_array([ $this, 'attr' ], $params);
@@ -142,7 +153,7 @@ class FileUpload extends Object {
      * @param string value to set to name option, if null, return option's value
      * @return mixed option on key name, or void if setting
      */
-	function attr($name, $values = null) {
+	public function attr($name, $values = null) {
     	if (key_exists($name, $this->options)) {
       		if (func_num_args() > 1) {
         		$this->options[$name] = $values;
@@ -161,7 +172,7 @@ class FileUpload extends Object {
      * @return void
      * @access public
      */
-  	function __construct(&$controller, $options = array()) {
+  	public function __construct(&$controller, $options = array()) {
     	$this->setData($controller->data())
     		->addData($controller->params());
     
@@ -178,7 +189,7 @@ class FileUpload extends Object {
      * @return void
      * @access public
      */
-  	function detectUpload() {
+  	public function detectUpload() {
     	//Backporting 4.0 to 3.6.3 //using setting attributes is now deprecated.
     	$this->fileModel= $this->fileModel();
     	$this->fileVar	= $this->fileVar();
@@ -210,7 +221,7 @@ class FileUpload extends Object {
      * @return boolean
      * @access public
      */
-  	function removeFile($name = null) {
+  	public function removeFile($name = null) {
     	if(!$name || strpos($name, '://')) {
       		return false;
     	}
@@ -233,7 +244,7 @@ class FileUpload extends Object {
      * @return boolean
      * @access public
      */
-  	function removeFileById($id = null) {
+  	public function removeFileById($id = null) {
     	if (!$id) {
       		return false;
     	}
@@ -258,7 +269,7 @@ class FileUpload extends Object {
      * @return string
      * @access public
      */
-  	function showErrors($sep = "<br />") {
+  	public function showErrors($sep = "<br />") {
     	$retval = "";
     	foreach ($this->errors as $error) {
       		$retval .= "$error $sep";
@@ -266,6 +277,13 @@ class FileUpload extends Object {
     	return $retval;
   	}
   
+  	/**
+  	 * Add error from PHP error types
+  	 * @param int $err
+  	 */
+  	private function addUploadError($err) {
+  		$this->_error(self::$UploadErrors[$err]);
+  	}
   
   	/**
      * _processFile takes the detected uploaded file and saves it to the
@@ -278,22 +296,23 @@ class FileUpload extends Object {
      * @return void
      * @access public
      */
-  	function processFile(){
+  	public function processFile($file){
     	//Backporting for manual use processFile(), show error when using.
-    	if (count($this->uploadedFiles) && empty($this->currentFile)) {
+    	/*if (count($this->uploadedFiles) && empty($this->currentFile)) {
       		throw new FUException('FileUpload: You\'re using a deprecated standard of uploading files manually.  Don\'t call processFile() directly. Instead, call processAllFiles().');
       		$this->setCurrentFile($this->uploadedFiles[0]);
-    	}
+    	}*/
+  		if ($file['error'] !== UPLOAD_ERR_OK)
+  			$this->addUploadError($file['error']);
+  		 
     
     	$save_data = $this->__prepareSaveData();
-    
-    	$this->Uploader->file = $this->currentFile;
-    	if ($finalFile = $this->Uploader->processFile()) {
+    	if ($finalFile = $this->Uploader->processFile($file)) {
       		$this->finalFiles[] = $finalFile;
       		$this->finalFile = $finalFile; 
       		$save_data[$this->options['fields']['name']] = $this->finalFile;
-      		$save_data[$this->options['fields']['type']] = $this->currentFile['type'];
-      		$save_data[$this->options['fields']['size']] = $this->currentFile['size'];
+      		$save_data[$this->options['fields']['type']] = $file['type'];
+      		$save_data[$this->options['fields']['size']] = $file['size'];
       		$model = $this->getModel();
       		      
 	      	//Save it
@@ -322,7 +341,7 @@ class FileUpload extends Object {
      * @access private
      * @return array of prepared savedata.
      */
-  	function __prepareSaveData(){
+  	public function __prepareSaveData(){
     	$retval = array();
     
     	if ($this->options['fileModel']) {
@@ -341,12 +360,11 @@ class FileUpload extends Object {
      * @return void
      * @access public
      */
-  	function processAllFiles() { 
+  	public function processAllFiles() { 
     	foreach ($this->uploadedFiles as $file) {
-      		$this->_setCurrentFile($file);
+      		//$this->_setCurrentFile($file);
       		//$this->Uploader->file = $this->options['fileModel'] ? $file[$this->options['fileVar']] : $file;
-      		$this->Uploader->file	= $file;
-      		$this->processFile();
+      		$this->processFile($file);
     	}
   	}
   
@@ -357,7 +375,7 @@ class FileUpload extends Object {
      * @param associative array of file
      * @return void
      */
-  	function _setCurrentFile($file) { 
+  	public function _setCurrentFile($file) { 
     	/*if ($this->options['fileModel']) {
       		$this->currentFile = $file[$this->options['fileVar']];
     	} else {
@@ -374,7 +392,7 @@ class FileUpload extends Object {
      * @return object A reference to a model object
      * @access public
      */
-	function getModel($name = null) {
+	public function getModel($name = null) {
 		$model = null;
 		if (!$name) {
 			$name = $this->options['fileModel'];
@@ -398,7 +416,7 @@ class FileUpload extends Object {
      * @return void
      * @access protected
      */
-  	function _error($text){
+  	public function _error($text){
     	$this->errors[] = $text;
     	trigger_error($text, E_USER_WARNING);
   	}
@@ -409,7 +427,7 @@ class FileUpload extends Object {
      * @return array|boolean Array of uploaded file, or false if no file uploaded
      * @access protected
      */
-  	function _uploadedFilesArray(){
+  	public function _uploadedFilesArray(){
     	$retval = array();
     	if ($this->options['fileModel']) { 
     		//Model
@@ -471,7 +489,7 @@ class FileUpload extends Object {
      * @return boolean true if given key is in an array
      * @access protected
      */
-  	function _multiArrayKeyExists($needle, $haystack) {
+  	public function _multiArrayKeyExists($needle, $haystack) {
     	if (is_array($haystack)) {
       		foreach ($haystack as $key => $value) {
         		if ($needle===$key && $value) {

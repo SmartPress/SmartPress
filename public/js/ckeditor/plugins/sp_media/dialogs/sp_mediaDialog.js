@@ -1,16 +1,9 @@
-
 CKEDITOR.dialog.add('sp_mediaDialog', function(editor) {
 	return {
 		title	: "Media Dialog",
 		minWidth	: 400,
 		minHeight	: 300,
 		resizable	: CKEDITOR.DIALOG_RESIZE_BOTH,
-		
-		ALIGN_NONE	: '0',
-		ALIGN_LEFT	: '1',
-		ALIGN_CENTER: '2',
-		ALIGN_RIGHT	: '3',
-		
 		contents	: [{
 			label	: 'Upload',
 			title	: 'Upload',
@@ -77,7 +70,7 @@ CKEDITOR.dialog.add('sp_mediaDialog', function(editor) {
 				},{
 					type: 'html',
 					html: '<div class="heading">Scale</div>' +
-					'<div class="checkbox"><label>Lock</label> <input type="checkbox" name="lock" class="media-editor-scale-lock" checked="checked" /></div>' +
+					'<div class="checkbox"><label>Lock</label> <input type="checkbox" name="lock" id="media_editor_scale_lock" checked="checked" /></div>' +
 					'<div><label>Width:</label> <input type="text" name="scaleWidth" id="media_editor_scale_width" /></div>' +
 					'<div><label>Height:</label> <input type="text" name="scaleHeight" id="media_editor_scale_height" /></div>'
 				},{

@@ -1,12 +1,12 @@
-
 (function($){
+	
 	$.inputChange = {
 		defaults: {
 			timeout: false,
 			keydown: function(event) {},
 			callback: function(event, jqObj) {}
 		}
-	}
+	};
 	
 	$.fn.inputChange = function(params) {
 		var options = $.extend($.inputChange.defaults, params || {});
@@ -39,5 +39,5 @@
 				lastText = currentText;
 			});
 		});
-	}
+	};
 })(jQuery);

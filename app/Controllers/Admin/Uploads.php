@@ -64,8 +64,8 @@ class Uploads extends Admin {
 		$this->ckEditor		= $this->params('CKEditor');
 		$this->langCode		= $this->params('langCode');
 		
-		if (!file_exists(UPLOADS_DIR)) {
-			File::mkdir_p(UPLOADS_DIR, 0755);
+		if (!file_exists(PUBLIC_UPLOADS_DIR)) {
+			File::mkdir_p(PUBLIC_UPLOADS_DIR, 0755);
 		}
 		
 		$this->respondTo(function($format) {
@@ -94,10 +94,21 @@ class Uploads extends Admin {
 					};
 				}	
 			} catch (\Cms\Lib\Exceptions\Uploader $e) {
-				$this->exception	= $e;
+				$this->exception= $e;
+				$this->errors	= $e->getTrace();
 				
 				$format->json = function() {
 					$this->render(['json' => ['success' => false, 'errors' => $e->getMessage(), 'stack' => $e->getTrace()]]);
+				};
+				$format->jsonp	= function() {
+					$this->render('exception');
+				};
+			} catch (\Cms\Lib\Helpers\FileUpload\Exception $e) {
+				$this->exception= $e;
+				$this->errors	= $this->mixin('FileUpload')->errors;
+				
+				$format->json = function() {
+					$this->render(['json' => ['success' => false, 'errors' => $this->errors]]);
 				};
 				$format->jsonp	= function() {
 					$this->render('exception');

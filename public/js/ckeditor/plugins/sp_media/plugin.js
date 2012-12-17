@@ -1,7 +1,15 @@
 CKEDITOR.plugins.add('sp_media', {
 	//icons: 'image',
 	init: function(editor) {
-		editor.addCommand('spMediaDialog', new CKEDITOR.dialogCommand('sp_mediaDialog'));
+		editor.addCommand('spMediaDialog', {
+			exec: function(editor) {
+				var dialog = jQuery.mediaCenter(editor, {
+					ckeditor: true
+				});
+				
+				dialog.open();
+			}
+		});
 		editor.ui.addButton('Image', {
 			label: 'Insert Image',
 			command: 'spMediaDialog',

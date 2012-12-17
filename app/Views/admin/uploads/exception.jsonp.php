@@ -5,6 +5,6 @@
 		{
 			success	: false,
 			message	: "<?php echo $this->exception->getMessage(); ?>",
-			errors	: <?php echo json_encode($this->exception->getTrace()); ?>
+			errors	: <?php echo json_encode($this->errors); ?>
 		});
 </script>

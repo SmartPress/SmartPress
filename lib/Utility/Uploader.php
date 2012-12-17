@@ -144,7 +144,7 @@ class Uploader {
 	    $up_dir	= $this->options['uploadDir'];
 	    $fileName	= $this->__handleFileNameCallback($this->file['name']);
 	    //if callback returns false hault the upload
-		
+	    \Speedy\Logger::debug('Check file');
 	    if (!$this->checkPath($up_dir)) return false; 
 	    if (!$fileName) return false;
 		  
@@ -155,7 +155,7 @@ class Uploader {
 	    //now move the file. 
 	    $targetArr	= explode(DS, $target_path);
 	    array_pop($targetArr);
-	    
+	    \Speedy\Logger::debug('Save file');
 	    $dirStruct	= implode(DS, $targetArr);
 	    if (!is_dir($dirStruct)) mkdir($dirStruct, 0777, true);
 	    if (move_uploaded_file($this->file['tmp_name'], $target_path)) {
@@ -201,7 +201,7 @@ class Uploader {
 	 * @access protected
 	 */
 	function _error($text) {
-		$this->errors[] = __($text,true);
+		$this->errors[] = $text;
 	}
 	  
 	/**
@@ -255,6 +255,8 @@ class Uploader {
 				throw new UException($this->uploadErrors[$this->file['error']]);
 			}
 	    }        
+	    
+	    $this->_error("File did not upload properly.");
 	    return false;
 	}
 	  
@@ -277,6 +279,7 @@ class Uploader {
 	      	}
 	    }
 	    
+	    $this->_error('Unknown size error.');
 		return false;
 	}
 	  
