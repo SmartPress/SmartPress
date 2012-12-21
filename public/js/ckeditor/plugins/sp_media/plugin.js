@@ -3,7 +3,7 @@ CKEDITOR.plugins.add('sp_media', {
 	init: function(editor) {
 		editor.addCommand('spMediaDialog', {
 			exec: function(editor) {
-				var dialog = jQuery.mediaCenter(editor, {
+				var dialog = jQuery.mediaCenter.init(editor, {
 					ckeditor: true
 				});
 				

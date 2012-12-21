@@ -7,6 +7,8 @@
 	<?php $this->javascript('/admin.js?debug=1'); ?>
 	<?php $this->javascript('/vendor/bootstrap/js/bootstrap.js'); ?>
 	<?php $this->javascript('/vendor/jquery-ui/js/jquery-ui-1.8.23.custom.min.js'); ?>
+	<?php //$this->javascript('http://code.jquery.com/ui/1.9.2/jquery-ui.js'); ?>
+	<?php $this->javascript('/vendor/jquery-plugins/imgselector/scripts/jquery.imgareaselect.pack.js')?>
 	
 	<?php $this->stylesheet('/vendor/bootstrap/css/bootstrap.css'); ?>
 	<style type="text/css">
@@ -20,6 +22,7 @@
     </style>
 	<?php $this->stylesheet('/vendor/bootstrap/css/bootstrap-responsive.css'); ?>
 	<?php $this->stylesheet('/vendor/jquery-ui/css/jquery-ui-1.8.23.custom.css'); ?>
+	<?php $this->stylesheet('/vendor/jquery-plugins/imgselector/css/imgareaselect-default.css'); ?>
 	<?php $this->stylesheet('/application.css?debug=1'); ?>
 	<?php $this->stylesheet('/admin.css?debug=1'); ?>
 	

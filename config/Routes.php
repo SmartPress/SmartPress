@@ -51,6 +51,11 @@ class Routes extends SpeedyDraw {
 			});
 			
 			$this->resources('uploads', ['only' => ['create','index','destroy']]);
+			$this->resources('images', ['only' => []], function() {
+				$this->member(function() {
+					$this->post('resize');
+				});
+			});
 		});
 		
 		$this->resources('posts', ['only' => ['show', 'index']], function() {

@@ -1,168 +1,25 @@
+//= require "media_center/editor"
+//= require "media_center/gallery"
+//= require "media_center/uploader"
+
 (function($){
-	var MediaEditor = function() {
-		var me = this;
-		this.scaleWidth().inputChange({
-			keydown	: function(evt, el) {
-				me.onScaleInputKeydown.call(me, evt, el, me.scaleWidthSelector);
-			},
-			timeout	: this.inputChangeTimeout,
-			callback: function(evt, el) {
-				me.onScaleWidthInputChange.call(me, evt, el);
-			}
-		});
-		
-		this.scaleHeight().inputChange({
-			keydown	: function(evt, el) {
-				me.onScaleInputKeydown.call(me, evt, el, me.scaleHeightSelector);
-			},
-			timeout	: this.inputChangeTimeout,
-			callback: function(evt, el) {
-				me.onScaleHeightInputChange.call(me, evt, el);
-			}
-		});
+	if (window.MediaCenter == null)
+		window.MediaCenter = {};
+	
+	/**
+	 * Media Dialog class
+	 * builds a dialog and handles dialog logic
+	 */
+	window.MediaCenter.Dialog = function(referrer, options) {
+		this.options	= $.extend(this.defaults, options || {});
+		this.referrer	= (this.options.ckeditor) ? referrer : $(referrer);
 		
 		return this;
 	};
-
-	MediaEditor.prototype = {
-		inputChangeTimeout	: 1000,
-		scaleLockSelector	: '#media_editor_scale_lock',
-		scaleHeightSelector	: '#media_editor_scale_height',
-		scaleWidthSelector	: '#media_editor_scale_width',
-		cropWidthSelector	: '#media_editor_crop_width',
-		cropHeightSelector	: '#media_editor_crop_height',
-		cropStartXSelector	: '#media_editor_crop_startx',
-		cropStartYSelector	: '#media_editor_crop_starty',
-		image: '#media_editor_image',
-		
-		cropStartY: function() {
-			return $(this.cropStartYSelector);
-		},
-		
-		cropStartX: function() {
-			return $(this.cropStartXSelector);
-		},
-		
-		cropHeight: function() {
-			return $(this.cropHeightSelector);
-		},
-		
-		cropWidth: function() {
-			return $(this.cropWidthSelector);
-		},
-		
-		imageEl: function() {
-			return $(this.image);
-		},
-		
-		scaleLock: function() {
-			return $(this.scaleLockSelector);
-		},
-		
-		scaleHeight: function() {
-			return $(this.scaleHeightSelector);
-		},
-		
-		scaleWidth: function() {
-			return $(this.scaleWidthSelector);
-		},
-			
-		onScaleInputKeydown: function(evt, el, target) {
-			if (evt.keyCode == 38) {
-				el.val(parseInt(el.val()) + 1);
-				
-				if (this.scaleLock().is(':checked')) {
-					//alert($('.media-editor-scale-height', $this.jqObj).val());
-					$(target).val(parseInt($(target).val()) + 1);
-				}
-			} else if (evt.keyCode == 40) {
-				el.val(parseInt(el.val()) - 1);
-				if (this.scaleLock().is(':checked')) {
-					$(target).val(parseInt($(target).val()) - 1);
-				}
-			}
-		},
-			
-		onScaleWidthInputChange: function(evt, el) {
-			var image = this.imageEl();
-			image.attr('width', el.val());
-				
-			if (this.scaleLock().is(':checked')) {
-				// Change aspect ratio
-				var height = parseInt(parseInt(el.val())/this.aspectRatio);
-				image.attr('height',height);
-				this.scaleHeight().val(height);
-			}
-				
-			// TODO
-			//$this.resetImgSelector();
-			//$this.initImgSelector();
-		},
-			
-		onScaleHeightInputChange: function(evt, el) {
-			var image = this.imageEl();
-			image.attr('height', el.val());
-				
-			if (this.scaleLock().is(':checked')) {
-				var width = parseInt(parseInt(el.val()) * this.aspectRatio);
-				image.attr('width',width);
-				this.scaleWidth().val(width);
-			}
-				
-			// TODO
-			//$this.resetImgSelector();
-			//$this.initImgSelector();
-		},
-		
-		setEditImage: function(src) {
-			var me = this;
-			this.imageEl().attr('src', src);
-			this.imageEl().load(function() {
-				var width	= this.naturalWidth,
-					height	= this.naturalHeight;
-				
-				me.aspectRatio = parseFloat(width/height);
-				me.initSelector();
-			});
-			
-			return this;
-		},
-		
-		initSelector: function() {
-			if (this.selector) {
-				this.selector.remote();
-				this.imageEl().removeData('imgAreaSelect');
-				this.selector = null;
-			}
-			
-			var me = this;
-			this.cropWidth().val('0');
-			this.cropHeight().val('0');
-			this.cropStartX().val('0');
-			this.cropStartY().val('0');
-			
-			this.selector	= this.imageEl().imgAreaSelect({
-				handles	: true,
-				instance: true,
-				onSelectChange: function(img, selection) {
-					me.cropWidth().val(selection.width);
-					me.cropHeight().val(selection.height);
-					me.cropStartX().val(selection.x1);
-					me.cropStartY().val(selection.y1);
-				}
-			});
-		}
-	};
 	
-	
-	var MediaDialog = function(referrer, options) {
-		this.options	= $.extend(this.defaults, options || {});
-		this.referrer	= $(referrer);
-	};
-	
-	MediaDialog.prototype = {
+	window.MediaCenter.Dialog.prototype = {
 		UPLOAD_TAB	: 0,
-		IMAGES_TAB	: 1,
+		GALLERY_TAB	: 1,
 		EDITOR_TAB	: 2,
 			
 		buildContainer	: function() {
@@ -176,8 +33,8 @@
 				me	= this;
 			
 			dialog.hide();
-			tpl	= tpl.replace(/{identifier}/ig, this.options.identifier);
-			tpl	= tpl.replace(/{uploadUrl}/ig, this.options.uploadUrl);
+			tpl	= tpl.replace(/#\{identifier\}/ig, this.options.identifier);
+			tpl	= tpl.replace(/#\{uploadUrl\}/ig, this.options.uploadUrl);
 			dialog.append(tpl);
 			dialog.dialog({
 				autoOpen: false,
@@ -186,8 +43,12 @@
 			});
 			
 			this.dialogEl = dialog;
-			this.editor = new MediaEditor();
-			this.tabs().tabs({
+			
+			this.editor = new MediaCenter.Editor(this);
+			this.uploader = new MediaCenter.Uploader(this);
+			this.gallery= new MediaCenter.Gallery(this);
+			
+			this.getTabs().tabs({
 				disabled: me.options.disabledTabs,
 				show	: function(event, ui) {
 					me.onTabShow.call(me, event, ui);
@@ -201,122 +62,85 @@
 		},
 		
 		onTabShow	: function(evt, ui) {
+			console.log(ui.index);
+			this.clearButtons();
+			this.getEl().dialog('option', 'title', '');
+			
 			switch (ui.index) {
-				case this.EDITOR_TAB:
-					this.onEditorTabShow.call(this, evt, ui);
+				case this.UPLOAD_TAB:
+					this.getUploader().onShow();
 					break;
 					
-				case this.IMAGES_TAB:
-					this.onImageTabShow.call(this, evt, ui);
+				case this.EDITOR_TAB:
+					this.getEditor().onShow();
+					break;
+					
+				case this.GALLERY_TAB:
+					this.getGallery().onShow();
 					break;
 			}
 		},
 		
-		onEditorTabShow: function(evt, ui) {
-			
-		},
-
-		setEditImage: function(src) {
-			this.editor.setEditImage(src);
-			
+		activateTab: function(index) {
+			this.getTabs().tabs('enable', index);
+			this.getTabs().tabs('select', index);
 			return this;
 		},
 		
-		onImageTabShow: function(evt, ui) {
-			if (this.images.length > 0) 
-				return true;
-			
-			var me	= this; 
-			$.getJSON('/admin/uploads.json', function(data) {
-				var images	= me.images = data.files,
-					//el	= dialog.getContentElement('add-image-tab', 'image-select').getElement(),
-					tpl	= me.imageTpl.join("\n");
-				
-				$("#images-selection .image-row").remove();
-				for (var i = 0; i < images.length; i++) {
-					var image = images[i], newEntry;
-					
-					newEntry	= tpl.replace(/\{\$src\}/ig, image.filename);
-					newEntry	= newEntry.replace(/\{\$width\}/ig, image.width);
-					newEntry	= newEntry.replace(/\{\$height\}/ig, image.height);
-					newEntry	= newEntry.replace(/\{\$id\}/ig, image.id);
-					$("#images-selection").append(newEntry);
-				}
-				
-				$('.media-library-image-link').click(function(evt) {
-					me.onMediaImageLinkClick.call(me, $(this), evt);
-				});
-				
-				$('#media_editor_link').click(function(evt) {
-					me.onEditorLinkClick.call(me, $(this), evt);
-				});
-			});
+		activeTab: function() {
+			return this.getTabs().tabs('option', 'active');
 		},
 		
-		/**
-		 * Choose thumb link action
-		 */
-		onMediaImageLinkClick: function(el, evt) {
-			var id = el.data('id'),
-				cont = $('tr.image-thumb[data-id="' + id + '"]'),
-				tpl	= this.definition.insertTpl.join("\n"),
-				me	= this;
-			
-			$('tr.insert_image_dialog').remove();
-			$('tr.image-thumb').after(tpl);
-			$('tr.insert_image_dialog').slideDown();
-			$('#insert_image_link_url').val(el.data('src'));
-			
-			$('#insert_image_into_post').on('click', function(evt) {
-				me.definition.onInsertButtonClick.call(me, $(this), evt);
-			});
+		clearButtons: function() {
+			this.getEl().dialog('option', 'buttons', []);
 		},
 		
-		/**
-		 * Send to editor link action
-		 */
-		onEditorLinkClick: function(el, evt) {
-			//this.showPage('edit-image-tab');
-			//this.selectPage('edit-image-tab');
-			this.setEditImage(el.data('src'));
-			this.tabs().tabs('enable', this.EDITOR_TAB);
-			this.tabs().tabs('select', this.EDITOR_TAB);
-			
-			$('#media_editor_orig_width').text(el.data('width'));
-			$('#media_editor_orig_height').text(el.data('height'));
-			
-			this.editor.scaleWidth().val(el.data('width'));
-			this.editor.scaleHeight().val(el.data('height'));
+		addButtons: function(buttons) {
+			this.getEl().dialog("option", "buttons", buttons);
 		},
 		
-		container: function() {
+		getGallery	 : function() {
+			return this.gallery;
+		},
+		
+		getContainer: function() {
 			return $(".media-holder");
 		},
 		
-		tabs: function() {
+		getTabs: function() {
 			return $(this.options.tabs);
 		},
 		
-		dialog: function() {
+		getEl: function() {
 			return this.dialogEl;
+		},
+		
+		getEditor: function() {
+			return this.editor;
+		},
+		
+		getUploader: function() {
+			return this.uploader;
+		},
+		
+		getIdentifier: function() {
+			return this.options.identifier;
 		},
 		
 		open: function() {
 			this.buildContainer();
-			this.dialog().dialog("open");
+			this.getEl().dialog("open");
 			return this;
 		},
 		
 		close: function() {
-			this.dialog().dialog('close');
+			this.getEl().dialog('close');
 			this.cleanup();
 		},
 		
 		cleanup: function() {
-			this.container().remove();
+			this.getContainer().remove();
 		},
-		
-		images	: [],
 		
 		defaults	: {
 			tabs		: '.media-tabs',			// Selector for tabs
@@ -326,14 +150,15 @@
 			editorImage	: '.media-editor-image',	// Selector for media editor image
 			prefix		: null,						// Potential Prefix for image update
 			identifier	: '__media',				// Not sure why I added this
-			libraryUri	: '/admin/uploads',	// Libray Uri
-			resizeUri	: '/admin/uploads/image_resize',	// Resize Uri
-			uploadUri	: '/admin/uploads',		// Upload Uri
+			libraryUri	: '/admin/uploads.json',	// Libray Uri
+			resizeUri	: '/admin/images/#{id}/resize.json',	// Resize Uri
+			uploadUri	: '/admin/uploads.json',		// Upload Uri
+			deleteUri	: '/admin/uploads/#{id}.json',
 			imageBase	: '/uploads/',
 			disabledTabs: [2],
 			bindLinksOnInit	: false,
 			onUploadSuccess	: function(data) {},
-			width	: 400,
+			width	: 600,
 			height	: 300
 		},
 			
@@ -341,21 +166,21 @@
 					'<div class="media-dialog" title="Media Editor">',
 					'<div class="media-tabs">',
 						'<ul>',
-							'<li><a href="#{identifier}-upload-form">Upload</a></li>',
-							'<li><a href="#{identifier}-media-library" class="media-gallery">Media Library</a></li>',
-							'<li><a href="#{identifier}-media-editor" class="media-editor-link">Media Editor</a></li>',
+							'<li><a href="##{identifier}-upload-form">Upload</a></li>',
+							'<li><a href="##{identifier}-media-library" class="media-gallery">Media Library</a></li>',
+							'<li><a href="##{identifier}-media-editor" class="media-editor-tab-link">Media Editor</a></li>',
 						'</ul>',
-						'<div id="{identifier}-upload-form">',
-							'<form accept-charset="utf-8" action="{uploadUrl}" method="post" enctype="multipart/form-data" class="UploadAdminAddForm">',
+						'<div id="#{identifier}-upload-form">',
+							'<form accept-charset="utf-8" action="#{uploadUrl}" method="post" enctype="multipart/form-data" class="UploadAdminAddForm">',
 								'<input type="hidden" value="POST" name="_method">',
 								'<div class="input file"><label for="UploadFile">File</label><input type="file" class="UploadFile" name="upload"></div>',
 								'<div class="submit">',
-									'<input type="submit" value="Submit">',
-									'<span class="media-upload-form-success"></span>',
+									//'<input type="submit" value="Submit">',
+									'<span id="media-upload-form-success"></span>',
 								'</div>',
 							'</form>',
 						'</div>',
-						'<div id="{identifier}-media-library" class="media-library">',
+						'<div id="#{identifier}-media-library" class="media-library">',
 							'<div class="media-results">',
 								'<table id="images-selection" width="100%" style="margin:0;width:100%;">',
 									'<tr>',
@@ -367,7 +192,7 @@
 							'</div>',
 							'<div class="media-results-pagination" class="ui-widget-header ui-corner-all" style="margin-top: 20px;"></div>',
 						'</div>',
-						'<div id="{identifier}-media-editor" class="media-editor">',
+						'<div id="#{identifier}-media-editor" class="media-editor">',
 							'<div class="media-editor-image-cont">',
 								'<img src="" id="media_editor_image" />',
 							'</div>',
@@ -399,38 +224,21 @@
 										'</tr>',
 									'</table>',
 									'<div class="submit">',
-										'<input type="button" value="Save" class="media-editor-save-edited" />',
-										'<span class="media-editor-save-edited-status"></span>',
+										'<span id="media_editor_status"></span>',
 									'</div>',
 								'</fieldset>',
 							'</div>',
 						'</div>',
 					'</div>',
 				'</div>'
-			],
-			
-		imageTpl: [
-		           '<tr class="image-row" data-id="{$id}">',
-		           		'<td>',
-			           		'<a href="javascript:void(0)" class="media-library-image-link" data-id="{$id}" data-src="/uploads/{$src}"><img src="/uploads/{$src}" width="75" height="50" border="0" class="media-library-image" style="width:75px;height:50px;" /></a><br/>',
-			           	'</td>',
-			           	'<td>',
-			           		'Width: {$width}<br />',
-			           		'Height: {$height}<br />',
-			           	'</td>',
-			           	'<td>',
-			           		'<a href="javascript:void(0)" id="media_editor_link" data-src="/uploads/{$src}" data-id="{$id}" data-width="{$width}" data-height="{$height}">Send to Editor</a><br />',
-			           		'<a href="javascript:void(0)" id="media_editor_delete_link" data-id="{$id}">Delete</a><br />',
-			           	'</td>',
-					'</tr>'
-		],
+			]
 	};
 	
-	$._mediaCenter = {};
-	
-	$.mediaCenter = function(referrer, options) {
-		$._mediaCenter.dialog = new MediaDialog(referrer, options);
-		return $._mediaCenter.dialog;
+	$.mediaCenter = {
+		init: function(referrer, options) {
+			$.mediaCenter.dialog = new MediaCenter.Dialog(referrer, options);
+			return $.mediaCenter.dialog;
+		}
 	};
 	
 	$.fn.mediaCenter = function(options) {
@@ -438,7 +246,7 @@
 			var me = this;
 			
 			$(this).click(function() {
-				var dialog = $.mediaCenter(me, options);
+				var dialog = $.mediaCenter.init(me, options);
 				dialog.open();
 			});
 		});

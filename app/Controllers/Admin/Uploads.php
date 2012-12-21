@@ -38,6 +38,7 @@ class Uploads extends Admin {
 	
 	
 	public function index() {
+		// TODO: Add paging		
 		$files = Upload::all();
 		$return = [];
 		foreach ($files as $file) {
@@ -77,7 +78,11 @@ class Uploads extends Admin {
 					$this->message	= "Successfully uploaded file";
 				
 					$format->json = function() {
-						$this->render(['json' => ['message' => $this->message, 'image' => $this->images[0]]]);
+						$this->render(['json' => [
+								'message'	=> $this->message, 
+								'image'	=> $this->images[0],
+								'success'	=> true
+							]]);
 					};
 					$format->jsonp = function() {
 						$this->render();

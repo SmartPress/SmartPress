@@ -30,4 +30,5 @@ CKEDITOR.editorConfig = function( config ) {
 	// need to have in the Standard(s) toolbar.
 	config.removeButtons= 'Underline,Subscript,Superscript';
 	config.extraPlugins	= 'sp_media';
+	config.contentsCss	= '/application.css';
 };

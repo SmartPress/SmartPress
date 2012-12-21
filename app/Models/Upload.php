@@ -17,7 +17,7 @@ class Upload extends \Speedy\Model\ActiveRecord {
 	
 	
 	public function deleteFile() {
-		return (@unline(PUBLIC_UNLOADS_DIR . DS . $this->filename)) ? true : false;
+		return (@unlink(PUBLIC_UPLOADS_DIR . DS . $this->filename)) ? true : false;
 	}
 	
 	public function get_info() {
