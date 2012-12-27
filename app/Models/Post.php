@@ -7,6 +7,8 @@ import("cms.lib.markdown");
 
 class Post extends \Speedy\Model\ActiveRecord {
 	
+	use \Cms\Lib\Concerns\Pagination;
+	
 	const PageType	= 'page';
 	
 	const PostType	= 'post';

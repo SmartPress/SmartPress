@@ -12,7 +12,7 @@ use Speedy\Loader;
 use Speedy\Logger;
 
 class Cms extends Admin {
-
+	
 	public $type	= 'page';
 
 	public $before_filter	= array();
@@ -23,7 +23,10 @@ class Cms extends Admin {
 	 * GET /posts
 	 */
 	public function index() {
-		$this->posts	= Post::all(array('conditions' => array( 'type' => $this->type )));
+		$this->posts	= Post::paginate(
+				$this->params('page'), 
+				array('conditions' => array( 'type' => $this->type ), 20)
+		);
 		
 		$this->respondTo(function(&$format) {
 			$format->html; // Render per usual

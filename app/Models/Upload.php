@@ -4,6 +4,8 @@ namespace Cms\Models;
 
 class Upload extends \Speedy\Model\ActiveRecord {
 	
+	use \Cms\Lib\Concerns\Pagination;
+	
 	static $before_destroy	= ['deleteFile'];
 	
 	private $_info;

@@ -37,9 +37,8 @@ class Uploads extends Admin {
 	
 	
 	
-	public function index() {
-		// TODO: Add paging		
-		$files = Upload::all();
+	public function index() {	
+		$files = Upload::paginate($this->params('page'));
 		$return = [];
 		foreach ($files as $file) {
 			$return[]	= [
@@ -54,7 +53,8 @@ class Uploads extends Admin {
 		$this->respondTo(function($format) {
 			$format->json	= function() {
 				$this->render(['json' => [
-							'files'	=> $this->files
+							'files'	=> $this->files,
+							'pagination'	=> Upload::paginationVars()
 						]]);
 			};
 		});
