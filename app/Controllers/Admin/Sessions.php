@@ -14,6 +14,12 @@ class Sessions extends Application {
 	
 	
 	
+	public function index() {
+		if ($this->user()) {
+			$this->redirectTo($this->admin_users_url());
+		}
+	}
+	
 	public function _new() {
 	}
 			

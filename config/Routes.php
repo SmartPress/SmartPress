@@ -63,6 +63,7 @@ class Routes extends SpeedyDraw {
 		});
 		$this->resources('pages', ['only' => 'show']);
 		
+		$this->match(['admin' => 'admin/users#index']);
 		$this->match(['admin/signin' => "admin/sessions#_new"]);
 		$this->match(['admin/signout' => "admin/sessions#destroy"]);
 		
