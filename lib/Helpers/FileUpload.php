@@ -296,7 +296,7 @@ class FileUpload extends Object {
      * @return void
      * @access public
      */
-  	public function processFile($file){
+  	public function processFile($file, $mergeData = []){
     	//Backporting for manual use processFile(), show error when using.
     	/*if (count($this->uploadedFiles) && empty($this->currentFile)) {
       		throw new FUException('FileUpload: You\'re using a deprecated standard of uploading files manually.  Don\'t call processFile() directly. Instead, call processAllFiles().');
@@ -306,7 +306,7 @@ class FileUpload extends Object {
   			$this->addUploadError($file['error']);
   		 
     
-    	$save_data = $this->__prepareSaveData();
+    	$save_data = array_merge($mergeData, $this->__prepareSaveData());
     	if ($finalFile = $this->Uploader->processFile($file)) {
       		$this->finalFiles[] = $finalFile;
       		$this->finalFile = $finalFile; 
@@ -360,11 +360,11 @@ class FileUpload extends Object {
      * @return void
      * @access public
      */
-  	public function processAllFiles() { 
+  	public function processAllFiles($mergeData = []) { 
     	foreach ($this->uploadedFiles as $file) {
       		//$this->_setCurrentFile($file);
       		//$this->Uploader->file = $this->options['fileModel'] ? $file[$this->options['fileVar']] : $file;
-      		$this->processFile($file);
+      		$this->processFile($file, $mergeData);
     	}
   	}
   
