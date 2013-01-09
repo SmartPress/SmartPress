@@ -23,7 +23,8 @@ class Modules extends Admin {
 			'uploadDir'	=> MODULE_UPLOAD_DIR,
 			'fileVar'	=> 'module',
 			'fileModel' => null,
-			'alias'		=> 'FileUpload'
+			'alias'		=> 'FileUpload',
+			'automatic'	=> true
 		],
 		'\\Speedy\\Controller\\Helper\\Session' => [ 'alias' => 'Session']
 	];

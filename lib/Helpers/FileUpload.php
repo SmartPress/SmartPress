@@ -302,6 +302,7 @@ class FileUpload extends Object {
       		throw new FUException('FileUpload: You\'re using a deprecated standard of uploading files manually.  Don\'t call processFile() directly. Instead, call processAllFiles().');
       		$this->setCurrentFile($this->uploadedFiles[0]);
     	}*/
+  		
   		if ($file['error'] !== UPLOAD_ERR_OK)
   			$this->addUploadError($file['error']);
   		 
@@ -450,7 +451,7 @@ class FileUpload extends Object {
         		$retval[] = $this->data("files.{$this->options['fileVar']}");
       		} elseif ($this->hasData("files.{$this->options['fileVar']}")) { 
       			//syntax for multiple files without a model is data[file][0]..data[file][1]..data[file][n]
-        		$retval = $this->data("files.{$this->options['fileVar']}");
+        		$retval[] = $this->data("files.{$this->options['fileVar']}");
       		} else {
         		$retval = false;
       		}

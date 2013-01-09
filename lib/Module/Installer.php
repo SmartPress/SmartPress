@@ -2,14 +2,14 @@
 namespace Cms\Lib\Module;
 
 
-use \Speedy\Cache;
-use \Speedy\Singleton;
-use \Speedy\Loader;
-use \Speedy\Logger;
-use \Speedy\Utility\Inflector;
-use \Cms\Lib\Module\Exception as MException;
-use \Cms\Models\Module;
-use \ZipArchive;
+use Speedy\Cache;
+use Speedy\Singleton;
+use Speedy\Loader;
+use Speedy\Logger;
+use Speedy\Utility\Inflector;
+use Cms\Lib\Module\Exception as MException;
+use Cms\Models\Module;
+use ZipArchive;
 
 class Installer extends \Speedy\Object {
 	
@@ -283,7 +283,7 @@ class Installer extends \Speedy\Object {
 	
 		$data = array();
 		$data['name']	= $config->name;
-		$data['status']	= 1;
+		$data['status']	= Module::ActiveStatus;
 		$data['version']= $config->version;
 		$data['code']	= $config->code;
 		//$data['file_path']	= (isset($folder)) ? $folder : $data['file_path'];

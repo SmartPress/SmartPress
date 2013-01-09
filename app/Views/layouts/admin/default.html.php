@@ -56,6 +56,7 @@
 				<?php endif; ?>
 			</div>
 			<div class="span9">
+				<?php $this->render('admin/shared/flash'); ?>
 				<?php $this->yield(); ?>
 			</div>
 		</div>

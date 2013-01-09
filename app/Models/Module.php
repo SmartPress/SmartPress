@@ -9,6 +9,12 @@ defined('MODULE_UPLOAD_DIR') or define("MODULE_UPLOAD_DIR", ROOT . DS . 'tmp' . 
 
 class Module extends \Speedy\Model\ActiveRecord {
 	
+	const ActiveStatus = 1;
+	
+	const DisabledStatus = 2;
+	
+	static $statuses = ['', 'Active', 'Disabled'];
+	
 	/*protected $_mixins = array(
 		"\\Cms\\Lib\\Concerns\\Uploader" => array(
         	'uploadDir' => MODULE_UPLOAD_DIR,
@@ -79,6 +85,13 @@ class Module extends \Speedy\Model\ActiveRecord {
 	
 	public static function settingsFor($namespace) {
 		
+	}
+	
+	public function get_status() {
+		$index = $this->read_attribute('status');
+		if (!isset($index)) $index = 0;
+		
+		return static::$statuses[$index];
 	}
 	
 }

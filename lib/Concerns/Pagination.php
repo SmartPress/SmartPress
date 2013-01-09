@@ -13,7 +13,7 @@ trait Pagination {
 	private static $__pagination = [];
 	
 	
-	public static function paginate($page = null, $conditions = [], $increment = null) {
+	public static function paginate($page = null, $increment = null, $conditions = []) {
 		if ($increment) self::setIncrement($increment);
 		
 		$pagination = self::__pageParams($page, $conditions);
@@ -43,7 +43,10 @@ trait Pagination {
 		$count = self::setPaginationVar('count', static::count($conditions));
 		$page	= ($page) ? $page : 1;
 		
-		$maxPage= (($maxPage = ceil($count/self::$_increment)) > 0) ? $maxPage : 1;
+		$maxPage	= ceil($count/self::$_increment);
+		if ($maxPage < 1)
+			$maxPage = 1;
+		
 		$offset = ((self::$_increment * $page) - self::$_increment) + 1;
 		$nextPage	= (($nextPage = $page + 1) <= $maxPage) ? $nextPage : null;
 		$prevPage	= (($prevPage = $page - 1) > 0) ? $prevPage : null;

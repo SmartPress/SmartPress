@@ -25,7 +25,8 @@ class Cms extends Admin {
 	public function index() {
 		$this->posts	= Post::paginate(
 				$this->params('page'), 
-				array('conditions' => array( 'type' => $this->type ), 20)
+				20,
+				array('conditions' => array( 'type' => $this->type ))
 		);
 		
 		$this->respondTo(function(&$format) {
