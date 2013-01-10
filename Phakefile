@@ -9,5 +9,9 @@ if (!file_exists($corePhake)) {
 
 require_once $corePhake;
 
+$glob = MODULES_PATH . DS . '*' . DS . 'Etc' . DS . 'tasks.php';
+foreach (glob($glob) as $tasks) {
+	require_once $tasks;
+}
 
 ?>

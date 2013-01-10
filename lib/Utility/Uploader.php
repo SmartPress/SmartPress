@@ -202,6 +202,7 @@ class Uploader {
 	 */
 	function _error($text) {
 		$this->errors[] = $text;
+		return false;
 	}
 	  
 	/**
@@ -227,15 +228,14 @@ class Uploader {
 			$ext = strtolower('.' . str_replace('.','', $ext));
 			if ($file_ext == $ext) {
 				if (is_array($types) && !in_array($this->file['type'], $types)) {
-					throw new UException("{$this->file['type']} is not an allowed type.");
-					return false;
+					return $this->_error("{$this->file['type']} is not an allowed type.");
 		        } else {
 					return true;
 				}
 			}    
 	    }
 	
-	    throw new UException("Extension is not allowed ({$file_ext}).");
+	    return $this->_error("Extension is not allowed ({$file_ext}).");
 	  }
 	  
 	  /**
@@ -252,7 +252,7 @@ class Uploader {
 			if (isset($this->file['error']) && $this->file['error'] == UPLOAD_ERR_OK) {
 				return true;
 	      	} else {
-				throw new UException($this->uploadErrors[$this->file['error']]);
+				return $this->_error($this->uploadErrors[$this->file['error']]);
 			}
 	    }        
 	    
@@ -275,7 +275,7 @@ class Uploader {
 			} elseif ($this->options['maxFileSize'] && $this->file['size'] < $this->options['maxFileSize']) {
 	        	return true;
 	      	} else {
-	        	throw new UException("File exceeds {$this->options['maxFileSize']} byte limit.");
+	        	return $this->_error("File exceeds {$this->options['maxFileSize']} byte limit.");
 	      	}
 	    }
 	    

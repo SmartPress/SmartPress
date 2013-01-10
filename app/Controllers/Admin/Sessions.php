@@ -1,9 +1,9 @@
 <?php
 namespace Cms\Controllers\Admin;
 
-use \Cms\Controllers\Application;
-use \Cms\Models\User;
-use \Speedy\Session;
+use Cms\Controllers\Application;
+use Cms\Models\User;
+use Speedy\Session;
 
 class Sessions extends Application {
 
