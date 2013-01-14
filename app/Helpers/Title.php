@@ -1,8 +1,8 @@
 <?php 
 namespace Cms\Helpers;
 
-use \Cms\Lib\View\Helpers\Base;
-use \Cms\Models\Config\Manager as ConfigManager;
+use Cms\Lib\View\Helpers\Base;
+use Cms\Models\Config\Manager as ConfigManager;
 
 class Title extends Base {
 

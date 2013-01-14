@@ -9,7 +9,7 @@ class Modules extends Migration {
 			$this->string("name");
 			$this->string("code");
 			$this->string("version");
-			$this->integer("status", 3);
+			$this->integer("status", ['length' => 3]);
 		});
 	}
 

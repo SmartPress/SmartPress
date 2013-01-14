@@ -7,6 +7,7 @@ defined('APP_PATH') or define('APP_PATH', ROOT . DS . 'app');	// Define path to 
 defined('CONFIG_PATH') or define('CONFIG_PATH', ROOT . DS . 'config');	// Define path to the config directory
 defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
 defined('TMP_PATH') or define('TMP_PATH', ROOT . DS . 'tmp');	// Define path to the tmp directory
+defined('UPLOAD_PATH') or define('UPLOAD_PATH', TMP_PATH . DS . 'uploads');
 defined('VENDOR_PATH') or define('VENDOR_PATH', ROOT . DS . 'vendor');
 defined('PUBLIC_UPLOADS_DIR') or define('PUBLIC_UPLOADS_DIR', PUBLIC_DIR . DS . 'uploads');
 //defined('SPEEDY_PATH') or define('SPEEDY_PATH', VENDOR_PATH . DS . 'SpeedyPHP' . );

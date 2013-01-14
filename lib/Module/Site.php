@@ -2,15 +2,15 @@
 namespace Cms\Lib\Module;
 
 
-use \Cms\Models\Module;
-use \Cms\Lib\Module\Exception as MException;
-use \Speedy\Singleton;
-use \Speedy\Cache;
-use \Speedy\Utility\Inflector;
-use \Speedy\Utility\Set;
-use \Speedy\Loader;
-use \Speedy\Router\Draw;
-use \App;
+use Cms\Models\Module;
+use Cms\Lib\Module\Exception as MException;
+use Speedy\Singleton;
+use Speedy\Cache;
+use Speedy\Utility\Inflector;
+use Speedy\Utility\Set;
+use Speedy\Loader;
+use Speedy\Router\Draw;
+use App;
 
 Class Site extends Singleton {
 	
@@ -35,7 +35,9 @@ Class Site extends Singleton {
 			foreach ($unfiltered as $module) {
 				$config	= $module->config();
 					
-				$siteModules[(string) $config->code]	= array_merge(Set::toArray($config), array('file_path' => $module->filePath()));
+				$siteModules[(string) $config->code]	= array_merge(Set::toArray($config), array(
+					'file_path' => $module->filePath(),
+					'inflected_namespace' => Inflector::underscore($config->namespace)));
 			}
 				
 			Cache::write('modules', $siteModules);
@@ -65,11 +67,14 @@ Class Site extends Singleton {
 		
 		foreach ($self->modules() as $module) {
 			Loader::instance()->registerNamespace(
-					Inflector::underscore($module['namespace']), 
+					$module['inflected_namespace'], 
 					$module['file_path']);
 			Loader::instance()->pushPathToNamespace(
 					App::instance()->ns() . '.views', 
 					$module['file_path'] . DS . 'Views');
+			Loader::instance()->pushPathToNamespace(
+					$module['inflected_namespace'] . '.helpers', 
+					$module['file_path'] . DS . 'Helpers');
 			/*
 			if (!count($module['routes'])) {
 				continue;

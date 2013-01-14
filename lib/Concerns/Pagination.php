@@ -53,6 +53,7 @@ trait Pagination {
 		
 		$lowerBound	= ceil(self::$_maxPages/2);
 		$upperBound	= self::$_maxPages - $lowerBound;
+		\Speedy\Logger::debug("Upper Bound $upperBound");
 		$upper = $page + $upperBound;
 		while ($upper > $maxPage) {
 			$upper--;
@@ -60,7 +61,11 @@ trait Pagination {
 		}
 		
 		$lower = (($lower = $page - $lowerBound) < 1) ? 1 : $lowerBound;
-		
+		$lowerDiff = $upper - $lower;\Speedy\Logger::debug("Lower Diff $lowerDiff");
+		while ($lowerDiff > 0) {
+			$upper++;
+			$lowerDiff--;
+		}
 		
 		self::setPaginationVar('maxPages', $maxPage);
 		self::setPaginationVar('lower', $lower);
@@ -69,6 +74,7 @@ trait Pagination {
 		self::setPaginationVar('offset', $offset);
 		self::setPaginationVar('nextPage', $nextPage);
 		self::setPaginationVar('prevPage', $prevPage);
+		self::setPaginationVar('currentPage', $page);
 		//self::setPaginationVar($name, $value)
 		
 		return self::$__pagination; 

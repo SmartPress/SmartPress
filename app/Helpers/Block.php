@@ -2,12 +2,12 @@
 namespace Cms\Helpers;
 
 
-use \Cms\Lib\View\Helpers\Base;
-use \Cms\Models\Block\Manager as BlockManager;
-use \Cms\Models\Event\Manager as EventManager;
-use \Speedy\Cache;
-use \Speedy\Loader;
-use \Speedy\View;
+use Cms\Lib\View\Helpers\Base;
+use Cms\Models\Block\Manager as BlockManager;
+use Cms\Models\Event\Manager as EventManager;
+use Speedy\Cache;
+use Speedy\Loader;
+use Speedy\View;
 
 class Block extends Base {
 	

@@ -329,6 +329,7 @@ class Installer extends \Speedy\Object {
 		//$folder	= (!$dest_path) ? $xmlObj->code : $dest_path;
 		$dest_path	= (!$dest_path) ? MODULES_PATH . DS . $xmlObj->code . DS : $dest_path . DS;
 	
+		return $archive->extractTo($dest_path);
 		if (!$this->_extractFolder($archive, 'Etc', $dest_path)) {
 			return false;
 		}
@@ -372,6 +373,12 @@ class Installer extends \Speedy\Object {
 						return false;
 					}
 					break;
+
+				case "helpers":
+					if (!$this->_extractFolder($archive, 'Helpers', $dest_path)) {
+						return false;
+					}
+					break;					
 			}
 		}
 	

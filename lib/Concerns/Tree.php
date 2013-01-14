@@ -5,7 +5,7 @@ namespace Cms\Lib\Concerns;
 use Cms\Lib\Concerns\Exceptions\TreeException;
 use ActiveRecord\Relationships\BelongsTo;
 use ActiveRecord\Relationships\HasMany;
-
+use Speedy\Logger;
 
 trait Tree {
 	
@@ -127,7 +127,7 @@ trait Tree {
 		
 		$nodeSpan	= $node->{static::$__treeRght} - $node->{static::$__treeLft};
 		$moveNode	= $siblings[$toIndex];
-		$moveSpan	= $nodeSpan + 1; output("Move Span $moveSpan");
+		$moveSpan	= $nodeSpan + 1; Logger::debug("Move Span $moveSpan");
 		
 		$oldLft	= $node->{static::$__treeLft};
 		$oldRght= $node->{static::$__treeRght};
@@ -149,14 +149,14 @@ trait Tree {
 				$node->{static::$__treeLft}
 			];
 		}
-		output($conditions);
+		Logger::debug($conditions);
 		// Move affected siblings
 		static::update_all(
 				static::$__treeLft . ' = ' . static::$__treeLft . " $symbol $moveSpan, " .
 				static::$__treeRght . ' = ' . static::$__treeRght . " $symbol $moveSpan",
 				$conditions);
-		output("Last Query " . static::connection()->last_query);
-		output($conditions);
+		Logger::debug("Last Query " . static::connection()->last_query);
+		Logger::debug($conditions);
 				
 		
 		// Figure out the span for the move
@@ -217,7 +217,7 @@ trait Tree {
 					$level--;
 				}
 			}
-			output($level);
+			Logger::debug($level);
 			$item->{$title}= static::separatorLevel($level) . $item->{$title};
 			 
 			$lastItem	= $item;
@@ -251,6 +251,17 @@ trait Tree {
 		}
 		
 		return $ret . ' ';
+	}
+
+	public static function path($model) {
+		return self::all([
+				'conditions' => [
+					'lft < ? AND rght > ?',
+					$model[self::$__treeLft],
+					$model[self::$__treeRght]
+				],
+				'order' => 'lft ASC'
+			]);
 	}	
 }
 ?>
