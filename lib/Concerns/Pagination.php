@@ -11,15 +11,34 @@ trait Pagination {
 	private static $_maxPages = 5;
 	
 	private static $__pagination = [];
+
+	private static $_controller = null;
+
+	private static $_linksHelper = null;
+
 	
 	
-	public static function paginate($page = null, $increment = null, $conditions = []) {
+	public static function paginate($controller, $increment = null, $conditions = []) {
+		self::$_linksHelper = \Speedy\Utility\Links::instance();
+		self::setController($controller);
 		if ($increment) self::setIncrement($increment);
 		
-		$pagination = self::__pageParams($page, $conditions);
+		$pagination = self::__pageParams($controller->params('page'), $conditions);
+		$sort = $controller->params('order');
+		$sortType = $controller->params('order_type');
+
+		if (!empty($sort)) {
+			$sortType	= (empty($sortType)) ? ' asc' : ' desc';
+			$conditions['order']	= $sort . $sortType;
+		}
+
 		$conditions['limit']	= $pagination['limit'];
 		$conditions['offset']	= $pagination['offset'];
 		return self::find('all', $conditions);
+	}
+
+	public static function setController(\Speedy\Controller $controller) {
+		self::$_controller = $controller;
 	}
 	
 	public static function setIncrement($increment) {
@@ -53,20 +72,27 @@ trait Pagination {
 		
 		$lowerBound	= ceil(self::$_maxPages/2);
 		$upperBound	= self::$_maxPages - $lowerBound;
-		\Speedy\Logger::debug("Upper Bound $upperBound");
 		$upper = $page + $upperBound;
 		while ($upper > $maxPage) {
 			$upper--;
 			$lowerBound++;
 		}
 		
-		$lower = (($lower = $page - $lowerBound) < 1) ? 1 : $lowerBound;
-		$lowerDiff = $upper - $lower;\Speedy\Logger::debug("Lower Diff $lowerDiff");
-		while ($lowerDiff > 0) {
+		$lower = $page - $lowerBound;
+		if ($lower < 1)
+			$lower = 1;
+		
+		$targetDiff = $upper - $lower;
+		while ($targetDiff < (self::$_maxPages - 1)) {
 			$upper++;
-			$lowerDiff--;
+			$targetDiff++;
 		}
 		
+		while ($targetDiff > (self::$_maxPages - 1)) {
+			$lower++;
+			$targetDiff--;
+		}
+
 		self::setPaginationVar('maxPages', $maxPage);
 		self::setPaginationVar('lower', $lower);
 		self::setPaginationVar('upper', $upper);
