@@ -78,7 +78,7 @@ if ($step === PREINSTALL_STATUS) {
 	if ($allLibs) {
 		try {
 			$app	= App::instance();
-			$app->bootstrap();
+			//$app->bootstrap();
 
 			$connection = \ActiveRecord\Connection::instance();
 			pushCondition(
@@ -138,20 +138,22 @@ if ($step === PREINSTALL_STATUS) {
 			);
 	}
 
-	$modulesPerms = fileperms(MODULES_PATH);
-	$permsCheck = $modulesPerms & $desired;
+	if (file_exists(MODULES_PATH)) {
+		$modulesPerms = fileperms(MODULES_PATH);
+		$permsCheck = $modulesPerms & $desired;
 
-	if ($permsCheck != $desired) {
-		pushCondition(
-			'Modules directory does not have full permissions, this may cause errors.',
-			INFO_COND_LEVEL,
-			PERMISSIONS_FIX_MSG
-			);
-	} else {
-		pushCondition(
-			'Modules directory has full permissions',
-			SUCCESS_COND_LEVEL
-			);
+		if ($permsCheck != $desired) {
+			pushCondition(
+				'Modules directory does not have full permissions, this may cause errors.',
+				INFO_COND_LEVEL,
+				PERMISSIONS_FIX_MSG
+				);
+		} else {
+			pushCondition(
+				'Modules directory has full permissions',
+				SUCCESS_COND_LEVEL
+				);
+		}
 	}
 }
 ?>
