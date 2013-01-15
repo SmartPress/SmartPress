@@ -2,14 +2,14 @@
 
 use Speedy\Loader;
 use Speedy\Session;
-use Cms\Models\Module;
-use Cms\Models\Event\Manager as EventManager;
-use Cms\Lib\Module\Site as SiteModules;
-use Cms\Models\Theme;
+use SmartPress\Models\Module;
+use SmartPress\Models\Event\Manager as EventManager;
+use SmartPress\Lib\Module\Site as SiteModules;
+use SmartPress\Models\Theme;
 
 class App extends \Speedy\App {
 
-	protected $_name = "Cms";
+	protected $_name = "SmartPress";
 
 
 	protected function initApp() {
@@ -17,8 +17,8 @@ class App extends \Speedy\App {
 		EventManager::dispatch('bootstrap');
 		
 		$theme = Theme::currentTheme();
-		Loader::instance()->pushPathToNamespace("cms.views", $theme['fullpath'] . DS . 'views');
-		Loader::instance()->registerNamespace("cms.blocks",  [APP_PATH . DS . 'Blocks', $theme['fullpath'] . DS . 'blocks']);
+		Loader::instance()->pushPathToNamespace("smart_press.views", $theme['fullpath'] . DS . 'views');
+		Loader::instance()->registerNamespace("smart_press.blocks",  [APP_PATH . DS . 'Blocks', $theme['fullpath'] . DS . 'blocks']);
 	}
 	
 	protected function initModules() {
@@ -28,7 +28,7 @@ class App extends \Speedy\App {
 	
 	protected function initEvents() {
 		EventManager::addListener('admin_configs_update_theme', [
-					'class'	=> '\\Cms\\Models\\Theme',
+					'class'	=> '\\SmartPress\\Models\\Theme',
 					'method'=> 'updateTheme'
 				]);
 	}

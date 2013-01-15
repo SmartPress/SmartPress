@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Lib\Block;
+namespace SmartPress\Lib\Block;
 
 
 use \Speedy\Object;
