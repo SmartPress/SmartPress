@@ -1,8 +1,8 @@
 <?php 
-namespace Cms\Blocks;
+namespace SmartPress\Blocks;
 
 
-use \Cms\Models\Menu as MenuModel;
+use \SmartPress\Models\Menu as MenuModel;
 use \Speedy\View;
 
 class Menu extends Partial {

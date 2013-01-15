@@ -1,9 +1,9 @@
 <?php
-namespace Cms\Models;
+namespace SmartPress\Models;
 
 
 use \Speedy\Cache;
-use \Cms\Lib\Module\Exception as MException;
+use \SmartPress\Lib\Module\Exception as MException;
 
 defined('MODULE_UPLOAD_DIR') or define("MODULE_UPLOAD_DIR", ROOT . DS . 'tmp' . DS . 'uploads');
 
@@ -16,7 +16,7 @@ class Module extends \Speedy\Model\ActiveRecord {
 	static $statuses = ['', 'Active', 'Disabled'];
 	
 	/*protected $_mixins = array(
-		"\\Cms\\Lib\\Concerns\\Uploader" => array(
+		"\\SmartPress\\Lib\\Concerns\\Uploader" => array(
         	'uploadDir' => MODULE_UPLOAD_DIR,
           	'forceWebroot' => false, //if false, files will be upload to the exact path of uploadDir
           	//'fields' => array('name' => 'file_name', 'type' => 'file_type', 'size' => 'file_size'),
@@ -62,7 +62,7 @@ class Module extends \Speedy\Model\ActiveRecord {
 	
 	/**
 	 * Settings object
-	 * @return object of Cms\Lib\Settings\Base
+	 * @return object of SmartPress\Lib\Settings\Base
 	 */
 	public function settings() {
 		$config	= $this->config();

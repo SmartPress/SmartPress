@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Cms</title>
+	<title>SmartPress</title>
 	<?php $this->javascript('jquery'); ?>
 </head>
 <body>

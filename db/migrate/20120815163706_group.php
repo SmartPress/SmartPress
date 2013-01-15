@@ -12,10 +12,10 @@ class Group extends Migration {
 	}
 	
 	public function up() {
-		$superAdmin = new \Cms\Models\Group(['name' => 'Super Admin', 'privileges' => 255]);
+		$superAdmin = new \SmartPress\Models\Group(['name' => 'Super Admin', 'privileges' => 255]);
 		$superAdmin->save();
 		
-		$admin	= new \Cms\Models\Group(['name' => 'Admin', 'privileges' => 16]);
+		$admin	= new \SmartPress\Models\Group(['name' => 'Admin', 'privileges' => 16]);
 		$admin->save();
 	}
 

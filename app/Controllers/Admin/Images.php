@@ -1,11 +1,11 @@
 <?php 
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
 
-use Cms\Controllers\Admin\Admin;
-use Cms\Lib\Exceptions\Image as ImageException;
-use Cms\Lib\Utility\Image;
-use Cms\Models\Upload;
+use SmartPress\Controllers\Admin\Admin;
+use SmartPress\Lib\Exceptions\Image as ImageException;
+use SmartPress\Lib\Utility\Image;
+use SmartPress\Models\Upload;
 use Speedy\Utility\File;
 
 class Images extends Admin {

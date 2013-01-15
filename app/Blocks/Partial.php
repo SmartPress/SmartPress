@@ -1,8 +1,8 @@
 <?php 
-namespace Cms\Blocks;
+namespace SmartPress\Blocks;
 
 
-use \Cms\Lib\Block\Base;
+use \SmartPress\Lib\Block\Base;
 use \Speedy\View;
 
 class Partial extends Base {

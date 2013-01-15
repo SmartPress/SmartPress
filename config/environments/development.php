@@ -28,7 +28,7 @@ App::instance()->configure(function($conf) {
 		//$conf->set_cache('\\Speedy\\Cache', 'table');
 	});
 	
-	$conf->addRenderer('php', 'cms.lib.view.php');
+	$conf->addRenderer('php', 'smart_press.lib.view.php');
 	
 });
 ?>

@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Lib\Utility;
+namespace SmartPress\Lib\Utility;
 
 /**
  * Uploader class handles a single file to be uploaded to the file system
@@ -9,7 +9,7 @@ namespace Cms\Lib\Utility;
  * @link: http://www.webtechnick.com 
  */
 
-use \Cms\Lib\Exceptions\Uploader as UException;
+use \SmartPress\Lib\Exceptions\Uploader as UException;
 
 class Uploader {
   

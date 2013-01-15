@@ -1,8 +1,8 @@
 <?php 
-namespace Cms\Helpers;
+namespace SmartPress\Helpers;
 
-use Cms\Lib\View\Helpers\Base;
-use Cms\Models\Config\Manager as ConfigManager;
+use SmartPress\Lib\View\Helpers\Base;
+use SmartPress\Models\Config\Manager as ConfigManager;
 
 class Title extends Base {
 

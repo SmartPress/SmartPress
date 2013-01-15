@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Lib\Helpers\FileUpload;
+namespace SmartPress\Lib\Helpers\FileUpload;
 
 class Exception extends \Exception {}
 

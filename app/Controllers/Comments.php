@@ -1,9 +1,9 @@
 <?php
-namespace Cms\Controllers\Posts;
+namespace SmartPress\Controllers\Posts;
 
 
-use Cms\Models\Comment;
-use Cms\Controllers\Application;
+use SmartPress\Models\Comment;
+use SmartPress\Controllers\Application;
 
 class Comments extends Application {
 		/**

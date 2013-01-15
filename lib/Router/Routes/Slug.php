@@ -1,9 +1,9 @@
 <?php
-namespace Cms\Lib\Router\Routes;
+namespace SmartPress\Lib\Router\Routes;
 
 use \Speedy\Router\Routes\Match;
 use \Speedy\Cache;
-use \Cms\Models\Post;
+use \SmartPress\Models\Post;
 
 class Slug extends Match {
 
@@ -101,7 +101,7 @@ class Slug extends Match {
 	/**
 	 * Setter for cache name
 	 * @param string $name
-	 * @return \Cms\Router\Routes\Slug
+	 * @return \SmartPress\Router\Routes\Slug
 	 */
 	protected function setName($name) {
 		$this->name	= $name;
@@ -111,7 +111,7 @@ class Slug extends Match {
 	/**
 	 * Setter for type
 	 * @param integer $type
-	 * @return \Cms\Router\Routes\Slug
+	 * @return \SmartPress\Router\Routes\Slug
 	 */
 	private function setType($type) {
 		$this->type	= $type;

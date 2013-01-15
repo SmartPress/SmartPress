@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Lib\Settings;
+namespace SmartPress\Lib\Settings;
 
 
 use \Speedy\Object;

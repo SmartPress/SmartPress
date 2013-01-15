@@ -1,9 +1,9 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
-use \Cms\Controllers\Application;
-use \Cms\Models\User;
-use \Cms\Lib\Module\Site as SiteModules;
+use \SmartPress\Controllers\Application;
+use \SmartPress\Models\User;
+use \SmartPress\Lib\Module\Site as SiteModules;
 use \Speedy\Cache;
 use \Speedy\Request;
 

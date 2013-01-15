@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Lib\Concerns\Exceptions;
+namespace SmartPress\Lib\Concerns\Exceptions;
 
 class TreeException extends \Exception {};
 ?>

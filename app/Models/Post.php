@@ -1,13 +1,13 @@
 <?php
-namespace Cms\Models;
+namespace SmartPress\Models;
 
 
 
-import("cms.lib.markdown");
+import("smart_press.lib.markdown");
 
 class Post extends \Speedy\Model\ActiveRecord {
 	
-	use \Cms\Lib\Concerns\Pagination;
+	use \SmartPress\Lib\Concerns\Pagination;
 	
 	const PageType	= 'page';
 	

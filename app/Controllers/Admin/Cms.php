@@ -1,17 +1,17 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
 
-use Cms\Controllers\Admin\Admin;
-use Cms\Models\Block;
-use Cms\Models\Block\Manager as BlockManager;
-use Cms\Models\Post;
-use Cms\Models\PostCustomField;
+use SmartPress\Controllers\Admin\Admin;
+use SmartPress\Models\Block;
+use SmartPress\Models\Block\Manager as BlockManager;
+use SmartPress\Models\Post;
+use SmartPress\Models\PostCustomField;
 use Speedy\Utility\Inflector;
 use Speedy\Loader;
 use Speedy\Logger;
 
-class Cms extends Admin {
+class SmartPress extends Admin {
 	
 	public $type	= 'page';
 

@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Lib\Concerns;
+namespace SmartPress\Lib\Concerns;
 
 
 trait Pagination {

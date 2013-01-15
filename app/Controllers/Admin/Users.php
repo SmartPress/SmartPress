@@ -1,9 +1,9 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
-use \Cms\Controllers\Admin\Admin;
-use \Cms\Models\User;
-use \Cms\Models\Group;
+use \SmartPress\Controllers\Admin\Admin;
+use \SmartPress\Models\User;
+use \SmartPress\Models\Group;
 
 class Users extends Admin {
 	

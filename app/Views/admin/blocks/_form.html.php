@@ -23,13 +23,13 @@ $info	= (class_exists($class)) ? $class::info() : null;
 	<div class="control-group">
 		<?php $f->label("block", null, ['class' => 'control-label']); ?>
 		<div class="controls">
-			<?php $f->select("block", \Cms\Models\Theme::blockOptions()); ?>
+			<?php $f->select("block", \SmartPress\Models\Theme::blockOptions()); ?>
 		</div>
 	</div>
 	<div class="control-group">
 		<?php $f->label("element", null, ['class' => 'control-label']); ?>
 		<div class="controls">
-			<?php $f->select("element", \Cms\Models\Block\Manager::availableBlocks()); ?>
+			<?php $f->select("element", \SmartPress\Models\Block\Manager::availableBlocks()); ?>
 		</div>
 	</div>
 	<div id="block_params_container">

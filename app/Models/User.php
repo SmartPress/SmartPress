@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Models;
+namespace SmartPress\Models;
 
 
 
@@ -17,7 +17,7 @@ class User extends \Speedy\Model\ActiveRecord {
 	static $validates_uniqueness_of = ['username'];
 	
 	static $belongs_to = [
-		['group', 'namespace' => '\\Cms\\Models']
+		['group', 'namespace' => '\\SmartPress\\Models']
 	];
 	
 	

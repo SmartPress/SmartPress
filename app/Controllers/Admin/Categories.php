@@ -1,8 +1,8 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
-use \Cms\Controllers\Admin\Admin;
-use \Cms\Models\Category;
+use \SmartPress\Controllers\Admin\Admin;
+use \SmartPress\Models\Category;
 
 class Categories extends Admin {
 

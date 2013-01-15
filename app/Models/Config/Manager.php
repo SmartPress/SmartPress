@@ -1,8 +1,8 @@
 <?php
-namespace Cms\Models\Config;
+namespace SmartPress\Models\Config;
 
 
-use Cms\Models\Config;
+use SmartPress\Models\Config;
 use Speedy\Cache;
 use Speedy\Singleton;
 

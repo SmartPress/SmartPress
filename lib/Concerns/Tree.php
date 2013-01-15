@@ -1,8 +1,8 @@
 <?php 
-namespace Cms\Lib\Concerns;
+namespace SmartPress\Lib\Concerns;
 
 
-use Cms\Lib\Concerns\Exceptions\TreeException;
+use SmartPress\Lib\Concerns\Exceptions\TreeException;
 use ActiveRecord\Relationships\BelongsTo;
 use ActiveRecord\Relationships\HasMany;
 use Speedy\Logger;

@@ -1,10 +1,10 @@
 <?php
-namespace Cms\Controllers;
+namespace SmartPress\Controllers;
 
-use \Cms\Controllers\Cms;
-use \Cms\Models\Post;
+use \SmartPress\Controllers\SmartPress;
+use \SmartPress\Models\Post;
 
-class Pages extends Cms {
+class Pages extends SmartPress {
 
 	public $type	= 'page';
 	

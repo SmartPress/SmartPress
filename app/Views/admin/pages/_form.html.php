@@ -1,4 +1,4 @@
-<?php $this->formFor(['admin', $this->post], ['class' => 'cms-form'], function($f) { ?>
+<?php $this->formFor(['admin', $this->post], ['class' => 'smart_press-form'], function($f) { ?>
 	<?php if ($this->post->errors && $this->post->errors->count()): ?>
 		<div id="error_explanation">
 			<?php element('h2', "{$this->pluralize($this->post, 'error')} prohibited this post from beign saved:"); ?>
@@ -47,11 +47,11 @@
 			</div>
 			<div class="field">
 				<?php $f->label("status"); ?>
-				<?php $f->select("status", \Cms\Models\Post::statuses(), null, ['class' => 'input-medium']); ?>
+				<?php $f->select("status", \SmartPress\Models\Post::statuses(), null, ['class' => 'input-medium']); ?>
 			</div>
 			<div class="field">
 				<?php $f->label("layout"); ?>
-				<?php $f->select("layout", \Cms\Models\Theme::availableLayouts(), null, ['class' => 'input-medium']); ?>
+				<?php $f->select("layout", \SmartPress\Models\Theme::availableLayouts(), null, ['class' => 'input-medium']); ?>
 			</div>
 		</div>
 		

@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Models;
+namespace SmartPress\Models;
 
 
 

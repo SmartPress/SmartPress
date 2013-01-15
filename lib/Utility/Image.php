@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Lib\Utility;
+namespace SmartPress\Lib\Utility;
 /**
  * 
  * Utility class for manipulating images
@@ -7,7 +7,7 @@ namespace Cms\Lib\Utility;
  *
  */
 
-use Cms\Lib\Exceptions\Image as ImageException;
+use SmartPress\Lib\Exceptions\Image as ImageException;
 
 class Image {
 	public $currentErrors	= array();
@@ -321,7 +321,7 @@ class Image {
 	/**
 	 * Add given watermark to current image
 	 * @param resource $watermark
-	 * @throws Cms\Lib\Exceptions\Image
+	 * @throws SmartPress\Lib\Exceptions\Image
 	 * @return object $this
 	 */
 	public function addWatermarkToImage($watermark = null) {
@@ -355,7 +355,7 @@ class Image {
 	/**
 	 * @deprecated
 	 * @param unknown_type $image
-	 * @return \Cms\Lib\Utility\Image
+	 * @return \SmartPress\Lib\Utility\Image
 	 */
 	public function setOutputImage($image) {
 		$this->_outputImg	= $image;
@@ -413,7 +413,7 @@ class Image {
 	
 	/**
 	 * Release current resources
-	 * @return Cms\Lib\Utility\Image $this
+	 * @return SmartPress\Lib\Utility\Image $this
 	 */
 	public function release() {
 		$this->currentErrors	= array();

@@ -1,13 +1,13 @@
 <?php 
-namespace Cms\Lib\Concerns;
+namespace SmartPress\Lib\Concerns;
 
-use \Cms\Lib\Utility\Uploader as UploadUtility;
-use \Cms\Lib\Config\FileUpload as Settings;
+use \SmartPress\Lib\Utility\Uploader as UploadUtility;
+use \SmartPress\Lib\Config\FileUpload as Settings;
 
 class Uploader extends \Speedy\Object {
 	
 	/**
-	* Uploader is the uploader instance of class \Cms\Lib\Utility\Uploader. This will handle the actual file saving.
+	* Uploader is the uploader instance of class \SmartPress\Lib\Utility\Uploader. This will handle the actual file saving.
 	* @var object
 	*/
 	public $Uploader;

@@ -15,7 +15,7 @@
 				<td><?php echo $comment->author; ?></td>
 				<td><?php echo $comment->summary(); ?></td>
 				<td>
-					<?php if ($comment->status != \Cms\Models\Comment::ApprovedStatus): ?>
+					<?php if ($comment->status != \SmartPress\Models\Comment::ApprovedStatus): ?>
 						<?php $this->linkTo('<i class="icon-thumbs-up"></i> Approve', $this->admin_comments_approve_path($comment->id), ['class' => 'btn']); ?>
 					<?php endif; ?>
 					<?php $this->linkTo('<i class="icon-edit icon-white"></i> Edit', $this->edit_admin_comment_path($comment->id), ['class' => 'btn btn-primary']); ?>

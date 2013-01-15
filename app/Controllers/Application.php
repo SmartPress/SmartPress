@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Controllers;
+namespace SmartPress\Controllers;
 
 
 use \Speedy\Controller;

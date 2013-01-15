@@ -1,9 +1,9 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
-use \Cms\Controllers\Admin\Admin;
-use \Cms\Models\Config;
-use \Cms\Models\Event\Manager as EventManager;
+use \SmartPress\Controllers\Admin\Admin;
+use \SmartPress\Models\Config;
+use \SmartPress\Models\Event\Manager as EventManager;
 use \Speedy\View;
 
 class Configs extends Admin {

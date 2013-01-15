@@ -1,10 +1,10 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
-use \Cms\Controllers\Admin\Cms;
-use \Cms\Models\Post;
+use \SmartPress\Controllers\Admin\SmartPress;
+use \SmartPress\Models\Post;
 
-class Posts extends Cms {
+class Posts extends SmartPress {
 
 	public $type = 'post';
 

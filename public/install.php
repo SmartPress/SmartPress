@@ -96,7 +96,7 @@ if ($step === PREINSTALL_STATUS) {
 
 		if ($connection) {
 			try {
-				$table = \Cms\Models\Post::table();
+				$table = \SmartPress\Models\Post::table();
 				$alreadyInstalled = true;
 			} catch (\ActiveRecord\Exceptions\DatabaseException $e) {
 				$alreadyInstalled = false;

@@ -1,9 +1,9 @@
 <?php
-namespace Cms\Models;
+namespace SmartPress\Models;
 
 
 use \Speedy\Cache;
-use \Cms\Models\Config\Manager as ConfigManager;
+use \SmartPress\Models\Config\Manager as ConfigManager;
 
 class Config extends \Speedy\Model\ActiveRecord {
 	

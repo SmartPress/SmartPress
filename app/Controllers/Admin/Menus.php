@@ -1,10 +1,10 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
 
-use Cms\Controllers\Admin\Admin;
-use Cms\Models\Menu;
-use Cms\Lib\Concerns\Exceptions\TreeException;
+use SmartPress\Controllers\Admin\Admin;
+use SmartPress\Models\Menu;
+use SmartPress\Lib\Concerns\Exceptions\TreeException;
 
 class Menus extends Admin {
 		/**

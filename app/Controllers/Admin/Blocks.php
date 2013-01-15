@@ -1,10 +1,10 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
 
-use Cms\Controllers\Admin\Admin;
-use Cms\Models\Block;
-use Cms\Models\Block\Manager;
+use SmartPress\Controllers\Admin\Admin;
+use SmartPress\Models\Block;
+use SmartPress\Models\Block\Manager;
 use Speedy\Loader;
 use Speedy\Session;
 use Speedy\View;

@@ -1,15 +1,15 @@
 <?php 
-namespace Cms\Lib\View;
+namespace SmartPress\Lib\View;
 
 
 use Speedy\Loader;
 use Speedy\Utility\Inflector;
-use Cms\Lib\Module\Site;
+use SmartPress\Lib\Module\Site;
 
 class Php extends \Speedy\View\Php {
 	
 	protected function __loadMixins() {
-		$paths['cms.helpers'] = Loader::instance()->path('cms.helpers')[0];
+		$paths['smart_press.helpers'] = Loader::instance()->path('smart_press.helpers')[0];
 
 		foreach (Site::all() as $module) {
 			$helperNs = $module['inflected_namespace'] . '.helpers';

@@ -8,7 +8,7 @@
 	
 	<div class="field">
 		<?php $this->labelTag('block[block]', 'Location'); ?>
-		<?php $this->selectTag('block[block]', $this->optionsForSelect(\Cms\Models\Theme::blockOptions())); ?>
+		<?php $this->selectTag('block[block]', $this->optionsForSelect(\SmartPress\Models\Theme::blockOptions())); ?>
 	</div>
 							
 	<?php $this->render('dynamic_fields', ['info' => $info, 'params' => []]); ?>

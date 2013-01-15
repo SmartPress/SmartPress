@@ -1,8 +1,8 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
-use Cms\Controllers\Application;
-use Cms\Models\User;
+use SmartPress\Controllers\Application;
+use SmartPress\Models\User;
 use Speedy\Session;
 
 class Sessions extends Application {

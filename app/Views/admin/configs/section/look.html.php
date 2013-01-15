@@ -26,7 +26,7 @@
 			<h2>Theme</h2>
 		</div>
 		<ul class="unstyled themes">
-			<?php foreach (\Cms\Models\Theme::all() as $theme): ?>
+			<?php foreach (\SmartPress\Models\Theme::all() as $theme): ?>
 				<li class="span4">
 					<?php $this->render('theme-form', ['theme' => $theme]); ?>
 				</li>	

@@ -1,10 +1,10 @@
 <ul class="thumbnails">
 	<?php 
-		$elements	= \Cms\Models\Block\Manager::currentFor($controller, $action);
-		$blocks		= \Cms\Models\Theme::availableBlocks();
+		$elements	= \SmartPress\Models\Block\Manager::currentFor($controller, $action);
+		$blocks		= \SmartPress\Models\Theme::availableBlocks();
 		$i = 0;
 		
-		$scopes	= \Cms\Models\Block\Manager::scopes($controller, $action);
+		$scopes	= \SmartPress\Models\Block\Manager::scopes($controller, $action);
 	?>
 	<?php foreach ($elements as $element): ?>
 		<?php 
@@ -61,7 +61,7 @@
 								
 								<div class="field">
 									<?php $this->labelTag('block[block]', 'Block'); ?>
-									<?php $this->selectTag('block[block]', $this->optionsForSelect(\Cms\Models\Theme::blockOptions(), $element['block'])); ?>
+									<?php $this->selectTag('block[block]', $this->optionsForSelect(\SmartPress\Models\Theme::blockOptions(), $element['block'])); ?>
 								</div>
 							
 								<?php $this->render('admin/blocks/dynamic_fields', ['info' => $info, 'params' => $params]); ?>

@@ -10,13 +10,13 @@
 * @version      4.0.4
 * @license      MIT
 */
-namespace Cms\Lib\Helpers;
+namespace SmartPress\Lib\Helpers;
 
 
 use Speedy\Object;
-use Cms\Lib\Utility\Uploader;
-use Cms\Lib\Config\FileUpload as Settings;
-use Cms\Lib\Helpers\FileUpload\Exception as FUException;
+use SmartPress\Lib\Utility\Uploader;
+use SmartPress\Lib\Config\FileUpload as Settings;
+use SmartPress\Lib\Helpers\FileUpload\Exception as FUException;
 
 class FileUpload extends Object {
   	/**

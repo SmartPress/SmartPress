@@ -1,11 +1,11 @@
 <?php
-namespace Cms\Config;
+namespace SmartPress\Config;
 
 
 use Speedy\Router\Draw as SpeedyDraw;
-use Cms\Lib\Router\Routes\Slug;
-use Cms\Lib\Module\Site as SiteModules;
-use Cms\Models\Config\Manager as ConfigManager;
+use SmartPress\Lib\Router\Routes\Slug;
+use SmartPress\Lib\Module\Site as SiteModules;
+use SmartPress\Models\Config\Manager as ConfigManager;
 
 class Routes extends SpeedyDraw {
 

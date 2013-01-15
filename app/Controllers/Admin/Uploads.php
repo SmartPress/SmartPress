@@ -1,9 +1,9 @@
 <?php 
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
 
-use Cms\Controllers\Admin\Admin;
-use Cms\Models\Upload;
+use SmartPress\Controllers\Admin\Admin;
+use SmartPress\Models\Upload;
 use Speedy\Utility\File;
 
 class Uploads extends Admin {
@@ -15,14 +15,14 @@ class Uploads extends Admin {
 	public $layout = null;
 	
 	protected $_mixins = [
-		'\\Cms\\Lib\\Helpers\\FileUpload' => [
+		'\\SmartPress\\Lib\\Helpers\\FileUpload' => [
 			'allowedTypes'	=> [ 'jpeg', 'jpg', 'gif', 'png' ],
 			//'allowedTypes'	=> ['zip'],
 			'unique'	=> true,
 			'forceWebroot'	=> false,
 			'uploadDir'	=> PUBLIC_UPLOADS_DIR,
 			'fileVar'	=> 'upload',
-			'fileModel' => '\\Cms\\Models\\Upload',
+			'fileModel' => '\\SmartPress\\Models\\Upload',
 			'alias'		=> 'FileUpload',
 			'automatic'	=> false,
 			'fileNameFunction' => '\\Speedy\\Utility\\Inflector::underscore',
@@ -98,7 +98,7 @@ class Uploads extends Admin {
 						$this->render('fail');
 					};
 				}	
-			} catch (\Cms\Lib\Exceptions\Uploader $e) {
+			} catch (\SmartPress\Lib\Exceptions\Uploader $e) {
 				$this->exception= $e;
 				$this->errors	= $e->getTrace();
 				
@@ -108,7 +108,7 @@ class Uploads extends Admin {
 				$format->jsonp	= function() {
 					$this->render('exception');
 				};
-			} catch (\Cms\Lib\Helpers\FileUpload\Exception $e) {
+			} catch (\SmartPress\Lib\Helpers\FileUpload\Exception $e) {
 				$this->exception= $e;
 				$this->errors	= $this->mixin('FileUpload')->errors;
 				

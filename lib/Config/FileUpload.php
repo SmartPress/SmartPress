@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Lib\Config;
+namespace SmartPress\Lib\Config;
 
 class FileUpload {
 

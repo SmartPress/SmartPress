@@ -1,5 +1,5 @@
 <?php
-namespace Cms\Models;
+namespace SmartPress\Models;
 
 
 use Speedy\Cache;
@@ -7,7 +7,7 @@ use Speedy\Set;
 
 class Menu extends \Speedy\Model\ActiveRecord {
 	
-	use \Cms\Lib\Concerns\Tree;
+	use \SmartPress\Lib\Concerns\Tree;
 	
 	public $children;
 	

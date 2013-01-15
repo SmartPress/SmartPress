@@ -1,10 +1,10 @@
 <?php
-namespace Cms\Models\Event;
+namespace SmartPress\Models\Event;
 
 
 use \Speedy\Cache;
 use \Speedy\Singleton;
-use \Cms\Lib\Module\Site as SiteModules;
+use \SmartPress\Lib\Module\Site as SiteModules;
 
 class Manager extends Singleton {
 	

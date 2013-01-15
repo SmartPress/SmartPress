@@ -1,10 +1,10 @@
 <?php 
-namespace Cms\Models\Block;
+namespace SmartPress\Models\Block;
 
 
 use Speedy\ActiveRecord\is_hash;
 
-use \Cms\Models\Block;
+use \SmartPress\Models\Block;
 use \Speedy\Cache;
 use \Speedy\Loader;
 use \Speedy\Singleton;

@@ -1,13 +1,13 @@
 <?php
-namespace Cms\Controllers;
+namespace SmartPress\Controllers;
 
 
-use Cms\Controllers\Application;
-use Cms\Models\Post;
-use Cms\Models\Theme;
-use Cms\Models\Comment;
+use SmartPress\Controllers\Application;
+use SmartPress\Models\Post;
+use SmartPress\Models\Theme;
+use SmartPress\Models\Comment;
 
-class Cms extends Application {
+class SmartPress extends Application {
 
 	public $type	= "page";
 	

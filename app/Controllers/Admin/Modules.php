@@ -1,9 +1,9 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
-use \Cms\Controllers\Admin\Admin;
-use \Cms\Models\Module;
-use \Cms\Lib\Module\Installer as ModInstaller;
+use \SmartPress\Controllers\Admin\Admin;
+use \SmartPress\Models\Module;
+use \SmartPress\Lib\Module\Installer as ModInstaller;
 use \ZipArchive;
 use \ArrayObject;
 
@@ -16,7 +16,7 @@ class Modules extends Admin {
 	protected $minWritePrivilege= SuperAdminPrivilege;
 
 	protected $_mixins = [
-		'\\Cms\\Lib\\Helpers\\FileUpload' => [
+		'\\SmartPress\\Lib\\Helpers\\FileUpload' => [
 			'allowedTypes'	=> [ 'zip' ],
 			'unique'	=> false,
 			'forceWebroot'	=> false,

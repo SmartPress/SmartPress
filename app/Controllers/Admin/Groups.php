@@ -1,8 +1,8 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
-use \Cms\Controllers\Admin\Admin;
-use \Cms\Models\Group;
+use \SmartPress\Controllers\Admin\Admin;
+use \SmartPress\Models\Group;
 
 class Groups extends Admin {
 

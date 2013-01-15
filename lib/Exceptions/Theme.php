@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Lib\Exceptions;
+namespace SmartPress\Lib\Exceptions;
 
 
 use \Exception;

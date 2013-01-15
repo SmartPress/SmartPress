@@ -1,9 +1,9 @@
 <?php 
-namespace Cms\Lib\Module;
+namespace SmartPress\Lib\Module;
 
 
-use Cms\Models\Module;
-use Cms\Lib\Module\Exception as MException;
+use SmartPress\Models\Module;
+use SmartPress\Lib\Module\Exception as MException;
 use Speedy\Singleton;
 use Speedy\Cache;
 use Speedy\Utility\Inflector;
@@ -60,7 +60,7 @@ Class Site extends Singleton {
 	
 	/**
 	 * Load all modules
-	 * @return object instance of Cms\Lib\Module\Site
+	 * @return object instance of SmartPress\Lib\Module\Site
 	 */
 	public static function load()	{	
 		$self = self::instance();

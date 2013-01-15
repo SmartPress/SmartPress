@@ -1,10 +1,10 @@
 <?php
-namespace Cms\Models;
+namespace SmartPress\Models;
 
 
 class Upload extends \Speedy\Model\ActiveRecord {
 	
-	use \Cms\Lib\Concerns\Pagination;
+	use \SmartPress\Lib\Concerns\Pagination;
 	
 	static $before_destroy	= ['deleteFile'];
 	

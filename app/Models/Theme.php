@@ -1,12 +1,12 @@
 <?php 
-namespace Cms\Models;
+namespace SmartPress\Models;
 
 
 use Speedy\Cache;
 use Speedy\Singleton;
 use Speedy\Utility\File;
-use Cms\Models\Config\Manager as ConfigManager;
-use Cms\Lib\Exceptions\Theme as ThemeException;
+use SmartPress\Models\Config\Manager as ConfigManager;
+use SmartPress\Lib\Exceptions\Theme as ThemeException;
 use ZipArchive;
 
 
@@ -30,7 +30,7 @@ class Theme extends Singleton {
 	/**
 	 * Installer for theme
 	 * @param string filename
-	 * @throws \Cms\Exceptions\Theme
+	 * @throws \SmartPress\Exceptions\Theme
 	 */
 	public static function install($zip) {
 		$arch = new ZipArchive();

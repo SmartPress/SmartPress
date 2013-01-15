@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Lib\Module;
+namespace SmartPress\Lib\Module;
 
 class Exception extends \Exception {}
 ?>

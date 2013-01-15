@@ -1,10 +1,10 @@
 <?php 
-namespace Cms\Helpers;
+namespace SmartPress\Helpers;
 
 
-use Cms\Lib\View\Helpers\Base;
-use Cms\Models\Block\Manager as BlockManager;
-use Cms\Models\Event\Manager as EventManager;
+use SmartPress\Lib\View\Helpers\Base;
+use SmartPress\Models\Block\Manager as BlockManager;
+use SmartPress\Models\Event\Manager as EventManager;
 use Speedy\Cache;
 use Speedy\Loader;
 use Speedy\View;

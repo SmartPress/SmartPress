@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Lib\Module;
+namespace SmartPress\Lib\Module;
 
 
 use Speedy\Cache;
@@ -7,8 +7,8 @@ use Speedy\Singleton;
 use Speedy\Loader;
 use Speedy\Logger;
 use Speedy\Utility\Inflector;
-use Cms\Lib\Module\Exception as MException;
-use Cms\Models\Module;
+use SmartPress\Lib\Module\Exception as MException;
+use SmartPress\Models\Module;
 use ZipArchive;
 
 class Installer extends \Speedy\Object {
@@ -92,7 +92,7 @@ class Installer extends \Speedy\Object {
 	
 	/**
 	 * Attr getter for zipFile
-	 * @throws \Cms\Lib\Module\Exception
+	 * @throws \SmartPress\Lib\Module\Exception
 	 * @return string $zipFile
 	 */
 	public function zipFile() {

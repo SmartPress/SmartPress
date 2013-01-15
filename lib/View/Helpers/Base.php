@@ -1,5 +1,5 @@
 <?php 
-namespace Cms\Lib\View\Helpers;
+namespace SmartPress\Lib\View\Helpers;
 
 use \Speedy\View\Helpers\Base as HelperBase;
 

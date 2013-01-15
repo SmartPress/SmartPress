@@ -1,10 +1,10 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
 
-use \Cms\Controllers\Admin\Admin;
-use \Cms\Models\Theme;
-use \Cms\Lib\Exceptions\Theme as ThemeException;
+use \SmartPress\Controllers\Admin\Admin;
+use \SmartPress\Models\Theme;
+use \SmartPress\Lib\Exceptions\Theme as ThemeException;
 use \Speedy\Cache;
 use \ZipArchive;
 use \Exception;
@@ -18,7 +18,7 @@ class Themes extends Admin {
 	protected $minWritePrivilege	= SuperAdminPrivilege;
 	
 	protected $_mixins = [
-		'\\Cms\\Lib\\Helpers\\FileUpload' => [
+		'\\SmartPress\\Lib\\Helpers\\FileUpload' => [
 			'allowedTypes'	=> [ 'zip' ],
 			'unique'	=> false,
 			'forceWebroot'	=> false,

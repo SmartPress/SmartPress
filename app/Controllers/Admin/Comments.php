@@ -1,8 +1,8 @@
 <?php
-namespace Cms\Controllers\Admin;
+namespace SmartPress\Controllers\Admin;
 
 
-use Cms\Models\Comment;
+use SmartPress\Models\Comment;
 
 class Comments extends Admin {
 		/**

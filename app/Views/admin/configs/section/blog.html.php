@@ -11,8 +11,8 @@
 			<h2>Blog Settings</h2>
 		</div>
 		<?php $this->formTag($this->admin_configs_url(), ['method' => 'POST', 'class' => 'form-horizontal'], function()  { 
-			$title	= \Cms\Models\Config\Manager::get('title/default');
-			$home	= \Cms\Models\Config\Manager::get('home');
+			$title	= \SmartPress\Models\Config\Manager::get('title/default');
+			$home	= \SmartPress\Models\Config\Manager::get('home');
 			?>
 			
 			<div class="control-group">
@@ -43,7 +43,7 @@
 				
 				<div class="controls">
 					<?php $this->selectTag('config[2][value]', $this->optionsForSelect(
-							$this->optionsFromCollectionForSelect(\Cms\Models\Post::allPages(), 'id', 'title'), 
+							$this->optionsFromCollectionForSelect(\SmartPress\Models\Post::allPages(), 'id', 'title'), 
 							(isset($home['single_id'])) ? $home['single_id'] : null)); ?>
 				</div>
 			</div>
