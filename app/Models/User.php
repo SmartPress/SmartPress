@@ -14,7 +14,7 @@ class User extends \Speedy\Model\ActiveRecord {
 		['password', 'within' => [6, 16]]
 	];
 	
-	static $validates_uniqueness_of = ['username'];
+	static $validates_uniqueness_of = ['email'];
 	
 	static $belongs_to = [
 		['group', 'namespace' => '\\SmartPress\\Models']
