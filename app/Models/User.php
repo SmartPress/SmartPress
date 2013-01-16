@@ -5,7 +5,7 @@ namespace SmartPress\Models;
 
 class User extends \Speedy\Model\ActiveRecord {
 	
-	//public $password;
+	public $password;
 	
 	public $password_confirm;
 	
@@ -25,7 +25,7 @@ class User extends \Speedy\Model\ActiveRecord {
 		//output("PASSWORD: " . $password);
 		//$this->password = $password;
 		$this->assign_attribute('password_hash', $this->crypto($password));
-		$this->assign_attribute('password', $password);
+		$this->password = $password;
 	}
 	
 	public function crypto($rawPassword) {
