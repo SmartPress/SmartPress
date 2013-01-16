@@ -24,7 +24,8 @@ class User extends \Speedy\Model\ActiveRecord {
 	public function set_password($password) {
 		//output("PASSWORD: " . $password);
 		//$this->password = $password;
-		$this->assign_attribute('password', $this->crypto($password));
+		$this->assign_attribute('password_hash', $this->crypto($password));
+		$this->assign_attribute('password', $password);
 	}
 	
 	public function crypto($rawPassword) {
