@@ -4,8 +4,8 @@ namespace SmartPress\Models;
 
 
 class Group extends \Speedy\Model\ActiveRecord {
-	const SuperAdminId = 1;
-	const AdminId = 2;
+	const SuperAdminID = 1;
+	const AdminID = 2;
 }
 
 ?>
