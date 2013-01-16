@@ -68,9 +68,9 @@ class Routes extends SpeedyDraw {
 		$this->match(['admin/signout' => "admin/sessions#destroy"]);
 		
 		$homeType = ConfigManager::get('home/type');
-		if ($homeType == 2) {
+		if ($homeType == \SmartPress\Models\Post::SinglePageHomeType) {
 			$this->rootTo('pages#show', ['id' => ConfigManager::get('home/single_id')]);
-		} elseif ($homeType == 1) {
+		} elseif ($homeType == \SmartPress\Models\Post::BlogRollHomeType) {
 			$this->rootTo('posts#index');
 		}
 		

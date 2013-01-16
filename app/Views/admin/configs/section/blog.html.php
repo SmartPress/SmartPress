@@ -29,11 +29,7 @@
 				<?php $this->labelTag('config[1][value]', 'Home Page Type', ['class' => 'control-label']); ?>
 				
 				<div class="controls">
-					<?php $this->selectTag('config[1][value]', $this->optionsForSelect([
-							'0' => 'Select One', 
-							'1'	=> 'Blog Roll',
-							'2'	=> 'Single Page'
-					], (isset($home['type'])) ? $home['type'] : null)); ?>
+					<?php $this->selectTag('config[1][value]', $this->optionsForSelect(\SmartPress\Models\Post::$homeTypes, (isset($home['type'])) ? $home['type'] : null)); ?>
 				</div>
 			</div>
 			

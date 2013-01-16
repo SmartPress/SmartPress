@@ -1,16 +1,21 @@
 <?php
 require_once('defines.php');
-include_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
+$composerAutoload = dirname(__DIR__) . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
 
-if (!include(CONFIG_PATH . DS . 'App.php')) {
-	trigger_error("Could not find App class for current application, please check that app file is in CONFIG_PATH/App.php");
-}
+if (file_exists($composerAutoload))
+	include_once $composerAutoload;
+
+define('PATH_TO_APP', CONFIG_PATH . DS . 'App.php');
 
 define('PREINSTALL_STATUS', 0);
 define('INSTALL_STATUS', 1);
 define('SUCCESS_STATUS', 2);
 define('ERROR_STATUS', 3);
-define('MAX_STATUS', 3);
+define('FAILED_CREATE_USER_STATUS', 4);
+define('RECREATE_USER_STATUS', 5);
+define('MIGRATION_FAILED_STATUS', 6);
+define('MIGRATION_RETRY_STATUS', 7);
+define('MAX_STATUS', 7);
 
 define('WARNING_COND_LEVEL', 0);
 define('FATAL_COND_LEVEL', 1);
@@ -20,10 +25,17 @@ define('SUCCESS_COND_LEVEL', 3);
 define('LIBRARY_FIX_MSG', 'Run composer install to install all missing libraries');
 define('PERMISSIONS_FIX_MSG', 'Ensure file permissions are correct');
 
+define('DEFAULT_THEME_NAME', 'Greenish');
+
 $titles = [
-	'Install SmartPress',
-	'Successfully Installed SmartPress',
-	'Error Installing SmartPress'
+	'Install SmartPress',				// Preinstall status
+	'',									// Install
+	'Successfully Installed SmartPress',// Success
+	'Error Installing SmartPress',		// Error installing
+	'Failed Creating Admin User',		// Failed to create user
+	'',									// Recreate user
+	'Failed to Create Database Tables',	// Migration failed
+	''									// Migration retry
 ];
 $errorLevels = [
 	'warning',
@@ -34,7 +46,9 @@ $errorLevels = [
 $conditions = [];
 $fatalError = false;
 
-$step = (isset($_REQUEST['status']) && $_REQUEST['status'] > MAX_STATUS) ? $_REQUEST['status'] : PREINSTALL_STATUS;
+$status = (isset($_REQUEST['status']) && $_REQUEST['status'] <= MAX_STATUS) ? 
+	intval($_REQUEST['status']) : PREINSTALL_STATUS;
+
 
 function pushCondition($message, $level = WARNING_COND_LEVEL, $fix = '') {
 	global $conditions, $errorLevels;
@@ -49,7 +63,150 @@ function pushCondition($message, $level = WARNING_COND_LEVEL, $fix = '') {
 	];
 }
 
-if ($step === PREINSTALL_STATUS) {
+function fdump($var) {
+	echo "<pre>\n";
+	var_dump($var);
+	echo "</pre>\n";
+}
+
+function includeApp() {
+	if (!include_once(PATH_TO_APP)) {
+		trigger_error("Could not find App class for current application, please check that app file is in CONFIG_PATH/App.php");
+	}
+}
+
+function migrate() {
+	$migrations	= ROOT . DS . 'db' . DS . 'migrate' . DS . '*.php';
+		
+	foreach (glob($migrations) as $migration) {
+		require_once $migration;
+			
+		$info	= pathinfo($migration);
+		$file	= $info['filename'];
+		$fileArr= explode('_', $file);
+		$version= array_shift($fileArr);
+		$class	= \Speedy\Utility\Inflector::camelize(implode('_', $fileArr));
+			
+			
+		$obj	= new $class(\ActiveRecord\Connection::instance());
+		if ($obj->migrated()) {
+			continue;
+			//return false;
+		}
+			
+		\Speedy\Logger::info("===================================================");
+		\Speedy\Logger::info("Starting Migration for $class");
+		\Speedy\Logger::info("===================================================");
+		\Speedy\Logger::info();
+			
+		$obj->runUp();
+		$log	= $obj->log();
+		foreach ($log as $l) {
+			\Speedy\Logger::info($l);
+		}
+	}
+		
+	\Speedy\Logger::info();
+	\Speedy\Logger::info("============= Successfully Completed ==============");
+
+	return true;
+}
+
+$user;
+function createUser($data) {
+	global $user;
+
+	$data['group_id'] = \SmartPress\Models\Group::SuperAdminID;
+
+	$user = new \SmartPress\Models\User($data);
+	if (!$user->save()) {
+		pushCondition(
+			'Failed to create user',
+			FATAL_COND_LEVEL
+			);
+		return false;
+	}
+
+	return true;
+}
+
+function addDefaultConfigs() {
+	$defaults = [
+		['name'	=> 'theme', 'value' => \SmartPress\Models\Theme::DIR . DS . DEFAULT_THEME_NAME],
+		['name'	=> 'title/default', 'value'	=> 'My Awesome SmartPress Blog'],
+		['name'	=> 'home/type', 'value'	=> \SmartPress\Models\Post::BlogRollHomeType]
+	];
+}
+
+function recreateUserAction() {
+	global $status;
+
+	includeApp();
+	$app	= App::instance();
+
+	if (!createUser($_REQUEST['admin_user'])) {
+		$status = FAILED_CREATE_USER_STATUS;
+		return false;
+	}
+
+	$status = SUCCESS_STATUS;
+	return true;
+}
+
+function seedDb() {
+	try {
+		$connection = \ActiveRecord\Connection::instance();
+		$connection->transaction();
+		$sql	= "CREATE TABLE schema_migrations (" .
+					'`version` varchar(255) NOT NULL);';
+		$connection->query($sql);
+				
+		$sql	= "CREATE UNIQUE INDEX `unique_schema_migrations` ON `schema_migrations` (`version`)";
+		$connection->query($sql);
+				
+		$connection->commit();
+		\Speedy\Logger::info("Database seeded");
+	} catch (\Exception $e) {
+		$connection->rollback();
+		\Speedy\Logger::info();
+		\Speedy\Logger::info($e);
+		pushCondition($e->getMessage(), FATAL_COND_LEVEL);
+		return false;
+	}
+
+	return true;
+}
+
+function installAction() {
+	global $status;
+
+	includeApp();
+	$app	= App::instance();
+	
+	if (!seedDb()) {
+		$status = MIGRATION_FAILED_STATUS;
+		pushCondition('Failed to seed database', FATAL_COND_LEVEL);
+	}
+
+	if (!migrate()) {
+		$status = MIGRATION_FAILED_STATUS;
+		pushCondition(
+			'Failed to migrate',
+			FATAL_COND_LEVEL
+			);
+		return false;
+	}
+
+	if (!createUser($_REQUEST['admin_user'])) {
+		$status = FAILED_CREATE_USER_STATUS;
+		return false;
+	}
+
+	$status = SUCCESS_STATUS;
+	return true;
+}
+
+function preinstallAction() {
 	$requiredLibs = [
 		'ActiveRecord' => '\\ActiveRecord\\Connection',
 		'Speedy Sprockets' => '\\Speedy\\Sprocket\\Sprocket',
@@ -76,6 +233,8 @@ if ($step === PREINSTALL_STATUS) {
 
 	$alreadyInstalled = false;
 	if ($allLibs) {
+		includeApp();
+
 		try {
 			$app	= App::instance();
 			//$app->bootstrap();
@@ -156,6 +315,40 @@ if ($step === PREINSTALL_STATUS) {
 		}
 	}
 }
+
+function migrationRetryAction() {
+	global $status;
+	includeApp();
+
+	$app	= App::instance();
+
+	if (!$migrate()) {
+		$status = MIGRATION_FAILED_STATUS;
+		pushCondition(
+			'Failed to migrate',
+			FATAL_COND_LEVEL
+			);
+		return false;
+	}
+
+	if (!createUser($_REQUEST['admin_user'])) {
+		$status = FAILED_CREATE_USER_STATUS;
+		return false;
+	}
+
+	return true;
+}
+
+if ($status === PREINSTALL_STATUS) {
+	preinstallAction();
+} elseif ($status === INSTALL_STATUS) {
+	installAction();
+} elseif ($status === RECREATE_USER_STATUS) {
+	recreateUserAction();
+} elseif ($status === MIGRATION_RETRY_STATUS) {
+	migrationRetryAction();
+}
+
 ?>
 <html>
 <head>
@@ -182,9 +375,9 @@ if ($step === PREINSTALL_STATUS) {
 		<div class="row-fluid">
 			<div class="span3"></div>
 			<div class="span6">
-				<h1><?php echo $titles[$step]; ?></h1>
+				<h1><?php echo $titles[$status]; ?></h1>
 
-				<?php if ($step == PREINSTALL_STATUS): ?>
+				<?php if ($status === PREINSTALL_STATUS): ?>
 				<form action="/install.php" method="POST" class="form-horizontal">
 					<fieldset>
 						<legend>Conditions</legend>
@@ -205,6 +398,7 @@ if ($step === PREINSTALL_STATUS) {
 						</div>
 					</fieldset>
 
+					<?php if (!$fatalError): ?>
 					<fieldset>
 						<legend>Admin User</legend>
 
@@ -218,25 +412,118 @@ if ($step === PREINSTALL_STATUS) {
 						<div class="control-group">
 							<label class="control-label">Password</label>
 							<div class="controls">
-								<input type="text" name="admin_user[password]" />
+								<input type="password" name="admin_user[password]" />
 							</div>
 						</div>
 
 						<div class="control-group">
 							<label class="control-label">Password Confirmation</label>
 							<div class="controls">
-								<input type="text" name="admin_user[password_confirmation]" />
+								<input type="password" name="admin_user[password_confirm]" />
 							</div>
 						</div>
 					</fieldset>
 
-						<?php if (!$fatalError): ?>
-							<div class="form-actions">
-								<input type="hidden" name="status" value="<?php echo INSTALL_STATUS; ?>" />
-								<input type="submit" value="Install" class="btn btn-primary"  />
-							</div>
-						<?php endif; ?>
+						
+					<div class="form-actions">
+						<input type="hidden" name="status" value="<?php echo INSTALL_STATUS; ?>" />
+						<input type="submit" value="Install" class="btn btn-primary"  />
+					</div>
+					<?php endif; ?>
 				</form>
+				<?php elseif ($status === FAILED_CREATE_USER_STATUS): ?>
+				<form action="/install.php" method="POST" class="form-horizontal">
+					<fieldset>
+						<legend>Admin User</legend>
+
+						<?php if ($user->errors && $user->errors->count()): ?>
+							<div id="error_explanation">
+								<p>Errors prohibited this user from being saved:</p>
+							</div>
+							
+							<ul>
+								<?php $user->errors->each(function($error) { ?>
+									<li><?php echo $error; ?></li>
+								<?php }); ?>
+							</ul>
+						<?php endif; ?>
+
+						<div class="control-group">
+							<label class="control-label" for="admin_user_email">Email</label>
+							<div class="controls">
+								<input type="text" name="admin_user[email]" id="admin_user_email" value="<?php echo $user->email; ?>" />
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label">Password</label>
+							<div class="controls">
+								<input type="password" name="admin_user[password]" />
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label">Password Confirmation</label>
+							<div class="controls">
+								<input type="password" name="admin_user[password_confirm]" />
+							</div>
+						</div>
+					</fieldset>
+
+					<div class="form-actions">
+						<input type="hidden" name="status" value="<?php echo RECREATE_USER_STATUS; ?>" />
+						<input type="submit" value="Create" class="btn btn-primary"  />
+					</div>
+				</form>
+				<?php elseif ($status === SUCCESS_STATUS): ?>
+					<p>Successfully installed SmartPress. Login via <a href="/admin/signin">sign in</a>.</p>
+				<?php elseif ($status === MIGRATION_FAILED_STATUS): ?>
+					<p>Failed creating database.</p>
+					<?php fdump($conditions); ?>
+
+					<form class="form-horizontal" action="/install.php" method="POST" class="form-horizontal">
+						<fieldset>
+							<legend>Admin User</legend>
+
+							<?php if (isset($user) && $user->errors && $user->errors->count()): ?>
+								<div id="error_explanation">
+									<p>Errors prohibited this user from being saved:</p>
+								</div>
+								
+								<ul>
+									<?php $user->errors->each(function($error) { ?>
+										<li><?php echo $error; ?></li>
+									<?php }); ?>
+								</ul>
+							<?php endif; ?>
+
+							<div class="control-group">
+								<label class="control-label" for="admin_user_email">Email</label>
+								<div class="controls">
+									<input type="text" name="admin_user[email]" id="admin_user_email" value="<?php echo (isset($_REQUEST['admin_user']['email'])) ? $_REQUEST['admin_user']['email'] : ''; ?>" />
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label">Password</label>
+								<div class="controls">
+									<input type="password" name="admin_user[password]" />
+								</div>
+							</div>
+
+							<div class="control-group">
+								<label class="control-label">Password Confirmation</label>
+								<div class="controls">
+									<input type="password" name="admin_user[password_confirm]" />
+								</div>
+							</div>
+						</fieldset>
+
+						<div class="form-actions">
+							<input type="hidden" name="status" value="<?php echo MIGRATION_RETRY_STATUS; ?>" />
+							<input type="submit" value="Retry" class="btn btn-primary"  />
+						</div>
+					</form>
 				<?php endif; ?>
 			</div>
 			<div class="span3"></div>

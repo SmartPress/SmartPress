@@ -3,7 +3,7 @@
 		"adapter"	: "mysql",
 		"encoding"	: "utf8",
 		"reconnect"	: "false",
-		"database"	: "cms",
+		"database"	: "sp_carepl",
 		"pool"	: 5,
 		"username"	: "root",
 		"password"	: "root",
