@@ -1,7 +1,5 @@
-<h1>Editing category</h1>
+<div class="page-header">
+	<h1>Editing category</h1>
+</div>
 
-<?php $this->render("form"); ?>
-
-<?php $this->linkTo('Show', $this->category_path($this->category->id)); ?> 
-|
-<?php $this->linkTo('Back', $this->category_url()); ?>
+<?php echo $this->render("form"); ?>

@@ -32,7 +32,8 @@ class Block extends Base {
 		EventManager::dispatch("pre_load_block_$name", $blocks);
 		EventManager::dispatch("pre_load_block_{$name}_{$controller}", $blocks);
 		EventManager::dispatch("pre_load_block_{$name}_{$controller}_{$action}", $blocks);
-		
+
+		$content = '';
 		foreach ($blocks as $block) {
 			if ($block['block'] != $name) continue;
 			
@@ -51,19 +52,23 @@ class Block extends Base {
 			if (isset($params['only'])) {
 				if (is_array($params['only']) && !in_array($this->view()->here(), $params['only'])) {
 					continue;
-				} elseif (is_string($params['only']) && $params['only'] != $this->view()->here()) {
+				} elseif (is_string($params['only']) && 
+						strlen($params['only']) > 0 &&
+						$params['only'] != $this->view()->here()) {
 					continue;
 				}
 			}
 			
 			if ($this->widgetExists($block['element'])) {
-				echo $this->renderWidget($block['element'], $params);
+				$content .= $this->renderWidget($block['element'], $params);
 			} 
 		}
 		
 		EventManager::dispatch("post_load_block_$name", $blocks);
 		EventManager::dispatch("post_load_block_{$name}_{$controller}", $blocks);
 		EventManager::dispatch("post_load_block_{$name}_{$controller}_{$action}", $blocks);
+		
+		return $content;
 	}
 	
 	private function pushWidget($widget, $obj) {

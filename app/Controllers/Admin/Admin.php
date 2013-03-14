@@ -36,7 +36,8 @@ class Admin extends Application {
 		
 		$menus = [
 			'modules' => [],
-			'settings' => []
+			'settings' => [],
+			'main'	=> []
 		];
 		foreach (SiteModules::all() as $module) {
 			if (!isset($module['menus']) || empty($module['menus']['link'])) {
@@ -54,7 +55,7 @@ class Admin extends Application {
 				];
 			}
 		}
-		
+	
 		$this->menus = $menus;
 		//Cache::write("module_menus", $menus);
 	}
@@ -63,9 +64,9 @@ class Admin extends Application {
 		if (isset($this->user)) 
 			return $this->user;
 		
-		$userId	= $this->session()->read('User.id');
-		if (isset($userId)) {
-			$this->user = User::find($userId, ['joins' => ['group']]);
+		$user	= unserialize(base64_decode($this->session()->read('User')));
+		if ($user) {
+			$this->user = $user;
 			return $this->user;
 		} 
 		

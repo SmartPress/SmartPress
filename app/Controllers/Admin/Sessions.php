@@ -24,7 +24,7 @@ class Sessions extends Application {
 	}
 			
 	public function create() {		
-		$user = User::find_by_email_or_username($this->params('username'));
+		$user = User::find_by_email($this->params('email'));
 		
 		if (!$user) {
 			Session::instance()->write('flash.error', self::NoUserErrorMsg);
@@ -33,7 +33,7 @@ class Sessions extends Application {
 		}
 		
 		if ($user->passwordMatch($this->params('password'))) {
-			Session::instance()->write('User.id', $user->id);
+			Session::instance()->write('User', base64_encode(serialize($user)));
 			$this->redirectTo($this->admin_users_url());
 		} else {
 			Session::instance()->write('flash.error', self::PasswordMismatchErrorMsg);
@@ -42,6 +42,16 @@ class Sessions extends Application {
 	}
 			
 	public function destroy() {
+		Session::instance()->delete('User');
+
+		$this->respondTo(function(&$format) {
+			$format->html = function() {
+				$this->render('new');
+			};
+			$format->json = function() {
+				$this->render(['json' => ['success' => true]]);
+			};
+		});
 	}
 		
 }

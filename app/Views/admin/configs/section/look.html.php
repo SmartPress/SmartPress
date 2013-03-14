@@ -3,13 +3,13 @@
 <?php });*/ ?>
 <div class="pull-right well well-small">
 	<strong>Upload new theme</strong>
-	<?php $this->formTag('/admin/themes', ['enctype' => 'multipart/form-data', 'method' => 'POST', 'class' => 'form-inline'], function() { ?>
+	<?php echo $this->formTag('/admin/themes', ['enctype' => 'multipart/form-data', 'method' => 'POST', 'class' => 'form-inline'], function() { ?>
 		<!-- <div class="field"> -->
-			<?php $this->labelTag('theme'); ?>
-			<?php $this->fileFieldTag('theme'); ?>
+			<?php echo $this->labelTag('theme'); ?>
+			<?php echo $this->fileFieldTag('theme'); ?>
 		<!-- </div>
 		<div class="actions"> -->
-			<?php $this->submit('Upload', array( "class" => 'btn btn-primary' )); ?>
+			<?php echo $this->submit('Upload', array( "class" => 'btn btn-primary' )); ?>
 		<!-- </div> -->
 	<?php }); ?>	
 </div>
@@ -28,7 +28,7 @@
 		<ul class="unstyled themes">
 			<?php foreach (\SmartPress\Models\Theme::all() as $theme): ?>
 				<li class="span4">
-					<?php $this->render('theme-form', ['theme' => $theme]); ?>
+					<?php echo $this->render('theme-form', ['theme' => $theme]); ?>
 				</li>	
 			<?php endforeach; ?>
 		</ul>

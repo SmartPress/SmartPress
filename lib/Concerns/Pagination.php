@@ -66,7 +66,7 @@ trait Pagination {
 		if ($maxPage < 1)
 			$maxPage = 1;
 		
-		$offset = ((self::$_increment * $page) - self::$_increment) + 1;
+		$offset = (self::$_increment * $page) - self::$_increment;
 		$nextPage	= (($nextPage = $page + 1) <= $maxPage) ? $nextPage : null;
 		$prevPage	= (($prevPage = $page - 1) > 0) ? $prevPage : null;
 		
@@ -87,11 +87,17 @@ trait Pagination {
 			$upper++;
 			$targetDiff++;
 		}
+
+		if ($upper > $maxPage) 
+			$upper = $maxPage;
 		
 		while ($targetDiff > (self::$_maxPages - 1)) {
 			$lower++;
 			$targetDiff--;
 		}
+
+		$end = $offset + 1 + self::$_increment;
+		if ($end > $count) $end = $count;
 
 		self::setPaginationVar('maxPages', $maxPage);
 		self::setPaginationVar('lower', $lower);
@@ -101,10 +107,16 @@ trait Pagination {
 		self::setPaginationVar('nextPage', $nextPage);
 		self::setPaginationVar('prevPage', $prevPage);
 		self::setPaginationVar('currentPage', $page);
+		self::setPaginationVar('total', $count);
+		self::setPaginationVar('start', $offset + 1);
+		self::setPaginationVar('end', $end);
 		//self::setPaginationVar($name, $value)
 		
 		return self::$__pagination; 
 	}
 	
 }
-?>
+
+
+
+

@@ -2,10 +2,10 @@
 namespace SmartPress\Controllers;
 
 
-use SmartPress\Controllers\SmartPress;
+use SmartPress\Controllers\Cms;
 use SmartPress\Models\Post;
 
-class Posts extends SmartPress {
+class Posts extends Cms {
 
 	public $type	= 'post';
 	
@@ -15,7 +15,10 @@ class Posts extends SmartPress {
 	 * GET /posts
 	 */
 	public function index() {
-		$this->posts	= Post::all(array('conditions' => array( 'type' => $this->type )));
+		$this->posts	= Post::all([
+				'conditions' => ['type' => $this->type],
+				'joins' => 'author'
+			]);
 	
 		$this->respondTo(function(&$format) {
 			$format->html; // Render per usual

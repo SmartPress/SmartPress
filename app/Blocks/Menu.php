@@ -2,8 +2,8 @@
 namespace SmartPress\Blocks;
 
 
-use \SmartPress\Models\Menu as MenuModel;
-use \Speedy\View;
+use SmartPress\Models\Menu as MenuModel;
+use Speedy\View;
 
 class Menu extends Partial {
 	
@@ -16,7 +16,8 @@ class Menu extends Partial {
 	}*/
 	
 	public function setUp() {
-		$this->setData('items', MenuModel::itemsForId($this->menu));
+		$items = MenuModel::itemsForId($this->menu);
+		$this->setData('items', isset($items) ? $items->toList() : []);
 	}
 	
 	public static function info() {

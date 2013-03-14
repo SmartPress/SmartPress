@@ -299,6 +299,7 @@ class Installer extends \Speedy\Object {
 			return false;
 		}
 		
+		\Speedy\Logger::debug($folder);
 		$this->runMigrations($folder);
 	
 		$module = new Module($data);
@@ -329,8 +330,9 @@ class Installer extends \Speedy\Object {
 		//$folder	= (!$dest_path) ? $xmlObj->code : $dest_path;
 		$dest_path	= (!$dest_path) ? MODULES_PATH . DS . $xmlObj->code . DS : $dest_path . DS;
 	
-		return $archive->extractTo($dest_path);
-		if (!$this->_extractFolder($archive, 'Etc', $dest_path)) {
+		$archive->extractTo($dest_path);
+		return $dest_path;
+		/*if (!$this->_extractFolder($archive, 'Etc', $dest_path)) {
 			return false;
 		}
 	
@@ -347,7 +349,7 @@ class Installer extends \Speedy\Object {
 				return false;
 			}
 		}*/
-	
+		/*
 		foreach ($xmlObj->features->feature as $feature) {
 			switch($feature) {
 				case 'controllers':
@@ -383,6 +385,7 @@ class Installer extends \Speedy\Object {
 		}
 	
 		return $dest_path;
+		*/
 	}
 	
 	/**
@@ -424,10 +427,11 @@ class Installer extends \Speedy\Object {
 	 */
 	private function runMigrations($base) {
 		$migrationPath	= $base . DS . "Etc" . DS . "migrate";
+		\Speedy\Logger::debug($migrationPath);
 		if (!is_dir($migrationPath)) {
 			return true;
 		}
-		
+		Logger::debug(glob($migrationPath . DS . "*.php"));
 		foreach (glob($migrationPath . DS . "*.php") as $migration) {
 			require_once $migration;
 				

@@ -16,8 +16,8 @@ class Php extends \Speedy\View\Php {
 			$paths[$helperNs] = Loader::instance()->path($helperNs)[0];
 		}
 
-		$helpers	= array();\Speedy\Logger::debug($paths);
-		foreach ($paths as $ns => $path) {\Speedy\Logger::debug($ns);
+		$helpers	= array();
+		foreach ($paths as $ns => $path) {
 			$files	= rglob('*.php', 0, $path);
 
 			foreach ($files as $file) {
@@ -32,7 +32,7 @@ class Php extends \Speedy\View\Php {
 				$import .= '.' . Inflector::underscore($info['filename']);
 				$helpers[]	= $import;
 			}
-		}\Speedy\Logger::debug($helpers);
+		}
 		
 		return $helpers;
 	} 

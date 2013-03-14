@@ -16,14 +16,11 @@ class App extends \Speedy\App {
 		Session::instance();
 		EventManager::dispatch('bootstrap');
 		
+		SiteModules::load();
+
 		$theme = Theme::currentTheme();
 		Loader::instance()->pushPathToNamespace("smart_press.views", $theme['fullpath'] . DS . 'views');
 		Loader::instance()->registerNamespace("smart_press.blocks",  [APP_PATH . DS . 'Blocks', $theme['fullpath'] . DS . 'blocks']);
-	}
-	
-	protected function initModules() {
-		SiteModules::load();
-		//debug(SiteModules::all());
 	}
 	
 	protected function initEvents() {

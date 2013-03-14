@@ -76,7 +76,7 @@ class Blocks extends Admin {
 						'json' => [
 						'template' => View::instance()->setVars($this->vars)
 							->setParams($this->params())
-							->renderToString(
+							->render(
 								'admin/blocks/_class_form',
 								[]
 							)
@@ -107,7 +107,7 @@ class Blocks extends Admin {
 						'template' 	=> View::instance()
 							->setVars($this->vars)
 							->setParams($this->params())
-							->renderToString('admin/blocks/_dynamic_fields_horz', [])
+							->render('admin/blocks/_dynamic_fields_horz', [])
 						],
 						'success' 	=> true
 					]);

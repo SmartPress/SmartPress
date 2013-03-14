@@ -10,6 +10,7 @@ use \Speedy\Loader;
 use \Speedy\Singleton;
 use \Speedy\Request;
 use \Speedy\Utility\Inflector;
+use \PLinq\PLinq;
 
 class Manager extends Singleton {
 	
@@ -73,9 +74,9 @@ class Manager extends Singleton {
 			$action	= $params['action'];
 		
 		return [
-			'global'	=> 'Global',
-			$controller	=> 'Controller',
-			"$controller/$action"	=> 'Action Only'
+			'/'	=> 'Global',
+			"/{$controller}"	=> 'Controller',
+			"/{$controller}/{$action}"	=> 'Action Only'
 		];
 	}
 	
@@ -86,29 +87,37 @@ class Manager extends Singleton {
 	 * @param string $action
 	 */
 	public function _currentFor($controller, $action) {
-		$blocks	=& $this->_all();
+		$blocks	= $this->_all();
 		// If no blocks are set then return none
 		if (count($blocks) < 1 || empty($blocks)) {
 			return [];
 		}
 		
-		$global	= $this->__dotAccess('global', $blocks);
+		/*$global	= $this->__dotAccess('global', $blocks);
 		if (is_hash($global))
 			$global	= [$global];
 		$filtered = $this->__dotAccess([$controller, "$controller/$action"], $blocks);
-		$filtered = array_merge($filtered, $global);
+		$filtered = array_merge($filtered, $global);*/
 
-		return $filtered;
+		$filtered = PLinq::from($blocks)
+				->where(function($block) use ($controller, $action) {
+					return ($block->path == '/' || 
+							$block->path == "/{$controller}" || 
+							$block->path == "/{$controller}/{$action}");
+				});
+		$list = ($filtered) ? $filtered->toList() : [];
+		return $list;
 	}
 	
-	public function &_all() {
-		if (!empty($this->_blocks)) return $this->_blocks;
+	public function _all() {
+		if (isset($this->_blocks)) 
+			return $this->_blocks;
 	
 		$blocks	= Cache::read(Block::CacheName);
 		if (empty($blocks)) {
-			$blocks	= Block::all(['select' => 'id, path, block, element, params, priority', 'order' => 'priority DESC']);
+			$blocks	= Block::all(['select' => 'id, path, block, element, params, priority', 'order' => 'priority ASC']);
 				
-			$refined = [];
+			/*$refined = [];
 			foreach ($blocks as $block) {
 				$refined[] = [
 					'path'	=> $block->path,
@@ -122,7 +131,7 @@ class Manager extends Singleton {
 					]
 				];
 			}
-			$blocks = $this->mutateDataWithKeyValue($refined, 'path', 'data');
+			$blocks = $this->mutateDataWithKeyValue($refined, 'path', 'data');*/
 			Cache::write(Block::CacheName, $blocks);
 		}
 	

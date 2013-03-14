@@ -6,8 +6,9 @@ use SmartPress\Controllers\Application;
 use SmartPress\Models\Post;
 use SmartPress\Models\Theme;
 use SmartPress\Models\Comment;
+use Speedy\Utility\Inflector;
 
-class SmartPress extends Application {
+class Cms extends Application {
 
 	public $type	= "page";
 	
@@ -17,16 +18,29 @@ class SmartPress extends Application {
 	 * GET /posts/1
 	 */
 	public function show() {
-		$this->post	= Post::find('first', array( 
-				'conditions' => ['(id = ? OR slug = ?) AND type = ?', $this->params('id'), $this->params('id'), $this->type]
-				));
+		$this->post	= Post::find_by_slug_or_id($this->params('id'), $this->type);
+		
 		if (!empty($this->post->layout) && in_array($this->post->layout, Theme::availableLayouts())) {
 			$this->layout	= $this->post->layout;
 		}
+
 		$this->comment = new Comment();
+
+		$this->altView = "show-{$this->layout}";
+		$this->showAltView = false;
+		$path = Inflector::pluralize($this->type) . DS . $this->altView;
+		if (\Speedy\View::instance()->findFile($path) !== false)
+			$this->showAltView = true;
 		
 		$this->respondTo(function(&$format) {
-			$format->html; // show.php.html
+			if ($this->showAltView) {
+				$format->html = function() {
+					$this->render($this->altView);
+				};
+			} else {
+				$format->html; // show.php.html
+			}
+
 			$format->json	= function() {
 				$this->render(array( 'json' => $this->post ));
 			};

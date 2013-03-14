@@ -5,6 +5,7 @@
 		// $('.collapse').on('shown', function() { console.log($('.collapse')); });
 		
 		//$('[data-target="modal"]').modal();
+		$('[data-role="tabs"]').tab('show');
 	})
 	
 	

@@ -2,6 +2,7 @@
 use Speedy\Loader;
 use ActiveRecord\Config as ARConfig;
 
+
 App::instance()->configure(function($conf) {
 
 	// Turn on short links
@@ -25,7 +26,7 @@ App::instance()->configure(function($conf) {
 		$conf->set_logging(true);
 		$conf->set_logger(\ActiveRecord\Logger\Runtime::instance());
 		
-		//$conf->set_cache('\\Speedy\\Cache', 'table');
+		$conf->set_cache('\\ActiveRecord\\Cache\\File', 'table');
 	});
 	
 	$conf->addRenderer('php', 'smart_press.lib.view.php');

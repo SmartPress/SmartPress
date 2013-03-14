@@ -31,9 +31,9 @@
 			<td><?php echo $comment->status; ?></td>
 			<td><?php echo $comment->created_at; ?></td>
 			<td><?php echo $comment->updated_at; ?></td>
-			<td><?php $this->linkTo('Show', $this->admin_comment_path($comment->id)); ?></td>
-			<td><?php $this->linkTo('Edit', $this->edit_admin_comment_path($comment->id)); ?></td>
-			<td><?php $this->linkTo('Destroy', $this->admin_comment_path($comment->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete' )); ?></td>
+			<td><?php echo $this->linkTo('Show', $this->admin_comment_path($comment->id)); ?></td>
+			<td><?php echo $this->linkTo('Edit', $this->edit_admin_comment_path($comment->id)); ?></td>
+			<td><?php echo $this->linkTo('Destroy', $this->admin_comment_path($comment->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete' )); ?></td>
 		</tr>
 	<?php }); ?>
 </table>

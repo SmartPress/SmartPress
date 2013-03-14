@@ -2,4 +2,4 @@
 	<h1>New Block</h1>
 </div>
 
-<?php $this->render('form'); ?>
+<?php echo $this->render('form'); ?>

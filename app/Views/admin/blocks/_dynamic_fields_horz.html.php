@@ -13,16 +13,16 @@
 		if (!$valid) continue;
 	?>
 	<div class="control-group">
-		<?php $this->labelTag("block[params][$name]", (isset($options['label'])) ? $options['label'] : ucfirst($name), ['class' => 'control-label']); ?>
+		<?php echo $this->labelTag("block[params][$name]", (isset($options['label'])) ? $options['label'] : ucfirst($name), ['class' => 'control-label']); ?>
 		<div class="controls">
 			<?php 
 			if ($options['input'] == 'selectTag') {
-				$this->{$options['input']}(
+				echo $this->{$options['input']}(
 					"block[params][$name]",
 					$this->optionsForSelect($options['options'], isset($params[$name]) ? $params[$name] : null)
 				);
 			} else {
-				$this->{$options['input']}(
+				echo $this->{$options['input']}(
 					"block[params][$name]", 
 					['value' => isset($params[$name]) ? $params[$name] : '']
 				);

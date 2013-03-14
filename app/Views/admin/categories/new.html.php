@@ -1,5 +1,5 @@
-<h1>New category</h1>
+<div class="page-header">
+	<h1>New category</h1>
+</div>
 
-<?php $this->render('form'); ?>
-
-<?php $this->linkTo('Back', $this->category_url()); ?>
+<?php echo $this->render('form'); ?>

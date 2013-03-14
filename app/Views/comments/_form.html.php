@@ -1,8 +1,8 @@
-<?php $this->formFor($this->comment, null, function($f) { ?>
+<?php echo $this->formFor($this->comment, null, function($f) { ?>
 
 	<?php if ($this->comment->errors && $this->comment->errors->count()): ?>
 		<div id="error_explanation">
-			<?php element('h2', "{$this->pluralize($this->comment, 'error')} prohibited this comment from beign saved:"); ?>
+			<?php echo $this->element('h2', "{$this->pluralize($this->comment, 'error')} prohibited this comment from beign saved:"); ?>
 		</div>
 		<ul>
 			<?php $this->comment->errors->each(function($error) { ?>
@@ -10,48 +10,48 @@
 			<?php }); ?>
 		</ul>
 	<?php endif; ?>
-	<div class="field">
-		<?php $f->label("post_id"); ?>
-		<?php $f->textField("post_id"); ?>
+	<div class="field">
+		<?php echo $f->label("post_id"); ?>
+		<?php echo $f->textField("post_id"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("user_id"); ?>
-		<?php $f->textField("user_id"); ?>
+		<?php echo $f->label("user_id"); ?>
+		<?php echo $f->textField("user_id"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("content"); ?>
-		<?php $f->textField("content"); ?>
+		<?php echo $f->label("content"); ?>
+		<?php echo $f->textField("content"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("author"); ?>
-		<?php $f->textField("author"); ?>
+		<?php echo $f->label("author"); ?>
+		<?php echo $f->textField("author"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("author_email"); ?>
-		<?php $f->textField("author_email"); ?>
+		<?php echo $f->label("author_email"); ?>
+		<?php echo $f->textField("author_email"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("author_url"); ?>
-		<?php $f->textField("author_url"); ?>
+		<?php echo $f->label("author_url"); ?>
+		<?php echo $f->textField("author_url"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("author_ip"); ?>
-		<?php $f->textField("author_ip"); ?>
+		<?php echo $f->label("author_ip"); ?>
+		<?php echo $f->textField("author_ip"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("status"); ?>
-		<?php $f->textField("status"); ?>
+		<?php echo $f->label("status"); ?>
+		<?php echo $f->textField("status"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("created_at"); ?>
-		<?php $f->textField("created_at"); ?>
+		<?php echo $f->label("created_at"); ?>
+		<?php echo $f->textField("created_at"); ?>
 	</div>
 	<div class="field">
-		<?php $f->label("updated_at"); ?>
-		<?php $f->textField("updated_at"); ?>
+		<?php echo $f->label("updated_at"); ?>
+		<?php echo $f->textField("updated_at"); ?>
 	</div>
 	<div class="actions">
-		<?php $f->submit('Save'); ?>
+		<?php echo $f->submit('Save'); ?>
 	</div>
 	
 <?php }); ?>

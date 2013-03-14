@@ -10,8 +10,20 @@ class Menu extends \Speedy\Model\ActiveRecord {
 	use \SmartPress\Lib\Concerns\Tree;
 	
 	public $children;
+
+	public static $_all;
+
+	const AllCacheName = "menus";
+
+	public static $after_save = ['clearCaches'];
+	public static $after_update = ['clearCaches'];
+	public static $before_destroy = ['clearCaches'];
 	
 	
+
+	public function clearCaches() {
+		Cache::instance()->flush(TMP_PATH . DS . 'cache' . DS . self::AllCacheName);
+	}
 	
 	public function set_title($title) {
 		return $this->assign_attribute('title', htmlentities($title));
@@ -20,6 +32,25 @@ class Menu extends \Speedy\Model\ActiveRecord {
 	public function items() {
 		$items = $all	= self::childrenFor($this->lft, $this->rght);
 		return $items;
+	}
+
+	public static function for_title($title) {
+		$cacheName = 'menus' . DS . $title;
+		$menu = Cache::read($cacheName);
+		if (empty($menu)) {
+			$menu = self::all([
+					'conditions' => [
+						'p.title = ? AND (m.lft > p.lft AND m.lft < p.rght)',
+						$title
+					],
+					'from'	=> 'menus AS m, menus AS p',
+					'order' => 'm.lft ASC',
+					'select'=> 'm.*'
+				]);
+			Cache::write($cacheName, $menu);
+		}
+
+		return $menu;
 	}
 	
 	public static function childrenFor($lft, $rght) {
