@@ -27,6 +27,8 @@ define('PERMISSIONS_FIX_MSG', 'Ensure file permissions are correct');
 
 define('DEFAULT_THEME_NAME', 'Greenish');
 
+use SmartPress\Models\Permissions;
+
 $titles = [
 	'Install SmartPress',				// Preinstall status
 	'',									// Install
@@ -116,7 +118,7 @@ $user;
 function createUser($data) {
 	global $user;
 
-	$data['group_id'] = \SmartPress\Models\Group::SuperAdminID;
+	$data['permissions'] = 255;
 
 	$user = new \SmartPress\Models\User($data);
 	if (!$user->save()) {
@@ -210,7 +212,7 @@ function preinstallAction() {
 	$requiredLibs = [
 		'ActiveRecord' => '\\ActiveRecord\\Connection',
 		'Speedy Sprockets' => '\\Speedy\\Sprocket\\Sprocket',
-		'PLinq'				=> '\\YaLinqo\\Enumerable',
+		'PLinq'				=> '\\PLinq\\PLinq',
 		'Speedy Framework'	=> "\\Speedy\\App",
 	];
 	$allLibs = true;

@@ -20,10 +20,6 @@ class User extends \Speedy\Model\ActiveRecord {
 	];
 	
 	static $validates_uniqueness_of = ['email'];
-	
-	static $belongs_to = [
-		['group', 'namespace' => '\\SmartPress\\Models']
-	];
 
 	static $after_save = ['clearCache'];
 

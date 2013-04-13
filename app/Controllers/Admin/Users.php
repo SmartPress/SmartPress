@@ -3,7 +3,6 @@ namespace SmartPress\Controllers\Admin;
 
 use \SmartPress\Controllers\Admin\Admin;
 use \SmartPress\Models\User;
-use \SmartPress\Models\Group;
 
 class Users extends Admin {
 	
@@ -45,7 +44,6 @@ class Users extends Admin {
 	 */
 	public function _new() {
 		$this->user	= new User();
-		$this->groups = Group::all();
 		
 		$this->respondTo(function($format) {
 			$format->html; // new.php.html
@@ -60,7 +58,6 @@ class Users extends Admin {
 	 */
 	public function edit() {
 		$this->user	= User::find($this->params('id'));
-		$this->groups = Group::all();
 	}
 
 	/**
@@ -79,7 +76,6 @@ class Users extends Admin {
 				};
 			} else {
 				$format->html = function() {
-					$this->groups = Group::all();
 					$this->render("new");
 				};
 				$format->json = function() {
@@ -111,7 +107,6 @@ class Users extends Admin {
 				};
 			} else {
 				$format->html = function() {
-					$this->groups = Group::all();
 					$this->render("new");
 				};
 				$format->json = function() {

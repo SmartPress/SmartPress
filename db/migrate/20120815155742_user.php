@@ -9,7 +9,7 @@ class User extends Migration {
 			$this->string("username");
 			$this->string("email");
 			$this->string("password_hash");
-			$this->integer("group_id");
+			$this->integer("permissions");
 
 			$this->timestamps();
 		});

@@ -10,7 +10,6 @@ use \Speedy\Request;
 
 define('ReadPrivilege',	1);
 define('WritePrivilege',2);
-define('AdminPrivilege',16);
 define('SuperAdminPrivilege', 128);
 
 
@@ -20,9 +19,9 @@ class Admin extends Application {
 
 	protected $beforeFilter = ['__setBackUrl', 'adminMenus', '_checkPrivilege'];
 	
-	protected $minReadPrivilege	= AdminPrivilege;
+	protected $minReadPrivilege	= ReadPrivilege;
 	
-	protected $minWritePrivilege= AdminPrivilege;
+	protected $minWritePrivilege= SuperAdminPrivilege;
 	
 	protected $_mixins = ['\\Speedy\\Controller\\Helper\\Session' => [ 'alias' => 'Session']];
 	
@@ -83,7 +82,7 @@ class Admin extends Application {
 			$minPrivilege = $this->minWritePrivilege;
 		}
 	
-		if (!$this->user() || !($this->user()->group->privilege & $minPrivilege)) {
+		if (!$this->user() || !($this->user()->permissions & $minPrivilege)) {
 			$this->redirectTo('/admin/signin', ['error' => 'You don\'t have permission to do this']);
 		}
 	}

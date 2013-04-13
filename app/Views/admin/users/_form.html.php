@@ -1,3 +1,7 @@
+<?php 
+use SmartPress\Models\Permissions;
+?>
+
 <?php echo $this->formFor(['admin', $this->user], ['class' => 'form-horizontal'], function($f) { ?>
 
 	<?php if ($this->user->errors && $this->user->errors->count()): ?>
@@ -37,9 +41,18 @@
 		</div>
 	</div>
 	<div class="control-group">
-		<?php echo $f->label("group_id", null, ['class' => 'control-label']); ?>
+		<label class="control-label">Permissions</label>
 		<div class="controls">
-			<?php echo $f->collectionSelect("group_id", $this->groups, 'id', 'name'); ?>
+			<?php \Speedy\Logger::debug(Permissions::all()); ?>
+			<?php foreach (Permissions::all() as $label => $perm): ?>
+
+				<label class="checkbox">
+					<?php echo $label; ?>
+					<?php echo $f->checkBox("permissions." . $perm, [
+							'value' => $perm
+						], ($this->user->permissions & $perm) ? true : false); ?>
+				</label>
+			<?php endforeach; ?>
 		</div>
 	</div>
 	<div class="control-group">

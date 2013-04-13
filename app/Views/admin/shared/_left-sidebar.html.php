@@ -41,7 +41,6 @@
 				<li><?php echo $this->linkTo('Settings', $this->admin_configs_url()); ?></li>
 				<li class="divider"></li>
 				<li><?php echo $this->linkTo("Users", $this->admin_users_url()); ?></li>
-				<li><?php echo $this->linkTo("Groups", $this->admin_groups_url()); ?></li>
 				<li><?php echo $this->linkTo("Blocks", $this->admin_blocks_url()); ?></li>
 				<li class="divider"></li>
 				<li><?php echo $this->linkTo('Theme', $this->edit_admin_config_path('look')); ?></li>

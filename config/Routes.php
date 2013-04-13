@@ -27,7 +27,6 @@ class Routes extends SpeedyDraw {
 			
 			$this->resources('categories');
 			$this->resources('modules');
-			$this->resources('groups');
 			$this->resources('users');
 			$this->resources('blocks', [], function() {
 				$this->collection(function() {

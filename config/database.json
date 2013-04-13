@@ -3,7 +3,7 @@
 		"adapter"	: "mysql",
 		"encoding"	: "utf8",
 		"reconnect"	: "false",
-		"database"	: "sp_carepl",
+		"database"	: "ohmy_dev",
 		"pool"	: 5,
 		"username"	: "root",
 		"password"	: "root",
