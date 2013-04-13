@@ -15,6 +15,7 @@ class Blog extends Base {
 		\Speedy\View\Helpers\Html::__construct as private __htmlConstruct;
 	}
 
+
 	private $_summarizeOptions = [
 		'ending'	=> '...',
 		'length'	=> 500,
@@ -38,6 +39,7 @@ class Blog extends Base {
 
 		if (!empty($title)) {
 			return $this->formatTitle($title);
+
 		} elseif ($title = ConfigManager::get(Config::DefaultTitleName)) {
 			return $title;
 		}
@@ -129,4 +131,3 @@ class Blog extends Base {
 	}
 	
 }
-

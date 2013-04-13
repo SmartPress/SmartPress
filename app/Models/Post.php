@@ -138,7 +138,4 @@ class Post extends \Speedy\Model\ActiveRecord {
 				$this->author->name : ''
 		];
 	}
-
 }
-
-?>

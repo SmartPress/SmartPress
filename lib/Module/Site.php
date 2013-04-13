@@ -160,5 +160,3 @@ class Site extends \Speedy\Singleton {
 		return $this->modules;
 	}*/
 }
-
-?>

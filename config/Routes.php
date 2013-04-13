@@ -6,6 +6,7 @@ use Speedy\Router\Draw as SpeedyDraw;
 use SmartPress\Lib\Router\Routes\Slug;
 use SmartPress\Lib\Module\Site as SiteModules;
 use SmartPress\Models\Config\Manager as ConfigManager;
+use SmartPress\Models\Config;
 
 class Routes extends SpeedyDraw {
 
@@ -62,18 +63,20 @@ class Routes extends SpeedyDraw {
 			$this->resources('comments', ['only' => ['create', 'index']]);
 		});
 		$this->resources('pages', ['only' => 'show']);
+		$this->resources('category', ['only' => 'show']);
 		
 		$this->match(['admin' => 'admin/users#index']);
-		$this->match(['admin/signin' => "admin/sessions#_new"]);
-		$this->match(['admin/signout' => "admin/sessions#destroy"]);
+		$this->match(['admin/signin' => "admin/sessions#_new", 'name' => 'admin_sign_in']);
+		$this->match(['admin/signout' => "admin/sessions#destroy", 'name' => 'admin_sign_out']);
 		
-		$homeType = ConfigManager::get('home/type');
+		$homeType = ConfigManager::get(Config::HomeTypeName);
 		if ($homeType == \SmartPress\Models\Post::SinglePageHomeType) {
-			$this->rootTo('pages#show', ['id' => ConfigManager::get('home/single_id')]);
-		} elseif ($homeType == \SmartPress\Models\Post::BlogRollHomeType) {
+			$this->rootTo('pages#show', ['id' => ConfigManager::get(Config::HomeSingleName)]);
+		} elseif (!$homeType || $homeType == \SmartPress\Models\Post::BlogRollHomeType) {
 			$this->rootTo('posts#index');
 		}
 		
+		//var_dump(SiteModules::allPaths());
 		foreach (SiteModules::allPaths() as $path) {
 			$routes = $path . DS . 'Etc' . DS . 'Routes.php';
 			if (!file_exists($routes)) {
