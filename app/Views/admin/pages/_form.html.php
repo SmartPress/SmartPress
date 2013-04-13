@@ -1,7 +1,15 @@
-<?php $this->formFor(['admin', $this->post], ['class' => 'smart_press-form'], function($f) { ?>
+<?php
+use Speedy\Router\Draw;
+?>
+<?php echo $this->formFor(['admin', $this->post], [
+		'class' => 'smart_press-form', 
+		'action' => (empty($this->post->id)) ? 
+			'/admin/pages' : '/admin/pages/' . $this->post->id
+		], 
+		function($f) { ?>
 	<?php if ($this->post->errors && $this->post->errors->count()): ?>
 		<div id="error_explanation">
-			<?php element('h2', "{$this->pluralize($this->post, 'error')} prohibited this post from beign saved:"); ?>
+			<?php echo $this->element('h2', "{$this->pluralize($this->post, 'error')} prohibited this post from beign saved:"); ?>
 		</div>
 		<ul>
 			<?php foreach($this->post->errors as $error): ?>
@@ -9,18 +17,21 @@
 			<?php endforeach; ?>
 		</ul>
 	<?php endif; ?>
-	<?php $f->hidden("type"); ?>
+	<?php echo $f->hidden("type"); ?>
+	<?php if (!empty($this->post->id)): ?>
+		<?php echo $this->hiddenFieldTag('_method', Draw::PUT); ?>
+	<?php endif; ?>
 	
 	<div class="span7">
 		<fieldset>
 			<div class="field">
-				<?php $f->label("title"); ?>
-				<?php $f->textField("title", ['class' => 'span12', ['data-target' => 'post_slug', 'data-preview' => 'slug_preview', 'data-edit-btn' => 'slug_edit_btn']]); ?>
+				<?php echo $f->label("title"); ?>
+				<?php echo $f->textField("title", ['class' => 'span12', ['data-target' => 'post_slug', 'data-preview' => 'slug_preview', 'data-edit-btn' => 'slug_edit_btn']]); ?>
 			</div>
 			<div class="field">
-				<?php $f->label("slug"); ?>
+				<?php echo $f->label("slug"); ?>
 				<div class="input-append">
-					<span><?php $f->textField("slug"); ?></span>
+					<span><?php echo $f->textField("slug", strlen($this->post->slug) > 0 ? ['data-locked' => 'true'] : []); ?></span>
 					<span class="span5 uneditable-input" id="slug_preview">
 						<?php echo (isset($this->post->slug) && strlen($this->post->slug) > 0) ? $this->post->slug : ''; ?>
 					</span>
@@ -33,7 +44,7 @@
 			<legend>Content</legend>
 			
 			<div class="field">
-				<?php $f->textArea("content", ['class' => 'span12 ckeditor', 'rows' => '14']); ?>
+				<?php echo $f->textArea("content", ['class' => 'span12 ckeditor', 'rows' => '14']); ?>
 			</div>
 		</fieldset>
 	</div>
@@ -41,25 +52,29 @@
 		<div class="well">
 			<div class="actions">
 				<div class="pull-right">
-					<?php $f->submit('Save', ['class' => 'btn btn-primary']); ?>
-					<?php $this->linkTo('Cancel', $this->admin_posts_url(), ['class' => 'btn']); ?>
+					<?php echo $f->submit('Save', ['class' => 'btn btn-primary']); ?>
+					<?php echo $this->linkTo('Cancel', $this->admin_posts_url(), ['class' => 'btn']); ?>
 				</div>
 			</div>
 			<div class="field">
-				<?php $f->label("status"); ?>
-				<?php $f->select("status", \SmartPress\Models\Post::statuses(), null, ['class' => 'input-medium']); ?>
+				<?php echo $f->label("status"); ?>
+				<?php echo $f->select("status", \SmartPress\Models\Post::statuses(), null, ['class' => 'input-medium']); ?>
 			</div>
 			<div class="field">
-				<?php $f->label("layout"); ?>
-				<?php $f->select("layout", \SmartPress\Models\Theme::availableLayouts(), null, ['class' => 'input-medium']); ?>
+				<?php echo $f->label("layout"); ?>
+				<?php echo $f->select("layout", \SmartPress\Models\Theme::availableLayouts(), null, ['class' => 'input-medium']); ?>
+			</div>
+			<div class="field">
+				<?php echo $f->label("author_id"); ?>
+				<?php echo $f->select('author_id', \SmartPress\Models\User::allForOptions(), null, ['class' => 'input-medium']); ?>
 			</div>
 		</div>
 		
 		<div class="well">
 			<?php foreach($this->post_custom_fields as $field): ?>
 				<div class="field">
-					<?php $f->label("custom_data.{$field->field}", $field->label); ?>
-					<?php $this->textFieldTag($f->formatName("custom_data.{$field->field}"), ['class' => 'span12', 'value' => isset($this->post->custom_data[$field->field]) ? $this->post->custom_data[$field->field] : null ]); ?>
+					<?php echo $f->label("custom_data.{$field->field}", $field->label); ?>
+					<?php echo $this->textFieldTag($f->formatName("custom_data.{$field->field}"), ['class' => 'span12', 'value' => isset($this->post->custom_data[$field->field]) ? $this->post->custom_data[$field->field] : null ]); ?>
 				</div>
 			<?php endforeach; ?>
 		</div>

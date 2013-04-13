@@ -1,5 +1,5 @@
 <p id="notice"></p>
-<p>
+<p>
 	<b>Id</b>
 	<?php echo $this->postcustomfield->id; ?>
 </p>
@@ -19,5 +19,5 @@
 	<b>Updated At</b>
 	<?php echo $this->postcustomfield->updated_at; ?>
 </p>
-<?php echo $this->linkTo('Edit', $this->edit_postcustomfield_path($this->postcustomfield->id)); ?>
+<?php echo $this->linkTo('Edit', $this->edit_postcustomfield_path($this->postcustomfield->id)); ?>
 <?php echo $this->linkTo('Back', $this->postcustomfields_url()); ?>

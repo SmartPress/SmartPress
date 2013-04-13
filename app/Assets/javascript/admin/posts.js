@@ -63,6 +63,10 @@
 				this.target.parent().hide();
 				this.editable = false;
 			}
+
+			// If the element is locked to don't add event listeners
+			if (this.target.data('locked')) 
+				return;
 			
 			var me = this;
 			this.el.don('keyup', {

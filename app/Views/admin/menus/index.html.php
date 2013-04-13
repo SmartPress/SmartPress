@@ -14,22 +14,21 @@
 					$this->menus->each(function($menu) use (&$i) {
 					$i++; 
 						?>
-					<li><?php $this->linkTo($menu->title, "#menu-$i", ['data' => ['toggle' => 'tab']]); ?></li>
+					<li><?php echo $this->linkTo($menu->title, "#menu-$i", ['data' => ['toggle' => 'tab']]); ?></li>
 				<?php }); ?>	
 			</ul>
-			
 			<div class="tab-content"> 
 				<?php 
 					$i = 0;
 					
 					$this->menus->each(function($menu) use (&$i) { 
-					$i++;
-						?>
-					<div class="tab-pane<? if ($i == 1) echo ' active'; ?>" id="<?php echo "menu-$i"?>">
-						<?php if (!isset($menu->children) || $menu->children->count() < 1) return; ?>
-						
+						if (!isset($menu->children) || $menu->children->count() < 1) 
+							return;
+						$i++;
+				?>
+					<div class="tab-pane<?php if ($i == 1) echo ' active'; ?>" id="<?php echo "menu-$i"; ?>">
 						<ul class="sortable">
-							<?php $this->render('sortable', ['menus' => $menu->children, 'level' => 1]); ?>
+							<?php echo $this->render('sortable', ['menus' => $menu->children, 'level' => 1]); ?>
 						</ul>
 					</div>
 				<?php }); ?>
@@ -37,7 +36,7 @@
 		</div>
 		<div class="span4 offset1">
 			<div class="well">
-				<?php $this->render('form'); ?>
+				<?php echo $this->render('form'); ?>
 			</div>
 		</div>
 	</div>

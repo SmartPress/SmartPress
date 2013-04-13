@@ -29,7 +29,7 @@ class Slug extends Match {
 		$this->setName("{$params['type']}_slugs");
 	}
 
-	public function match(\Speedy\Request $request) {
+	public function match($request) {
 		if (!$this->compile($request)) return false;
 		
 		$params	= $this->params();

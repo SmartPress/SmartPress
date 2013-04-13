@@ -1,5 +1,5 @@
 <p id="notice"></p>
-<p>
+<p>
 	<b>Id</b>
 	<?php echo $this->category->id; ?>
 </p>
@@ -31,5 +31,5 @@
 	<b>Updated At</b>
 	<?php echo $this->category->updated_at; ?>
 </p>
-<?php echo $this->linkTo('Edit', $this->edit_category_path($this->category->id)); ?>
+<?php echo $this->linkTo('Edit', $this->edit_category_path($this->category->id)); ?>
 <?php echo $this->linkTo('Back', $this->category_url()); ?>

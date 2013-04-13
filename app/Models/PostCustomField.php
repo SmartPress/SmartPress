@@ -16,7 +16,7 @@ class PostCustomField extends \Speedy\Model\ActiveRecord {
 	
 	
 	public function flushCache() {
-		Cache::clear(ConfigManager::CacheName);
+		Cache::clear(self::CacheName);
 	}
 	
 	static function all() {

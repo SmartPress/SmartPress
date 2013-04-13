@@ -1,5 +1,5 @@
 <p id="notice"></p>
-<p>
+<p>
 	<b>Id</b>
 	<?php echo $this->menu->id; ?>
 </p>
@@ -31,5 +31,5 @@
 	<b>Updated At</b>
 	<?php echo $this->menu->updated_at; ?>
 </p>
-<?php echo $this->linkTo('Edit', $this->edit_menu_path($this->menu->id)); ?>
+<?php echo $this->linkTo('Edit', $this->edit_menu_path($this->menu->id)); ?>
 <?php echo $this->linkTo('Back', $this->menus_url()); ?>

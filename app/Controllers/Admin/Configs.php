@@ -116,8 +116,11 @@ class Configs extends Admin {
 		
 		$this->respondTo(function($format) use($success, $errors) {
 			if ($success) {
-				$format->html = function() {
-					$this->redirectTo($this->admin_configs_url(), array("notice" => "Settings saved successfully."));
+				$redirectPath = ($this->hasParam('config_redirect')) ? 
+					$this->params('config_redirect') : $this->admin_configs_url();
+
+				$format->html = function() use ($redirectPath) {
+					$this->redirectTo($redirectPath, array("notice" => "Settings saved successfully."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => ['success' => true] ));
@@ -143,9 +146,11 @@ class Configs extends Admin {
 			if ($this->config->update_attributes($this->params('config'))) {
 				$name = str_replace('/', '_', $this->config->name);
 				EventManager::dispatch('admin_configs_update_' . $name);
-				
-				$format->html = function() {
-					$this->redirectTo($this->admin_configs_url(), array("notice" => "Config was successfully updated."));
+				$redirectPath = ($this->params('config_redirect')) ? 
+					$this->params('config_redirect') : $this->admin_configs_url();
+
+				$format->html = function() use ($redirectPath) {
+					$this->redirectTo($redirectPath, array("notice" => "Config was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->config ));

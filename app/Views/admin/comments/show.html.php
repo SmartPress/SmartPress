@@ -1,5 +1,5 @@
 <p id="notice"></p>
-<p>
+<p>
 	<b>Id</b>
 	<?php echo $this->comment->id; ?>
 </p>
@@ -43,5 +43,5 @@
 	<b>Updated At</b>
 	<?php echo $this->comment->updated_at; ?>
 </p>
-<?php echo $this->linkTo('Edit', $this->edit_admin_comment_path($this->comment->id)); ?>
+<?php echo $this->linkTo('Edit', $this->edit_admin_comment_path($this->comment->id)); ?>
 <?php echo $this->linkTo('Back', $this->admin_comments_url()); ?>

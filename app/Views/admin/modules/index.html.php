@@ -1,4 +1,4 @@
-<?php $this->render('top-nav'); ?>
+<?php echo $this->render('top-nav'); ?>
 
 <section>
 	<div class="page-header">
@@ -22,9 +22,9 @@
 				<td><?php echo $module->code; ?></td>
 				<td><?php echo $module->version; ?></td>
 				<td><?php echo $module->status; ?></td>
-				<td><?php $this->linkTo('<i class="icon-eye-open"></i> Show', $this->admin_module_path($module->id), array('class' => 'btn')); ?></td>
-				<td><?php $this->linkTo('<i class="icon-upload icon-white"></i> Update', $this->edit_admin_module_path($module->id), array('class' => 'btn btn-warning')); ?></td>
-				<td><?php $this->linkTo('<i class="icon-trash icon-white"></i> Destroy', $this->admin_module_path($module->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete', 'class' => 'btn btn-danger' )); ?></td>
+				<td><?php echo $this->linkTo('<i class="icon-eye-open"></i> Show', $this->admin_module_path($module->id), array('class' => 'btn')); ?></td>
+				<td><?php echo $this->linkTo('<i class="icon-upload icon-white"></i> Update', $this->edit_admin_module_path($module->id), array('class' => 'btn btn-warning')); ?></td>
+				<td><?php echo $this->linkTo('<i class="icon-trash icon-white"></i> Destroy', $this->admin_module_path($module->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete', 'class' => 'btn btn-danger' )); ?></td>
 			</tr>
 		<?php }); ?>
 	</table>

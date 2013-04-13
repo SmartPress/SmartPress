@@ -72,7 +72,7 @@ class Users extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->user->save()) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_user_path($this->user), array("notice" => "User was successfully created."));
+					$this->redirectTo($this->edit_admin_user_path($this->user), array("notice" => "User was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->user ));
@@ -94,11 +94,17 @@ class Users extends Admin {
 	 */
 	public function update() {
 		$this->user	= User::find($this->params('id'));
+		$attrs = $this->params('user');
+		if (empty($attrs['password'])) {
+			unset($attrs['password']);
+			unset($attrs['password_confirm']);
+		}
+		$this->attrs = $attrs;
 		
 		$this->respondTo(function($format) {
-			if ($this->user->update_attributes($this->params('user'))) {
+			if ($this->user->update_attributes($this->attrs)) {
 				$format->html = function() {
-					$this->redirectTo($this->admin_user_path($this->user), array("notice" => "User was successfully updated."));
+					$this->redirectTo($this->edit_admin_user_path($this->user), array("notice" => "User was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->user ));

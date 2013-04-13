@@ -50,42 +50,42 @@
 							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 							<h3><?php echo isset($info['title']) ? $info['title'] : ''; ?></h3>
 						</div>
-						<?php $this->formTag($this->admin_block_path($element['id']), ['method' => 'POST'], function() use ($info, $scopes, $element, $params) { ?>
-							<?php $this->hiddenFieldTag('_method', 'PUT'); ?>
-							<?php $this->hiddenFieldTag('block[id]', $element['id']); ?>
+						<?php echo $this->formTag($this->admin_block_path($element['id']), ['method' => 'POST'], function() use ($info, $scopes, $element, $params) { ?>
+							<?php echo $this->hiddenFieldTag('_method', 'PUT'); ?>
+							<?php echo $this->hiddenFieldTag('block[id]', $element['id']); ?>
 							<div class="modal-body">
 								<div class="field">
-									<?php $this->labelTag("block[path]", "Scope"); ?>
-									<?php $this->selectTag("block[path]", $this->optionsForSelect($scopes, $element['path'])); ?>
+									<?php echo $this->labelTag("block[path]", "Scope"); ?>
+									<?php echo $this->selectTag("block[path]", $this->optionsForSelect($scopes, $element['path'])); ?>
 								</div>
 								
 								<div class="field">
-									<?php $this->labelTag('block[block]', 'Block'); ?>
-									<?php $this->selectTag('block[block]', $this->optionsForSelect(\SmartPress\Models\Theme::blockOptions(), $element['block'])); ?>
+									<?php echo $this->labelTag('block[block]', 'Block'); ?>
+									<?php echo $this->selectTag('block[block]', $this->optionsForSelect(\SmartPress\Models\Theme::blockOptions(), $element['block'])); ?>
 								</div>
 							
-								<?php $this->render('admin/blocks/dynamic_fields', ['info' => $info, 'params' => $params]); ?>
+								<?php echo $this->render('admin/blocks/dynamic_fields', ['info' => $info, 'params' => $params]); ?>
 								
 								<div class="field">
-									<?php $this->labelTag('block[params][except]', 'Excluding'); ?>
-									<?php $this->textFieldTag('block[params][except]', ['value' => (isset($params['except']) ? implode(',', $params['except']) : '')]); ?>
+									<?php echo $this->labelTag('block[params][except]', 'Excluding'); ?>
+									<?php echo $this->textFieldTag('block[params][except]', ['value' => (!empty($params['except']) ? implode(',', $params['except']) : '')]); ?>
 									<span class="help-inline">Leave blank if you don't want exclusions.</span>
 								</div>
 								
 								<div class="field">
-									<?php $this->labelTag('block[params][only]', 'Only On'); ?>
-									<?php $this->textFieldTag('block[params][only]', ['value' => (isset($params['only']) ? implode(',', $params['only']) : '')]); ?>
+									<?php echo $this->labelTag('block[params][only]', 'Only On'); ?>
+									<?php echo $this->textFieldTag('block[params][only]', ['value' => (!empty($params['only']) ? implode(',', $params['only']) : '')]); ?>
 									<span class="help-inline">Leave blank if you don't want to limit.</span>
 								</div>
 								<div class="field">
-									<?php $this->labelTag('block[priority]', 'Priority'); ?>
-									<?php $this->textFieldTag('block[priority]', ['value' => $element['priority']]); ?>
+									<?php echo $this->labelTag('block[priority]', 'Priority'); ?>
+									<?php echo $this->textFieldTag('block[priority]', ['value' => $element['priority']]); ?>
 								</div>
 							</div>
 							
 							<div class="modal-footer">
 								<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-								<?php $this->submit('Save', ['class' => 'btn btn-primary']); ?>
+								<?php echo $this->submit('Save', ['class' => 'btn btn-primary']); ?>
 							</div>
 						<?php }); ?>
 					</div>

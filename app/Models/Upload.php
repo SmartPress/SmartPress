@@ -46,3 +46,4 @@ class Upload extends \Speedy\Model\ActiveRecord {
 }
 
 ?>
+>

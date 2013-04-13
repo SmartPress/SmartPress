@@ -1,5 +1,5 @@
 <p id="notice"></p>
-<p>
+<p>
 	<b>Id</b>
 	<?php echo $this->block->id; ?>
 </p>
@@ -23,5 +23,5 @@
 	<b>Priority</b>
 	<?php echo $this->block->priority; ?>
 </p>
-<?php echo $this->linkTo('Edit', $this->edit_admin_block_path($this->block->id)); ?>
+<?php echo $this->linkTo('Edit', $this->edit_admin_block_path($this->block->id)); ?>
 <?php echo $this->linkTo('Back', $this->admin_blocks_url()); ?>

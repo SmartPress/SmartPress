@@ -2,7 +2,7 @@
 	<?php $this->render('left-menu'); ?>
 	<?php $this->render("admin/shared/_left-sidebar"); ?>
 <?php });*/ ?>
-<?php $this->render('top-nav'); ?>
+<?php echo $this->render('top-nav'); ?>
 
 <section id="grid">
 	<div class="page-header">
@@ -21,8 +21,8 @@
 			<tr>
 				<td><?php echo $config->name; ?></td>
 				<td><?php echo $config->value; ?></td>
-				<td><?php $this->linkTo('<i class="icon-edit icon-white"></i> Edit', $this->edit_admin_config_path($config->id), array('class' => 'btn btn-primary')); ?></td>
-				<td><?php $this->linkTo('<i class="icon-trash icon-white"></i> Destroy', $this->admin_config_path($config->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete', 'class' => 'btn btn-danger' )); ?></td>
+				<td><?php echo $this->linkTo('<i class="icon-edit icon-white"></i> Edit', $this->edit_admin_config_path($config->id), array('class' => 'btn btn-primary')); ?></td>
+				<td><?php echo $this->linkTo('<i class="icon-trash icon-white"></i> Destroy', $this->admin_config_path($config->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete', 'class' => 'btn btn-danger' )); ?></td>
 			</tr>
 		<?php }); ?>
 	</table>

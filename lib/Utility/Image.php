@@ -26,6 +26,8 @@ class Image {
 	
 	private $_imageRsc 	= null;
 	private $_outputImg	= null;
+
+	const GRAVITY_CENTER = 0;
 	
 	
 	
@@ -107,6 +109,9 @@ class Image {
 		);
 		
 		$source = $this->resource();	
+		if (!$source) 
+			throw new ImageException("Image resource is null");
+			
   		
   		/**
   		 *  resource $dst_image , resource $src_image , int $dst_x , int $dst_y , int $src_x , int $src_y , int $dst_w , int $dst_h , int $src_w , int $src_h )
@@ -115,8 +120,63 @@ class Image {
 			throw new ImageException('Unable to copy a sample');
 		//$this->newImageName	= substr_replace($image, "-$cropWidth-$cropHeight-crop", strrpos($image, '.'), 0);
 		$this->setResource($newImage);
+		$this->_imageInfo['width'] = $cropWidth;
+		$this->_imageInfo['height']= $cropHeight;
 		
 		return $this;
+	}
+
+	/**
+	 * Auto crop and resize the image
+	 * @param int $width
+	 * @param int $height
+	 * @param int $gravity
+	 */
+	public function crop_resize($width, $height, $gravity = self::GRAVITY_CENTER, $autoSave = false) {
+		$aspectRatio = $width/$height;
+		
+		if ($aspectRatio < 1.00) {
+			// Height Focused
+			$scale = $this->width()/$width;
+			$cropWidth = $this->width();
+			$cropHeight = $height * $scale;
+		} else {
+			// Width Focused
+			$scale = $this->height()/$height;
+			$cropWidth = $width*$scale;
+			$cropHeight = $this->height();
+		}
+
+		$cropStarts = $this->startCoordinates($cropWidth, $cropHeight, $gravity);
+		$this->crop($cropWidth, $cropHeight, $cropStarts['x'], $cropStarts['y'])
+			->resize($width, $height);
+
+		if (!$autoSave) {
+			return $this;
+		}
+
+		
+		$savePath	= substr_replace(
+			$this->_imagePath,
+			"{$width}x{$height}",
+			strrpos($this->_imagePath, '.'), 0
+		);
+
+		return $this->save($savePath);
+	}
+
+	/**
+	 * Start coordinates from gravity
+	 * @param int $width
+	 * @param int $height
+	 * @param int $gravity
+	 */
+	private function startCoordinates($width, $height, $gravity) {
+		if ($gravity == self::GRAVITY_CENTER) {
+			$x = $this->width()/2;
+			$y = $this->height()/2;
+			return ['x' => $x-ceil($width/2), 'y' => $y-ceil($height/2)];
+		}
 	}
 
 	/**
@@ -189,7 +249,7 @@ class Image {
 				break;
 		}
 		
-		chmod($savePath, 0604);
+		chmod($savePath, 0664);
 		return $savePath;
 	}
 	
@@ -248,21 +308,19 @@ class Image {
 			//return false;
 		}
 		
-		$this->_imagePath	= $image;
-		list(
-			$this->_imageInfo['width'], 
-			$this->_imageInfo['height'], 
-			$this->_imageInfo['type'])	= getimagesize($this->_imagePath);
+		try {
+			$this->_imagePath	= $image;
+			list(
+				$this->_imageInfo['width'], 
+				$this->_imageInfo['height'], 
+				$this->_imageInfo['type'])	= getimagesize($this->_imagePath);
+		} catch (\Exception $e) {
+			throw new ImageException($e->getMessage() . " for file path " . $this->_imagePath);
+			
+		}
 		
 		return $this->_imagePath;
 	}
-	
-	/**
-	 * 
-	 
-	private function _resource() {
-		return $this->_imageRsc;
-	}*/
 	
 	/**
 	 * Generates a new name for image

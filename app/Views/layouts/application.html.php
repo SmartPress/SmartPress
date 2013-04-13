@@ -2,10 +2,10 @@
 <html>
 <head>
 	<title>SmartPress</title>
-	<?php $this->javascript('jquery'); ?>
+	<?php echo $this->javascript('jquery'); ?>
 </head>
 <body>
-	<?php $this->yield(); ?>
-	<?php $this->printSqlLog(); ?>
+	<?php echo $this->yield(); ?>
+	<?php echo $this->printSqlLog(); ?>
 </body>
 </html>

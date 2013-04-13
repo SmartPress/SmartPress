@@ -64,7 +64,7 @@ class Categories extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->category->save()) {
 				$format->html = function() {
-					$this->redirectTo($this->category, array("notice" => "Category was successfully created."));
+					$this->redirectTo($this->admin_categories_url(), array("notice" => "Category was successfully created."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->category ));
@@ -89,7 +89,7 @@ class Categories extends Admin {
 		$this->respondTo(function($format) {
 			if ($this->category->update_attributes($this->params('category'))) {
 				$format->html = function() {
-					$this->redirectTo($this->category, array("notice" => "Category was successfully updated."));
+					$this->redirectTo($this->admin_categories_url(), array("notice" => "Category was successfully updated."));
 				};
 				$format->json = function() {
 					$this->render(array( 'json' => $this->category ));
@@ -113,7 +113,7 @@ class Categories extends Admin {
 		$this->category->destroy();
 		
 		$this->respondTo(function($format) {
-			$format->html = function() { $this->redirectTo($this->category_url()); };
+			$format->html = function() { $this->redirectTo($this->admin_categories_url()); };
 		});
 	}
 

@@ -11,6 +11,8 @@ class Block extends \Speedy\Model\ActiveRecord {
 	static $after_save = ['flushCache'];
 	
 	static $after_destroy = ['flushCache'];
+
+	static $after_update = ['flushCache'];
 	
 	private $_params;
 	
@@ -20,10 +22,10 @@ class Block extends \Speedy\Model\ActiveRecord {
 	}
 	
 	public function set_params($params) {
-		if (is_array($params) && isset($params['only']))
+		if (is_array($params) && !empty($params['only']))
 			$params['only']	= explode(',', str_replace(' ', '', $params['only']));
 		
-		if (is_array($params) && isset($params['except']))
+		if (is_array($params) && !empty($params['except']))
 			$params['except']	= explode(',', str_replace(' ', '', $params['except']));
 		
 		$this->assign_attribute('params', serialize((array) $params));

@@ -1,5 +1,5 @@
 <p id="notice"></p>
-<p>
+<p>
 	<b>Id</b>
 	<?php echo $this->module->id; ?>
 </p>
@@ -21,4 +21,4 @@
 </p>
 
 <?php echo $this->linkTo('<i class="icon-chevron-left"></i> Back', $this->admin_modules_url(), [ 'class' => 'btn' ]); ?>
-<?php echo $this->linkTo('<i class="icon-pencil"></i> Upload', $this->edit_admin_module_path($this->module->id), [ 'class' => 'btn']); ?>
+<?php echo $this->linkTo('<i class="icon-pencil"></i> Upload', $this->edit_admin_module_path($this->module->id), [ 'class' => 'btn']); ?>

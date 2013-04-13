@@ -2,8 +2,8 @@
 namespace SmartPress\Models;
 
 
-use \Speedy\Cache;
-use \SmartPress\Lib\Module\Exception as MException;
+use Speedy\Cache;
+use SmartPress\Lib\Module\Exception as MException;
 
 defined('MODULE_UPLOAD_DIR') or define("MODULE_UPLOAD_DIR", ROOT . DS . 'tmp' . DS . 'uploads');
 
@@ -49,7 +49,7 @@ class Module extends \Speedy\Model\ActiveRecord {
 	
 	public function config() {
 		if (!$this->_config) {
-			$filename	= $this->filePath() . DS . 'etc' . DS . 'config.xml';
+			$filename	= $this->filePath() . DS . 'Etc' . DS . 'config.xml';
 			if (!file_exists($filename)) {
 				throw new MException('Could not load config file at ' . $filename);
 			}

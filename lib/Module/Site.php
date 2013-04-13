@@ -4,7 +4,6 @@ namespace SmartPress\Lib\Module;
 
 use SmartPress\Models\Module;
 use SmartPress\Lib\Module\Exception as MException;
-use Speedy\Singleton;
 use Speedy\Cache;
 use Speedy\Utility\Inflector;
 use Speedy\Utility\Set;
@@ -12,8 +11,8 @@ use Speedy\Loader;
 use Speedy\Router\Draw;
 use App;
 
-Class Site extends Singleton {
-	
+class Site extends \Speedy\Singleton {
+
 	/**
 	 * Site modules in array
 	 * @var array
@@ -28,6 +27,7 @@ Class Site extends Singleton {
 	 */
 	public function loadModules() {
 		$siteModules	= Cache::read("modules");
+		
 		if (empty($siteModules)) {
 			$unfiltered	= Module::findActives();
 			$siteModules	= array();
@@ -75,6 +75,9 @@ Class Site extends Singleton {
 			Loader::instance()->pushPathToNamespace(
 					$module['inflected_namespace'] . '.helpers', 
 					$module['file_path'] . DS . 'Helpers');
+			Loader::instance()->pushPathToNamespace(
+					$module['inflected_namespace'] . '.mailers', 
+					$module['file_path'] . DS . 'Mailers');
 			/*
 			if (!count($module['routes'])) {
 				continue;
@@ -134,7 +137,7 @@ Class Site extends Singleton {
 		$self	= self::instance();
 		$paths	= [];
 		
-		foreach ($self->modules as $code => $info) {
+		foreach ($self->modules() as $code => $info) {
 			$paths[]	= $info['file_path'];
 		}
 		

@@ -25,7 +25,8 @@ trait Tree {
 		if (!isset(static::$belongs_to)) {
 			static::table()->add_relationship(new BelongsTo([
 					'parent', 
-					'class_name' => get_class($this)
+					'class_name' => get_class($this),
+					'foreign_key' => 'parent_id'
 					]));
 		}
 		
@@ -42,13 +43,12 @@ trait Tree {
 	public function setTreeParent() {
 		$maxValue	= static::maximum(static::$__treeRght);
 		
-		$upper;
 		if (!empty($maxValue)) {
 			$upper	= static::where([static::$__treeRght => $maxValue])->first();
 		}
 		
 		if (empty($upper)) $rght	= 0;
-		else $rght = $upper;
+		else $rght = $upper->{static::$__treeRght};
 		
 		$this->{static::$__treeLft} = $rght + 1;
 		$this->{static::$__treeRght}= $this->{static::$__treeLft} + 1;
@@ -203,7 +203,11 @@ trait Tree {
 			$title = 'title';
 		}
 		
-		$options['order'] = static::$__treeLft . ' ASC';
+		$order = static::$__treeLft . ' ASC';
+		if (isset($options['order']))
+			$order .= ', ' . $options['order'];
+
+		$options['order'] = $order;
 		$items	= static::all($options);
 		
 		$level = 0;
@@ -225,10 +229,24 @@ trait Tree {
 		
 		return $items;
 	}
+
+	public static function allChildren($parent) {
+		if (is_object($parent)) {
+			return self::allChildrenOf($parent);
+		} else {
+			return self::allChildrenById($parent);
+		}
+	}
 	
 	public static function allChildrenById($id) {
-		$parent	= static::find($id);
-		return static::allChildrenOf($parent);
+		return self::all([
+				'conditions' => [
+					'p.id = ? AND (c.' . self::$__treeLft . ' BETWEEN p.' . self::$__treeLft . ' AND p.' . self::$__treeRght . ')',
+					$id
+				],
+				'select' => 'c.*',
+				'from'	=> 'cp_locations as p, cp_locations as c'
+			]);
 	}
 	
 	public static function allChildrenOf($parent) {
@@ -257,8 +275,8 @@ trait Tree {
 		return self::all([
 				'conditions' => [
 					'lft < ? AND rght > ?',
-					$model[self::$__treeLft],
-					$model[self::$__treeRght]
+					$model[$model::$__treeLft],
+					$model[$model::$__treeRght]
 				],
 				'order' => 'lft ASC'
 			]);
