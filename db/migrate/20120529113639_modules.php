@@ -9,6 +9,7 @@ class Modules extends Migration {
 			$this->string("name");
 			$this->string("code");
 			$this->string("version");
+			$this->string("namespace");
 			$this->integer("status", ['length' => 3]);
 		});
 	}

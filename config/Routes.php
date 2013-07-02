@@ -1,5 +1,5 @@
 <?php
-namespace SmartPress\Config;
+namespace Config;
 
 
 use Speedy\Router\Draw as SpeedyDraw;

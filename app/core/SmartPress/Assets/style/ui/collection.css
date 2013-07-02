@@ -1,0 +1,12 @@
+.collection .collection-item {
+	display: inline-block;
+	margin: 0 5px 10px 0;
+	position: relative;
+}
+
+.collection .collection-item .toolbar {
+	position: absolute;
+	right: 0;
+	top: 0;
+	background-color: white;
+}
