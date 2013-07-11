@@ -1,1 +1,0 @@
-/Users/zachary/Documents/workspace/SpeedyPHP/js/Object.js

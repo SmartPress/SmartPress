@@ -43,7 +43,6 @@ use SmartPress\Models\Permissions;
 	<div class="control-group">
 		<label class="control-label">Permissions</label>
 		<div class="controls">
-			<?php \Speedy\Logger::debug(Permissions::all()); ?>
 			<?php foreach (Permissions::all() as $label => $perm): ?>
 
 				<label class="checkbox">
@@ -61,14 +60,21 @@ use SmartPress\Models\Permissions;
 				<?php echo $f->checkBox('generate_password', ['value' => '1']); ?>
 				Generate a password
 			</label>
-		</div>
-	</div>
-	<div class="control-group">
-		<div class="controls">
 			<label class="checkbox">
 				<?php echo $f->checkBox('send_welcome', ['value' => '1']); ?>
 				Send welcome email
 			</label>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">API Access</label>
+		<div class="controls">
+			<?php if (!empty($this->user->api_id)): ?>
+				<div><strong>ID:</strong> <span><?php echo $this->user->api_id; ?></span></div>
+				<div><strong>Key:</strong> <span><?php echo $this->user->api_key; ?></span></div>
+			<?php else: ?>
+				<?php echo $this->linkTo('Generate', $this->generateApi_admin_user_path($this->user), ['class' => 'btn']); ?>
+			<?php endif; ?>
 		</div>
 	</div>
 	<div class="form-actions">

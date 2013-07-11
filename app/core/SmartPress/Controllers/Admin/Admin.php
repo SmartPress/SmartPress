@@ -17,7 +17,7 @@ class Admin extends Application {
 
 	public $layout	= "admin/default";
 
-	protected $beforeFilter = ['__setBackUrl', 'adminMenus', '_checkPrivilege'];
+	protected $beforeFilter = ['__setBackUrl', 'adminMenus', '__validateApi', '_checkPrivilege'];
 	
 	protected $minReadPrivilege	= ReadPrivilege;
 	
@@ -58,11 +58,26 @@ class Admin extends Application {
 		$this->menus = $menus;
 		//Cache::write("module_menus", $menus);
 	}
+
+	protected function __validateApi() {
+		if ($this->hasParam('api_id') && $this->hasParam('api_key')) { 
+			$user = User::find_by_api_id($this->params('api_id'));
+		} else return;
+
+		if (!isset($user))
+			return;
+
+		if (!$user->validateApiKey($this->params('api_key'))) 
+			return;
+		
+		$this->user = $user;
+	}
 	
 	protected function user() {
 		if (isset($this->user)) 
 			return $this->user;
 		
+		// First attempt to get user from session
 		$user	= unserialize(base64_decode($this->session()->read('User')));
 		if ($user) {
 			$this->user = $user;

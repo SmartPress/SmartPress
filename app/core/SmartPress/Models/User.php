@@ -81,6 +81,21 @@ class User extends \Speedy\Model\ActiveRecord {
 		return ($this->password_hash == $this->crypto($testPassword)) ? true : false;
 	}
 
+	public function validateApiKey($apiKey) {
+		return (md5($this->password_hash . ':' . $this->api_generated_at) == $this->api_id . $apiKey);
+	}
+
+	public function generateApi() {
+		$time = time();
+		$hash = md5($this->password_hash . ':' . $time);
+
+		$this->api_id	= substr($hash, 0, 8);
+		$this->api_key	= substr($hash, 8, 24);
+		$this->api_generated_at = $time;
+
+		return $this;
+	}
+
 	public static function allForOptions() {
 		$options = Cache::read(self::AllOptionsCacheName);
 		if (empty($options)) {

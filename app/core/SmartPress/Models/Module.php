@@ -66,13 +66,13 @@ class Module extends \Speedy\Model\ActiveRecord {
 	 */
 	public function settings() {
 		$config	= $this->config();
-		$class	= $config->namespace . '\\Etc\\Settings';
+		$class	= $this->namespace . '\\Etc\\Settings';
 		return new $class($config);
 	}
 	
 	public function filePath() {
 		if (!isset($this->_filePath)) {
-			$this->_filePath = MODULES_PATH . DS . $this->code;
+			$this->_filePath = MODULES_PATH . DS . $this->namespace;
 		}
 		
 		return $this->_filePath;
@@ -96,4 +96,3 @@ class Module extends \Speedy\Model\ActiveRecord {
 	
 }
 
-?>

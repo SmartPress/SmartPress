@@ -9,7 +9,7 @@
 	<?php echo $this->javascript('/vendor/jquery-ui/js/jquery-ui-1.8.23.custom.min.js'); ?>
 	<?php //$this->javascript('http://code.jquery.com/ui/1.9.2/jquery-ui.js'); ?>
 	<?php echo $this->javascript('/vendor/jquery-plugins/imgselector/scripts/jquery.imgareaselect.pack.js')?>
-	<?php echo $this->javascript('/vendor/quickly/collection.js'); ?>
+	<?php echo $this->javascript('/vendor/quickly/js/quickly-ui-v1.0.0.min.js'); ?>
 	
 	<?php echo $this->stylesheet('/vendor/bootstrap/css/bootstrap.css'); ?>
 	<style type="text/css">
@@ -21,6 +21,8 @@
         padding: 9px 0;
       }
     </style>
+
+    <?php echo $this->stylesheet('/vendor/quickly/css/quickly-ui-v1.0.0.min.css'); ?>
 	<?php echo $this->stylesheet('/vendor/bootstrap/css/bootstrap-responsive.css'); ?>
 	<?php echo $this->stylesheet('/vendor/jquery-ui/css/jquery-ui-1.8.23.custom.css'); ?>
 	<?php echo $this->stylesheet('/vendor/jquery-plugins/imgselector/css/imgareaselect-default.css'); ?>

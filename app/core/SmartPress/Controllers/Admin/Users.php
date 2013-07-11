@@ -5,6 +5,10 @@ use \SmartPress\Controllers\Admin\Admin;
 use \SmartPress\Models\User;
 
 class Users extends Admin {
+
+	const APIGenerationSuccess = "Api successfully generated for user.";
+
+	const APIGenerationFail	= "Error occured while generating api for user.";
 	
 	protected $minReadPrivilege	= SuperAdminPrivilege;
 	
@@ -125,6 +129,41 @@ class Users extends Admin {
 		
 		$this->respondTo(function($format) {
 			$format->html = function() { $this->redirectTo($this->admin_users_url()); };
+		});
+	}
+
+	/**
+	 * GET /admin/users/1/generateApi
+	 */
+	public function generateApi() {
+		$this->user = User::find($this->params('id'));
+
+		$this->respondTo(function($format) {
+			if ($this->user->generateApi()->save()) {
+				$format->html = function() {
+					$this->redirectTo($this->edit_admin_user_path($this->user), ['success' => self::APIGenerationSuccess]);
+				};
+				$format->json = function() {
+					$this->render([
+							'json' => [
+								'success'	=> true,
+								'message'	=> self::APIGenerationSuccess
+							]
+						]);
+				};
+			} else {
+				$format->html = function() {
+					$this->redirectTo($this->edit_admin_user_path($this->user), ['error' => self::APIGenerationFail]);
+				};
+				$format->json = function() {
+					$this->render([
+							'json' => [
+								'success' 	=> false,
+								'message'	=> self::APIGenerationFail
+							]
+						]);
+				};
+			}
 		});
 	}
 
