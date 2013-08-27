@@ -52,6 +52,30 @@ $status = (isset($_REQUEST['status']) && $_REQUEST['status'] <= MAX_STATUS) ?
 	intval($_REQUEST['status']) : PREINSTALL_STATUS;
 
 
+function checkComposer($text) {
+	$text = preg_replace("/(\[\d{1,2}m)/", "", $text);
+	$text = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%&-]/s', '', $text);
+	$matches = preg_match("/^Composer version/", $text);
+
+	return ($matches > 0) ? true : false;
+}
+
+function verifyComposer() {
+	chdir("..");
+	$composer = "composer.phar";
+	$out = `$composer --version`;
+
+	$check = checkComposer($out);
+	$attempts = 1;
+	while (!$check && $attempts <= 3) {
+		$composer = "composer";
+		$check = checkComposer(`$composer --version`);
+		$attempts++;
+	}
+
+	return $check;
+}
+
 function pushCondition($message, $level = WARNING_COND_LEVEL, $fix = '') {
 	global $conditions, $errorLevels;
 
@@ -250,18 +274,20 @@ function preinstallAction() {
 			pushCondition(
 				'No database connection available.',
 				FATAL_COND_LEVEL,
-				'Check database connection settings in initializer "' . SPEEDY_ENV . '" ' .
+				'Check database connection settings in database.json "' . SPEEDY_ENV . '" ' .
 				'or change environment in defines.php'
 			);
 		}
 
-		if ($connection) {
+		if (isset($connection)) {
 			try {
 				$table = \SmartPress\Models\Post::table();
 				$alreadyInstalled = true;
 			} catch (\ActiveRecord\Exceptions\DatabaseException $e) {
 				$alreadyInstalled = false;
 			}
+
+			//$alreadyInstalled = false;
 		}
 
 		if ($alreadyInstalled) {
