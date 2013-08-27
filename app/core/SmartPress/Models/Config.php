@@ -23,6 +23,8 @@ class Config extends \Speedy\Model\ActiveRecord {
 
 	const TitleFormat 		= 'blog/title/format';
 
+	const PostUrlSchema		= 'blog/post_url_schema';
+
 	const GACode 	= 'blog/ga_code';
 
 	

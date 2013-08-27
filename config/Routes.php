@@ -27,7 +27,12 @@ class Routes extends SpeedyDraw {
 			
 			$this->resources('categories');
 			$this->resources('modules');
-			$this->resources('users');
+			$this->resources('groups');
+			$this->resources('users', [], function() {
+				$this->member(function() {
+					$this->get("generateApi");
+				});
+			});
 			$this->resources('blocks', [], function() {
 				$this->collection(function() {
 					$this->get('new_with_ns');
@@ -61,6 +66,13 @@ class Routes extends SpeedyDraw {
 		$this->resources('posts', ['only' => ['show', 'index']], function() {
 			$this->resources('comments', ['only' => ['create', 'index']]);
 		});
+
+		$postUrlSchema = ConfigManager::get(Config::PostUrlSchema);
+		if (empty($postUrlSchema)) {
+			$postUrlSchema = 'posts/:id';
+		}
+		$this->match([$postUrlSchema => 'posts#show', 'name' => 'alt_post_path']);
+
 		$this->resources('pages', ['only' => 'show']);
 		$this->resources('category', ['only' => 'show']);
 		

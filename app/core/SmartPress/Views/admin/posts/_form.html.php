@@ -6,7 +6,10 @@ $(document).ready(function() {
 });
 </script>
 
-<?php echo $this->formFor(['admin', $this->post], ['class' => 'smart_press-form'], function($f) { ?>
+<?php echo $this->formFor(
+	['admin', $this->post], 
+	['accept-charset' => 'UTF-8', 'class' => 'smart_press-form'], 
+	function($f) { ?>
 	<?php if ($this->post->errors && $this->post->errors->count()): ?>
 		<div id="error_explanation">
 			<?php echo $this->element('h2', "{$this->pluralize($this->post, 'error')} prohibited this post from beign saved:"); ?>
@@ -74,7 +77,7 @@ $(document).ready(function() {
 			
 			<div id="featured_image_container">
 				<?php if (isset($this->post->featured_image) && strlen($this->post->featured_image) > 0): ?>
-					<img src="<?php echo $this->post->featured_image; ?>" width="174" height="150" />
+					<img src="/<?php echo $this->post->featured_image; ?>" width="174" height="150" />
 				<?php endif ?>
 			</div>
 		</div>

@@ -3,6 +3,7 @@ namespace SmartPress\Controllers;
 
 
 use SmartPress\Controllers\Application;
+use SmartPress\Models\Category;
 use SmartPress\Models\Post;
 use SmartPress\Models\Theme;
 use SmartPress\Models\Comment;
@@ -18,6 +19,11 @@ class Cms extends Application {
 	 * GET /posts/1
 	 */
 	public function show() {
+		if ($this->hasParam('category_slug')) {
+			$this->category = Category::find_by_slug($this->params('category_slug'));
+			\Speedy\Logger::debug("Category: " . $this->category->name);
+		}
+
 		$this->post	= Post::find_by_slug_or_id($this->params('id'), $this->type);
 		
 		if (!empty($this->post->layout) && in_array($this->post->layout, Theme::availableLayouts())) {

@@ -69,6 +69,7 @@ class Uploader {
   
 	function setOption($key, $value) {
 	    $this->options[$key] = $value;
+	    return $this;
 	}
 	  
 	/**

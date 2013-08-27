@@ -21,8 +21,10 @@ use SmartPress\Models\Config;
 			$tagLine= ConfigManager::get(Config::BlogTagLineName);
 			$format = ConfigManager::get(Config::TitleFormat);
 			$gaCode = ConfigManager::get(Config::GACode);
+			$postUrlSchema = ConfigManager::get(Config::PostUrlSchema);
 			?>
 			
+
 			<div class="control-group">
 				<?php echo $this->hiddenFieldTag('config[0][name]', Config::DefaultTitleName); ?>
 				<?php echo $this->labelTag('config[0][value]', 'Default Title', ['class' => 'control-label']); ?>
@@ -34,7 +36,7 @@ use SmartPress\Models\Config;
 
 			<div class="control-group">
 				<?php echo $this->hiddenFieldTag('config[1][name]', Config::TitleFormat); ?>
-				<?php echo $this->labelTag('config[1][value]', 'Default Title', ['class' => 'control-label']); ?>
+				<?php echo $this->labelTag('config[1][value]', 'Title Format', ['class' => 'control-label']); ?>
 				
 				<div class="controls">
 					<?php echo $this->textFieldTag('config[1][value]', ['value' => ($format) ? $format : '' ]); ?>
@@ -78,6 +80,19 @@ use SmartPress\Models\Config;
 					<?php echo $this->textAreaTag('config[5][value]', !empty($gaCode) ? $gaCode : ''); ?>
 				</div>
 			</div>
+
+			<fieldset>
+				<legend>URL Schemas</legend>
+
+				<div class="control-group">
+					<?php echo $this->hiddenFieldTag('config[6][name]', Config::PostUrlSchema); ?>
+					<?php echo $this->labelTag('config[6][value]', 'Post Url Schema', ['class' => 'control-label']); ?>
+					
+					<div class="controls">
+						<?php echo $this->textFieldTag('config[6][value]', !empty($postUrlSchema) ? $postUrlSchema : ''); ?>
+					</div>
+				</div>
+			</fieldset>
 			
 			<div class="form-actions">
 				<?php echo $this->submit('Save', ['class' => 'btn btn-primary']); ?>
